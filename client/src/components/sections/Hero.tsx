@@ -178,21 +178,18 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* 3D Element */}
+        {/* Kinder Mascot Image */}
         <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 2, delay: 0.5 }}
-          className="h-full w-full hidden lg:block relative -mr-20"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, delay: 0.8 }}
+          className="h-full w-full hidden lg:flex items-center justify-center relative"
         >
-           <Canvas camera={{ position: [0, 0, 6], fov: 35 }}>
-             <ambientLight intensity={0.5} />
-             <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1.5} castShadow />
-             <pointLight position={[-10, -5, -10]} intensity={0.5} color="#E63946" />
-             <Environment preset="studio" />
-             <FloatingChocolate />
-             <ContactShadows position={[0, -1.2, 0]} opacity={0.3} scale={10} blur={3} far={4} color="#3E2723" />
-           </Canvas>
+          <img 
+            src="/kinder-hero.jpg" 
+            alt="Kinder Mascot" 
+            className="w-full h-full object-contain drop-shadow-2xl"
+          />
         </motion.div>
       </div>
       
