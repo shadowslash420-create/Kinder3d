@@ -113,15 +113,15 @@ export default function Hero() {
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
-    <section id="hero" className="relative h-screen w-full overflow-hidden flex items-center bg-[#FDFBF7]">
-      {/* Background Parallax */}
+    <section id="hero" className="relative h-screen w-full overflow-hidden flex items-center">
+      {/* Background Image */}
       <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
         <img 
-          src={heroBg} 
-          alt="Chocolate Swirl Background" 
-          className="w-full h-full object-cover opacity-40 scale-105"
+          src="/luxury-dining.jpg" 
+          alt="Luxury Dining Background" 
+          className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#FDFBF7]/20 to-[#FDFBF7]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#FDFBF7]/95 via-[#FDFBF7]/70 to-transparent" />
       </motion.div>
 
       <div className="container mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full">
@@ -178,19 +178,6 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Luxury Dining Image */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.8 }}
-          className="w-full h-80 md:h-full lg:flex items-center justify-center relative"
-        >
-          <img 
-            src="/luxury-dining.jpg" 
-            alt="Luxury Dining Experience" 
-            className="w-full h-full object-cover rounded-3xl drop-shadow-2xl"
-          />
-        </motion.div>
       </div>
       
       {/* Scroll Indicator */}
