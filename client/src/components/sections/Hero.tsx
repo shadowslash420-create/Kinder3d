@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import * as THREE from "three";
 import heroBg from "@assets/generated_images/luxury_chocolate_swirl_background.png";
+import ChocolateBackground from "@/components/effects/ChocolateBackground";
 
 // Magnetic Button Component
 const MagneticButton = ({ children, className, ...props }: any) => {
@@ -114,15 +115,11 @@ export default function Hero() {
 
   return (
     <section id="hero" className="relative h-screen w-full overflow-hidden flex items-center bg-[#FDFBF7]">
-      {/* Background Parallax */}
-      <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
-        <img 
-          src={heroBg} 
-          alt="Chocolate Swirl Background" 
-          className="w-full h-full object-cover opacity-40 scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#FDFBF7]/20 to-[#FDFBF7]" />
-      </motion.div>
+      {/* Reactive Chocolate Background */}
+      <div className="absolute inset-0 z-0">
+        <ChocolateBackground />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#FDFBF7]/10 to-[#FDFBF7]/30" />
+      </div>
 
       <div className="container mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full">
         {/* Text Content */}
