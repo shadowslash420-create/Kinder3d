@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import * as THREE from "three";
 import heroBg from "@assets/generated_images/luxury_chocolate_swirl_background.png";
 import ChocolateBackground from "@/components/effects/ChocolateBackground";
+import hotChocolateVideo from "@assets/generated_videos/hot_chocolate_poured_on_crepe.mp4";
 
 // Magnetic Button Component
 const MagneticButton = ({ children, className, ...props }: any) => {
@@ -115,9 +116,22 @@ export default function Hero() {
 
   return (
     <section id="hero" className="relative h-screen w-full overflow-hidden flex items-center bg-[#FDFBF7]">
-      {/* Reactive Chocolate Background */}
+      {/* Reactive Chocolate Background with Video Overlay */}
       <div className="absolute inset-0 z-0">
         <ChocolateBackground />
+        
+        {/* Hot Chocolate Video Overlay */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-multiply"
+          style={{ pointerEvents: 'none' }}
+        >
+          <source src={hotChocolateVideo} type="video/mp4" />
+        </video>
+        
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#FDFBF7]/10 to-[#FDFBF7]/30" />
       </div>
 
