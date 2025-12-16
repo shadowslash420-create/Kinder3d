@@ -183,7 +183,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, delay: 0.8 }}
-          className="h-full w-full hidden lg:flex items-center justify-center relative"
+          className="w-full h-80 md:h-full lg:flex items-center justify-center relative"
         >
           <img 
             src="/luxury-dining.jpg" 
