@@ -1,17 +1,27 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useState } from "react";
 
 interface IntroProps {
   onEnter: () => void;
 }
 
 export default function Intro({ onEnter }: IntroProps) {
+  const [isExiting, setIsExiting] = useState(false);
+
+  const handleEnter = () => {
+    setIsExiting(true);
+    setTimeout(() => {
+      onEnter();
+    }, 600);
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.8 }}
+      initial={{ opacity: 1, scale: 1 }}
+      animate={isExiting ? { opacity: 0, scale: 1.1 } : { opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8, ease: "easeInOut" }}
       className="fixed inset-0 z-50 bg-[#FDFBF7] overflow-hidden"
     >
       {/* Animated background gradient */}
@@ -61,9 +71,10 @@ export default function Intro({ onEnter }: IntroProps) {
           transition={{ duration: 0.8, delay: 0.6 }}
         >
           <Button
-            onClick={onEnter}
+            onClick={handleEnter}
+            disabled={isExiting}
             size="lg"
-            className="rounded-full px-14 py-8 text-xl bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/20 transition-all duration-500 flex items-center gap-3"
+            className="rounded-full px-14 py-8 text-xl bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/20 transition-all duration-500 flex items-center gap-3 disabled:opacity-80"
           >
             Enter
             <motion.div
