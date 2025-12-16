@@ -19,19 +19,23 @@ export default function Contact() {
             className="flex flex-col justify-between h-full"
           >
             <div>
-              <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-6 block">Contact</span>
+              <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-6 block">Visit Us</span>
               <h2 className="text-5xl md:text-7xl font-serif font-medium mb-12 leading-none">
-                Reserve Your <br/> <span className="text-white/50 italic">Experience</span>
+                Find Us in <br/> <span className="text-white/50 italic">Batna</span>
               </h2>
               
               <div className="space-y-12">
                  <div>
-                   <label className="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">Location</label>
-                   <p className="text-2xl font-serif">123 Sweet Street<br/>Paris, France 75001</p>
+                   <label className="text-xs font-bold uppercase tracking-widest text-primary mb-3 block">Location</label>
+                   <p className="text-2xl font-serif leading-relaxed">Allée Ben Boulaïd<br/>Batna, Algeria</p>
                  </div>
                  <div>
-                   <label className="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">Contact</label>
-                   <p className="text-xl font-light text-white/80">hello@kinderdelice.com<br/>+33 1 23 45 67 89</p>
+                   <label className="text-xs font-bold uppercase tracking-widest text-primary mb-3 block">Contact</label>
+                   <p className="text-xl font-light text-white/80">+213 (0) 792 15 97 18</p>
+                 </div>
+                 <div>
+                   <label className="text-xs font-bold uppercase tracking-widest text-primary mb-3 block">Hours</label>
+                   <p className="text-lg font-light text-white/70">Tue-Thu, Sat: 12 PM - 12 AM<br/>Friday: 3 PM - 12 AM<br/>Sunday: Open 24 Hours</p>
                  </div>
               </div>
             </div>

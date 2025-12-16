@@ -135,7 +135,7 @@ export default function Hero() {
           >
             <div className="h-[1px] w-12 bg-primary"></div>
             <span className="text-primary font-medium tracking-[0.2em] text-sm uppercase">
-              Est. 2024
+              Batna, Algeria
             </span>
           </motion.div>
           
@@ -145,13 +145,9 @@ export default function Hero() {
             animate="show"
             className="text-6xl md:text-8xl font-serif font-bold leading-[0.9] mb-8 text-foreground tracking-tighter"
           >
-            {"Kinder".split("").map((char, i) => (
-              <motion.span key={i} variants={letterAnimation} className="inline-block text-primary">
-                {char}
-              </motion.span>
-            ))}
+            <span className="text-primary">Creperie</span>
             <br />
-            {"Délice".split("").map((char, i) => (
+            {"Kinder 5".split("").map((char, i) => (
               <motion.span key={i} variants={letterAnimation} className="inline-block">
                 {char}
               </motion.span>
@@ -164,7 +160,7 @@ export default function Hero() {
             transition={{ delay: 1.2, duration: 1 }}
             className="text-xl text-muted-foreground mb-12 leading-relaxed max-w-md font-light"
           >
-            Where authentic French technique meets the nostalgic soul of Kinder chocolate. An uncompromising luxury experience.
+            Finest crepes, waffles, and desserts in Batna. From our kitchen to your table, crafted with passion and precision.
           </motion.p>
           
           <motion.div 

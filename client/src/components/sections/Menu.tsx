@@ -2,37 +2,37 @@ import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import luxuryCrepe from "@assets/stock_images/luxury_crepe_with_ki_74d12ec0.jpg";
 
-// Mock data
+// Mock data - Authentic Menu
 const menuItems = [
   {
     id: 1,
-    name: "The Classic Kinder",
-    description: "Our signature crepe filled with melted Kinder chocolate bars and white cream.",
-    price: "$12.00",
+    name: "Kinder Classic",
+    description: "Golden crepe filled with Nutella, hazelnut cream, and strawberries.",
+    price: "520 DA",
     category: "Signature",
     image: luxuryCrepe
   },
   {
     id: 2,
-    name: "Bueno Delight",
-    description: "Crushed Kinder Bueno, hazelnut cream, and dark chocolate drizzle.",
-    price: "$14.50",
+    name: "Double Chocolate",
+    description: "Dark chocolate crepe with chocolate sauce and whipped cream.",
+    price: "480 DA",
     category: "Signature",
     image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=800"
   },
   {
     id: 3,
-    name: "Berry Bliss",
-    description: "Fresh strawberries, blueberries, and Kinder white chocolate shavings.",
-    price: "$13.50",
+    name: "Berry Sensation",
+    description: "Fresh mixed berries, cream, and powdered sugar on a delicate crepe.",
+    price: "550 DA",
     category: "Fruity",
     image: "https://images.unsplash.com/photo-1504113882839-58e39d385ef4?auto=format&fit=crop&q=80&w=800"
   },
   {
     id: 4,
-    name: "Royal Waffle",
-    description: "Belgian waffle topped with vanilla ice cream and warm Kinder sauce.",
-    price: "$15.00",
+    name: "Premium Waffle",
+    description: "Belgian waffle with ice cream, chocolate drizzle, and almonds.",
+    price: "650 DA",
     category: "Waffles",
     image: "https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&q=80&w=800"
   },

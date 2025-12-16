@@ -42,19 +42,19 @@ export default function About() {
                viewport={{ once: true }}
                transition={{ duration: 0.8 }}
             >
-              <h2 className="text-sm font-bold tracking-[0.3em] text-primary uppercase mb-6">The Craft</h2>
+              <h2 className="text-sm font-bold tracking-[0.3em] text-primary uppercase mb-6">Our Story</h2>
               
               <h3 className="text-4xl md:text-5xl font-serif font-medium text-foreground mb-8 leading-tight">
-                An Ode to <br/>
-                <span className="italic text-secondary">Sweet Nostalgia</span>
+                Bringing European <br/>
+                <span className="italic text-secondary">Flavors Home</span>
               </h3>
               
               <div className="space-y-6 text-muted-foreground text-lg font-light leading-relaxed">
                 <p>
-                  We don't just make crepes; we architect memories. Inspired by the creamy, hazelnut-infused joy of Kinder chocolate, our kitchen is a laboratory of indulgence.
+                  At Creperie Kinder 5, we blend authentic French technique with the warmth of Algerian hospitality. Each crepe is made fresh to order, crafted with premium ingredients and genuine care.
                 </p>
                 <p>
-                  Every crepe begins with our signature batter, rested for exactly 24 hours to achieve that elusive balance: crisp lace edges and a pillowy, melt-in-your-mouth center.
+                  From our kitchen to your table—whether you crave a classic Nutella crepe or our signature chocolate-filled specialties, every bite tells a story of passion and tradition.
                 </p>
               </div>
             </motion.div>
