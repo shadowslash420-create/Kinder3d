@@ -34,9 +34,9 @@ export default function Navbar() {
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         <Link href="/">
-          <span className="text-2xl font-serif font-bold text-foreground tracking-tighter relative group cursor-pointer">
-            Creperie<span className="text-primary group-hover:text-gold transition-colors duration-500">Kinder 5</span>
-          </span>
+          <a className="text-2xl font-serif font-bold text-foreground tracking-tighter relative group">
+            Kinder<span className="text-primary group-hover:text-gold transition-colors duration-500">Délice</span>
+          </a>
         </Link>
 
         {/* Desktop Menu */}
