@@ -178,7 +178,7 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Kinder Mascot Image */}
+        {/* Luxury Dining Image */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -186,9 +186,9 @@ export default function Hero() {
           className="h-full w-full hidden lg:flex items-center justify-center relative"
         >
           <img 
-            src="/kinder-hero.jpg" 
-            alt="Kinder Mascot" 
-            className="w-full h-full object-contain drop-shadow-2xl"
+            src="/luxury-dining.jpg" 
+            alt="Luxury Dining Experience" 
+            className="w-full h-full object-cover rounded-3xl drop-shadow-2xl"
           />
         </motion.div>
       </div>
