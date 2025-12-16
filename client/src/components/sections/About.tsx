@@ -1,90 +1,75 @@
 import { motion } from "framer-motion";
-import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import crepeImage from "@assets/generated_images/gourmet_crepe_with_kinder_chocolate.png";
-
-gsap.registerPlugin(ScrollTrigger);
+import chefImage from "@assets/stock_images/chef_pouring_chocola_d3a3e47e.jpg";
 
 export default function About() {
-  const imageRef = useRef(null);
-
   const stats = [
-    { value: "100%", label: "Authentic Taste" },
-    { value: "24h", label: "Fresh Batter" },
-    { value: "50+", label: "Unique Flavors" },
+    { value: "100%", label: "Authentic" },
+    { value: "24h", label: "Batter Rest" },
+    { value: "50+", label: "Variations" },
   ];
 
   return (
-    <section id="about" className="py-24 relative overflow-hidden bg-white">
+    <section id="about" className="py-32 relative overflow-hidden bg-white">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
           
-          {/* Image Side */}
+          {/* Image Side - Wider column */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="relative"
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1.2, ease: "circOut" }}
+            className="col-span-1 md:col-span-6 relative group"
           >
-            <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500 ease-out">
+            <div className="relative z-10 rounded-sm overflow-hidden aspect-[3/4]">
               <img 
-                src={crepeImage} 
+                src={chefImage} 
                 alt="Chef making crepes" 
-                className="w-full h-auto object-cover aspect-[4/5]"
+                className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+              <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700" />
             </div>
             
-            {/* Decorative background element */}
-            <div className="absolute top-10 -left-10 w-full h-full border-2 border-primary/20 rounded-2xl -z-0 -rotate-3" />
+            {/* Minimalist Decoration */}
+            <div className="absolute -bottom-6 -right-6 w-full h-full border border-primary/10 -z-10" />
           </motion.div>
 
           {/* Content Side */}
-          <div>
-            <motion.span 
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-primary font-serif italic text-xl mb-4 block"
+          <div className="col-span-1 md:col-span-5 md:col-start-8">
+            <motion.div
+               initial={{ opacity: 0, y: 30 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               transition={{ duration: 0.8 }}
             >
-              Since 2024
-            </motion.span>
-            
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6"
-            >
-              Crafting Sweet <br/> Memories
-            </motion.h2>
-            
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="text-muted-foreground text-lg leading-relaxed mb-8"
-            >
-              We believe that dessert is not just food—it’s an emotion. Inspired by the nostalgia of Kinder chocolate, we’ve reinvented the classic French crêpe into a luxurious, melt-in-your-mouth experience.
-              <br/><br/>
-              Every crepe is made to order using our secret batter recipe, resting for 24 hours to ensure the perfect texture—crispy edges with a soft, pillowy center.
-            </motion.p>
+              <h2 className="text-sm font-bold tracking-[0.3em] text-primary uppercase mb-6">The Craft</h2>
+              
+              <h3 className="text-4xl md:text-5xl font-serif font-medium text-foreground mb-8 leading-tight">
+                An Ode to <br/>
+                <span className="italic text-secondary">Sweet Nostalgia</span>
+              </h3>
+              
+              <div className="space-y-6 text-muted-foreground text-lg font-light leading-relaxed">
+                <p>
+                  We don't just make crepes; we architect memories. Inspired by the creamy, hazelnut-infused joy of Kinder chocolate, our kitchen is a laboratory of indulgence.
+                </p>
+                <p>
+                  Every crepe begins with our signature batter, rested for exactly 24 hours to achieve that elusive balance: crisp lace edges and a pillowy, melt-in-your-mouth center.
+                </p>
+              </div>
+            </motion.div>
 
-            <div className="grid grid-cols-3 gap-6 border-t border-border pt-8">
+            <div className="grid grid-cols-3 gap-8 mt-12 border-t border-border/40 pt-10">
               {stats.map((stat, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.3 + (index * 0.1) }}
+                  transition={{ delay: 0.4 + (index * 0.1), duration: 0.8 }}
                 >
-                  <h4 className="text-3xl font-serif font-bold text-primary mb-1">{stat.value}</h4>
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
+                  <h4 className="text-3xl font-serif text-foreground mb-2">{stat.value}</h4>
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">{stat.label}</p>
                 </motion.div>
               ))}
             </div>

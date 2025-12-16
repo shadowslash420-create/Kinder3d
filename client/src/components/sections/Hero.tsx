@@ -1,11 +1,47 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, Environment, ContactShadows } from "@react-three/drei";
-import { motion } from "framer-motion";
+import { Float, Environment, ContactShadows, Sparkles } from "@react-three/drei";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import * as THREE from "three";
 import heroBg from "@assets/generated_images/luxury_chocolate_swirl_background.png";
+
+// Magnetic Button Component
+const MagneticButton = ({ children, className, ...props }: any) => {
+  const ref = useRef<HTMLButtonElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouse = (e: React.MouseEvent) => {
+    const { clientX, clientY } = e;
+    const { height, width, left, top } = ref.current!.getBoundingClientRect();
+    const middleX = clientX - (left + width / 2);
+    const middleY = clientY - (top + height / 2);
+    setPosition({ x: middleX * 0.1, y: middleY * 0.1 });
+  };
+
+  const reset = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const { x, y } = position;
+  return (
+    <motion.div
+      animate={{ x, y }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+    >
+      <Button
+        ref={ref}
+        onMouseMove={handleMouse}
+        onMouseLeave={reset}
+        className={className}
+        {...props}
+      >
+        {children}
+      </Button>
+    </motion.div>
+  );
+};
 
 function FloatingChocolate() {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -13,129 +49,165 @@ function FloatingChocolate() {
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
     if (meshRef.current) {
-      meshRef.current.rotation.x = Math.cos(t / 4) / 8;
-      meshRef.current.rotation.y = Math.sin(t / 4) / 8;
-      meshRef.current.position.y = (1 + Math.sin(t / 1.5)) / 10;
+      // Slower, more elegant rotation
+      meshRef.current.rotation.x = Math.cos(t / 8) / 10;
+      meshRef.current.rotation.y = t / 10; 
+      meshRef.current.position.y = (1 + Math.sin(t / 2)) / 15;
     }
   });
 
   return (
     <group rotation={[0, 0, 0.1]}>
-      <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-        <mesh ref={meshRef} scale={1.5}>
-          <boxGeometry args={[3, 1, 0.4]} />
-          <meshStandardMaterial 
-            color="#5D4037" 
-            roughness={0.1} 
-            metalness={0.1} 
-          />
-        </mesh>
-        {/* White creamy layer inside */}
-        <mesh position={[0, 0.05, 0]} scale={1.48}>
-          <boxGeometry args={[3.01, 0.4, 0.38]} />
-          <meshStandardMaterial 
-            color="#FDFBF7" 
-            roughness={0.4}
-          />
-        </mesh>
-        {/* Top waves to look like chocolate bar */}
-        <mesh position={[-0.7, 0.5, 0]} scale={0.8}>
-           <cylinderGeometry args={[0.4, 0.5, 0.1, 32]} />
-           <meshStandardMaterial color="#5D4037" roughness={0.1} />
-        </mesh>
-        <mesh position={[0, 0.5, 0]} scale={0.8}>
-           <cylinderGeometry args={[0.4, 0.5, 0.1, 32]} />
-           <meshStandardMaterial color="#5D4037" roughness={0.1} />
-        </mesh>
-        <mesh position={[0.7, 0.5, 0]} scale={0.8}>
-           <cylinderGeometry args={[0.4, 0.5, 0.1, 32]} />
-           <meshStandardMaterial color="#5D4037" roughness={0.1} />
-        </mesh>
+      <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.4}>
+        <group scale={1.8}>
+           {/* Chocolate Bar Base */}
+          <mesh ref={meshRef}>
+            <boxGeometry args={[3, 1, 0.4]} />
+            <meshStandardMaterial 
+              color="#3E2723" 
+              roughness={0.2} 
+              metalness={0.1} 
+              envMapIntensity={1.5}
+            />
+          </mesh>
+          {/* White creamy layer inside - subtle reveal at ends */}
+          <mesh position={[1.51, 0, 0]} scale={[0.01, 0.9, 0.8]}>
+            <boxGeometry args={[1, 1, 0.4]} />
+            <meshStandardMaterial color="#FDFBF7" roughness={0.4} />
+          </mesh>
+           {/* Gold flakes/Sparkles around */}
+           <Sparkles count={20} scale={4} size={4} speed={0.4} opacity={0.5} color="#FFD700" />
+        </group>
       </Float>
     </group>
   );
 }
 
+const letterContainer = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+      delayChildren: 0.5,
+    },
+  },
+};
+
+const letterAnimation: any = {
+  hidden: { y: 100, opacity: 0 },
+  show: { 
+    y: 0, 
+    opacity: 1,
+    transition: {
+      type: "spring",
+      damping: 12,
+      stiffness: 100,
+    }
+  },
+};
+
 export default function Hero() {
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, 200]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
   return (
-    <section id="hero" className="relative h-screen w-full overflow-hidden flex items-center">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
+    <section id="hero" className="relative h-screen w-full overflow-hidden flex items-center bg-[#FDFBF7]">
+      {/* Background Parallax */}
+      <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
         <img 
           src={heroBg} 
           alt="Chocolate Swirl Background" 
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover opacity-40 scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/60 to-transparent" />
-      </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#FDFBF7]/20 to-[#FDFBF7]" />
+      </motion.div>
 
-      <div className="container mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="container mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full">
         {/* Text Content */}
-        <motion.div 
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="max-w-xl"
-        >
-          <motion.span 
+        <div className="max-w-xl pt-20">
+          <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="inline-block px-4 py-1 rounded-full bg-primary/10 text-primary font-medium text-sm mb-6 border border-primary/20"
+            transition={{ delay: 0.2, duration: 1 }}
+            className="flex items-center gap-3 mb-8"
           >
-            Premium Dessert Experience
-          </motion.span>
-          
-          <h1 className="text-5xl md:text-7xl font-serif font-bold leading-tight mb-6 text-foreground">
-            The Art of <br/>
-            <span className="text-primary relative inline-block">
-              Indulgence
-              <svg className="absolute w-full h-3 -bottom-1 left-0 text-primary/30" viewBox="0 0 100 10" preserveAspectRatio="none">
-                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="4" fill="none" />
-              </svg>
+            <div className="h-[1px] w-12 bg-primary"></div>
+            <span className="text-primary font-medium tracking-[0.2em] text-sm uppercase">
+              Est. 2024
             </span>
-          </h1>
+          </motion.div>
           
-          <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-            Discover the perfect harmony of authentic French crêpes and the nostalgic creaminess of Kinder chocolate. A luxury treat for your senses.
-          </p>
+          <motion.h1 
+            variants={letterContainer}
+            initial="hidden"
+            animate="show"
+            className="text-6xl md:text-8xl font-serif font-bold leading-[0.9] mb-8 text-foreground tracking-tighter"
+          >
+            {"Kinder".split("").map((char, i) => (
+              <motion.span key={i} variants={letterAnimation} className="inline-block text-primary">
+                {char}
+              </motion.span>
+            ))}
+            <br />
+            {"Délice".split("").map((char, i) => (
+              <motion.span key={i} variants={letterAnimation} className="inline-block">
+                {char}
+              </motion.span>
+            ))}
+          </motion.h1>
           
-          <div className="flex flex-wrap gap-4">
-            <Button size="lg" className="rounded-full px-8 text-base bg-primary hover:bg-primary/90 h-12 shadow-lg hover:shadow-primary/30 transition-all duration-300">
-              View Menu
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2, duration: 1 }}
+            className="text-xl text-muted-foreground mb-12 leading-relaxed max-w-md font-light"
+          >
+            Where authentic French technique meets the nostalgic soul of Kinder chocolate. An uncompromising luxury experience.
+          </motion.p>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.5 }}
+            className="flex flex-wrap gap-6"
+          >
+            <MagneticButton className="rounded-full px-10 py-7 text-lg bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/20 transition-all duration-500">
+              Explore Menu
+            </MagneticButton>
+            <Button variant="ghost" size="lg" className="rounded-full px-8 text-lg h-14 text-foreground hover:bg-transparent hover:text-primary transition-colors group">
+              Watch Film <div className="ml-3 w-10 h-10 rounded-full border border-current flex items-center justify-center group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-all"><ArrowRight className="w-4 h-4" /></div>
             </Button>
-            <Button variant="outline" size="lg" className="rounded-full px-8 text-base h-12 border-primary/20 text-foreground hover:bg-secondary/10 group">
-              Our Story <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
 
         {/* 3D Element */}
         <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.3 }}
-          className="h-[500px] w-full hidden lg:block relative"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2, delay: 0.5 }}
+          className="h-full w-full hidden lg:block relative -mr-20"
         >
-           <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-             <ambientLight intensity={0.8} />
-             <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} />
-             <pointLight position={[-10, -10, -10]} intensity={0.5} />
-             <Environment preset="city" />
+           <Canvas camera={{ position: [0, 0, 6], fov: 35 }}>
+             <ambientLight intensity={0.5} />
+             <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1.5} castShadow />
+             <pointLight position={[-10, -5, -10]} intensity={0.5} color="#E63946" />
+             <Environment preset="studio" />
              <FloatingChocolate />
-             <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={10} blur={2.5} far={4} />
+             <ContactShadows position={[0, -1.2, 0]} opacity={0.3} scale={10} blur={3} far={4} color="#3E2723" />
            </Canvas>
         </motion.div>
       </div>
       
       {/* Scroll Indicator */}
       <motion.div 
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground/60"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ repeat: Infinity, duration: 2 }}
+        className="absolute bottom-10 left-10 flex items-center gap-4 text-muted-foreground/40 mix-blend-multiply"
+        animate={{ opacity: [0.4, 1, 0.4] }}
+        transition={{ repeat: Infinity, duration: 4 }}
       >
-        <span className="text-xs uppercase tracking-widest">Scroll</span>
-        <div className="w-px h-12 bg-gradient-to-b from-transparent via-current to-transparent" />
+        <span className="text-[10px] uppercase tracking-[0.3em] font-medium rotate-180" style={{ writingMode: 'vertical-rl' }}>Scroll to Explore</span>
+        <div className="h-24 w-[1px] bg-current" />
       </motion.div>
     </section>
   );

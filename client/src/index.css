@@ -29,6 +29,10 @@
   --color-primary: hsl(355 78% 56%); 
   --color-primary-foreground: hsl(0 0% 100%);
 
+  /* Luxury Gold Accent */
+  --color-gold: hsl(45 93% 47%);
+  --color-gold-foreground: hsl(0 0% 0%);
+
   /* Milk Chocolate Secondary */
   --color-secondary: hsl(25 29% 55%);
   --color-secondary-foreground: hsl(0 0% 100%);

@@ -1,0 +1,201 @@
+Role:
+You are an elite creative technologist and frontend architect who builds $50,000–$100,000 luxury brand websites for premium food, chocolate, and hospitality companies.
+
+Objective:
+Build an ultra-premium Kinder-inspired creperie website that feels handcrafted, cinematic, and exclusive — comparable to top-tier agencies like Awwwards and CSS Design Awards winners.
+
+
+---
+
+TECH STACK (NON-NEGOTIABLE)
+
+React + Vite
+
+Tailwind CSS (custom design system, not default styles)
+
+Framer Motion (complex staggered motion, shared layout animations)
+
+GSAP + ScrollTrigger (cinematic scroll sequences)
+
+React Three Fiber + Drei (subtle, luxury-grade 3D)
+
+Lenis or custom smooth scrolling
+
+
+
+---
+
+DESIGN PHILOSOPHY
+
+Inspired by Kinder chocolate luxury
+
+Emotion-driven, not template-based
+
+Every section must feel intentional and animated
+
+No generic UI components
+
+
+Color Palette
+
+Warm cream white (primary)
+
+Deep chocolate brown (foundation)
+
+Soft Kinder red (accent)
+
+Gold highlights (luxury micro-details)
+
+
+Typography
+
+High-end serif for headlines
+
+Clean modern sans-serif for body
+
+Large spacing, elegant rhythm
+
+
+
+---
+
+EXPERIENCE RULES (VERY IMPORTANT)
+
+No sudden animations
+
+Motion must feel organic and expensive
+
+Every hover has micro-movement
+
+Scroll reveals are slow, smooth, cinematic
+
+3D is minimal, tasteful, and performance-optimized
+
+
+
+---
+
+WEBSITE STRUCTURE
+
+1. HERO — CINEMATIC OPENING
+
+Full-viewport hero
+
+Animated typography (letter-level motion)
+
+Floating 3D Kinder-style chocolate / crepe element
+
+Soft light reflections
+
+CTA with magnetic hover effect
+
+
+
+---
+
+2. BRAND STORY
+
+Scroll-triggered text reveal
+
+Image cards with 3D tilt interaction
+
+Premium spacing and rhythm
+
+
+
+---
+
+3. SIGNATURE MENU
+
+React menu components
+
+Hover = scale + shadow + glow
+
+Smooth category transitions
+
+Luxury card layouts
+
+
+
+---
+
+4. THE EXPERIENCE
+
+GSAP scroll storytelling
+
+Parallax images
+
+Staggered animations
+
+
+
+---
+
+5. GALLERY
+
+Horizontal cinematic scroll
+
+Depth illusion using scale & blur
+
+
+
+---
+
+6. CONTACT & LOCATION
+
+Animated luxury form
+
+Elegant transitions
+
+Minimalist map placeholder
+
+
+
+---
+
+3D GUIDELINES
+
+Use simple geometries
+
+Soft lighting only
+
+No heavy textures
+
+60 FPS performance target
+
+
+
+---
+
+CODE QUALITY
+
+Modular React components
+
+Clean folder architecture
+
+Fully responsive
+
+Comments explaining animation logic
+
+Production-ready standards
+
+
+
+---
+
+FINAL GOAL
+
+The site must feel:
+
+Expensive
+
+Emotional
+
+Luxurious
+
+Comparable to $50,000 agency work
+
+Worthy of design awards
+
+
+Deliver a fully runnable React project with refined animations and premium visuals.
