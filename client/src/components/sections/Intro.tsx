@@ -22,26 +22,19 @@ export default function Intro({ onEnter }: IntroProps) {
         transition={{ duration: 6, repeat: Infinity, repeatType: "reverse" }}
       />
 
-      {/* Full-Screen Image */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.7 }}
-        animate={{ opacity: 1, scale: 1, y: [0, -15, 0] }}
-        transition={{ duration: 1, delay: 0.2 }}
-        className="absolute inset-0 flex items-center justify-center"
-      >
-        <img
-          src="/kinder-hero.jpg"
-          alt="Kinder Mascot"
-          className="w-full h-full object-cover drop-shadow-2xl"
-        />
-      </motion.div>
+      {/* Full-Screen Image Background */}
+      <img
+        src="/kinder-hero.jpg"
+        alt="Kinder Mascot"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
 
-      {/* Bottom Content - Overlay */}
+      {/* Content Overlay - Centered on Image */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.4 }}
-        className="absolute bottom-0 left-0 right-0 text-center px-6 py-12 bg-gradient-to-t from-[#FDFBF7] via-[#FDFBF7]/80 to-transparent space-y-6 z-20"
+        className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-20 space-y-6"
       >
         <div>
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif font-bold mb-4 text-foreground leading-tight">
