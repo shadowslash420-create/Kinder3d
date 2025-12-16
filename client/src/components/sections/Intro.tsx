@@ -35,8 +35,8 @@ export default function Intro({ onEnter }: IntroProps) {
       {/* Full-Screen Image */}
       <motion.div
         initial={{ opacity: 0, scale: 0.7 }}
-        animate={{ opacity: 1, scale: 1, y: [0, -15, 0] }}
-        transition={{ duration: 1, delay: 0.2 }}
+        animate={isExiting ? { opacity: 0, scale: 1.2, y: -100 } : { opacity: 1, scale: 1, y: [0, -15, 0] }}
+        transition={isExiting ? { duration: 0.9, ease: "easeIn" } : { duration: 1, delay: 0.2 }}
         className="absolute inset-0 flex items-center justify-center"
       >
         <img
@@ -48,12 +48,16 @@ export default function Intro({ onEnter }: IntroProps) {
 
       {/* Bottom Content - Overlay */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
+        initial={{ opacity: 0, y: 40 }}
+        animate={isExiting ? { opacity: 0, y: 60 } : { opacity: 1, y: 0 }}
+        transition={isExiting ? { duration: 0.7, ease: "easeIn" } : { duration: 0.8, delay: 0.4 }}
         className="absolute bottom-0 left-0 right-0 text-center px-6 py-12 bg-gradient-to-t from-[#FDFBF7] via-[#FDFBF7]/80 to-transparent space-y-6 z-20"
       >
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isExiting ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
+          transition={isExiting ? { duration: 0.6, ease: "easeIn" } : { duration: 0.8, delay: 0.4 }}
+        >
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif font-bold mb-4 text-foreground leading-tight">
             Creperie
             <br />
@@ -62,13 +66,13 @@ export default function Intro({ onEnter }: IntroProps) {
           <p className="text-lg md:text-xl text-muted-foreground font-light max-w-2xl mx-auto">
             Welcome to Batna's finest crepes, waffles, and desserts. Crafted with passion, served with joy.
           </p>
-        </div>
+        </motion.div>
 
         {/* Button */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          initial={{ opacity: 0, y: 20, scale: 0.8 }}
+          animate={isExiting ? { opacity: 0, y: 30, scale: 0.8 } : { opacity: 1, y: 0, scale: 1 }}
+          transition={isExiting ? { duration: 0.6, ease: "easeIn" } : { duration: 0.8, delay: 0.6 }}
         >
           <Button
             onClick={handleEnter}
