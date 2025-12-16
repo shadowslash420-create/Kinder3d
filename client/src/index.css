@@ -12,43 +12,43 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* Kinder-inspired Luxury Palette */
-  /* Cream White Background */
-  --color-background: hsl(36 33% 97%); 
-  /* Dark Chocolate Text */
-  --color-foreground: hsl(15 25% 25%); 
+  /* Luxury Dining Gold & Cream Palette */
+  /* Off-white Background */
+  --color-background: hsl(45 20% 97%); 
+  /* Rich Dark Brown Text */
+  --color-foreground: hsl(25 30% 20%); 
 
-  /* Card White */
+  /* Premium White Card */
   --color-card: hsl(0 0% 100%);
-  --color-card-foreground: hsl(15 25% 25%);
+  --color-card-foreground: hsl(25 30% 20%);
 
   --color-popover: hsl(0 0% 100%);
-  --color-popover-foreground: hsl(15 25% 25%);
+  --color-popover-foreground: hsl(25 30% 20%);
 
-  /* Kinder Red/Orange Soft Accent */
-  --color-primary: hsl(355 78% 56%); 
-  --color-primary-foreground: hsl(0 0% 100%);
+  /* Luxury Gold Primary */
+  --color-primary: hsl(45 85% 50%); 
+  --color-primary-foreground: hsl(25 30% 15%);
 
   /* Luxury Gold Accent */
-  --color-gold: hsl(45 93% 47%);
-  --color-gold-foreground: hsl(0 0% 0%);
+  --color-gold: hsl(45 90% 55%);
+  --color-gold-foreground: hsl(25 30% 15%);
 
-  /* Milk Chocolate Secondary */
-  --color-secondary: hsl(25 29% 55%);
+  /* Rich Brown Secondary */
+  --color-secondary: hsl(25 35% 35%);
   --color-secondary-foreground: hsl(0 0% 100%);
 
-  --color-muted: hsl(30 20% 90%);
-  --color-muted-foreground: hsl(25 10% 45%);
+  --color-muted: hsl(40 25% 88%);
+  --color-muted-foreground: hsl(25 20% 50%);
 
-  --color-accent: hsl(36 50% 90%);
-  --color-accent-foreground: hsl(15 25% 25%);
+  --color-accent: hsl(45 80% 92%);
+  --color-accent-foreground: hsl(25 30% 20%);
 
   --color-destructive: hsl(0 84% 60%);
   --color-destructive-foreground: hsl(0 0% 98%);
 
-  --color-border: hsl(25 20% 85%);
-  --color-input: hsl(25 20% 85%);
-  --color-ring: hsl(355 78% 56%);
+  --color-border: hsl(40 30% 88%);
+  --color-input: hsl(40 30% 88%);
+  --color-ring: hsl(45 85% 50%);
 
   --radius: 1rem;
 }
