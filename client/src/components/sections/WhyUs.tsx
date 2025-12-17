@@ -60,7 +60,7 @@ export default function WhyUs() {
              <div className="absolute bottom-0 left-0 w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 bg-secondary/10 rounded-full blur-3xl" />
              
              <div className="relative z-10 text-center">
-                <span className="text-5xl sm:text-7xl md:text-9xl font-serif font-bold text-primary/10 select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">KINDER</span>
+                <span className="text-5xl sm:text-7xl md:text-9xl font-serif font-bold select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#ff00001a]">KINDER</span>
                 <div className="bg-white/80 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl shadow-xl border border-white">
                    <h3 className="font-serif font-bold text-lg sm:text-xl md:text-2xl mb-2 text-foreground">Top Rated</h3>
                    <div className="flex text-yellow-400 justify-center mb-2 gap-0.5">
