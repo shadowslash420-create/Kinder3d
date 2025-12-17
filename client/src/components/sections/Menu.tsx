@@ -3,14 +3,7 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import luxuryCrepe from "@assets/stock_images/luxury_crepe_with_ki_74d12ec0.jpg";
 import ShoppingCart from "@/components/ui/ShoppingCart";
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: string;
-  quantity: number;
-  image: string;
-}
+import { useCart } from "@/context/CartContext";
 
 const menuItems = [
   {
@@ -67,16 +60,16 @@ export default function Menu() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [selectedItem, setSelectedItem] = useState<typeof menuItems[0] | null>(null);
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const totalItems = menuItems.length;
+  const { addToCart, removeFromCart, getItemQuantity, totalItems } = useCart();
+  const totalItemsCount = menuItems.length;
 
   const handleNext = useCallback(() => {
-    setActiveIndex((prev) => (prev + 1) % totalItems);
-  }, [totalItems]);
+    setActiveIndex((prev) => (prev + 1) % totalItemsCount);
+  }, [totalItemsCount]);
 
   const handlePrev = useCallback(() => {
-    setActiveIndex((prev) => (prev - 1 + totalItems) % totalItems);
-  }, [totalItems]);
+    setActiveIndex((prev) => (prev - 1 + totalItemsCount) % totalItemsCount);
+  }, [totalItemsCount]);
 
   useEffect(() => {
     if (isDragging || selectedItem) return;
@@ -97,39 +90,23 @@ export default function Menu() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNext, handlePrev, selectedItem]);
 
-  const getItemQuantity = (itemId: number) => {
-    const cartItem = cart.find(item => item.id === itemId);
-    return cartItem?.quantity || 0;
-  };
-
   const handleAddToCart = (item: typeof menuItems[0]) => {
-    setCart(prev => {
-      const existing = prev.find(i => i.id === item.id);
-      if (existing) {
-        return prev.map(i => 
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      }
-      return [...prev, { id: item.id, name: item.name, price: item.price, quantity: 1, image: item.image }];
+    addToCart({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      image: item.image
     });
   };
 
   const handleRemoveFromCart = (itemId: number) => {
-    setCart(prev => {
-      const existing = prev.find(i => i.id === itemId);
-      if (existing && existing.quantity > 1) {
-        return prev.map(i => 
-          i.id === itemId ? { ...i, quantity: i.quantity - 1 } : i
-        );
-      }
-      return prev.filter(i => i.id !== itemId);
-    });
+    removeFromCart(itemId);
   };
 
   const getCardStyle = (index: number) => {
     const diff = index - activeIndex;
-    const normalizedDiff = ((diff + totalItems) % totalItems);
-    const adjustedDiff = normalizedDiff > totalItems / 2 ? normalizedDiff - totalItems : normalizedDiff;
+    const normalizedDiff = ((diff + totalItemsCount) % totalItemsCount);
+    const adjustedDiff = normalizedDiff > totalItemsCount / 2 ? normalizedDiff - totalItemsCount : normalizedDiff;
     
     const absPosition = Math.abs(adjustedDiff);
     const isCenter = adjustedDiff === 0;
@@ -192,8 +169,6 @@ export default function Menu() {
     return { x, z, rotateY, scale, opacity, zIndex };
   };
 
-  const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-
   return (
     <section id="menu" className="py-32 bg-[#FDFBF7] relative overflow-hidden">
       <div className="container mx-auto px-6">
@@ -210,13 +185,13 @@ export default function Menu() {
             Click on any item to add to your bag
           </p>
           
-          {totalCartItems > 0 && (
+          {totalItems > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className="mt-4 inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full"
             >
-              <span className="font-medium">{totalCartItems} item{totalCartItems > 1 ? 's' : ''} in your bag</span>
+              <span className="font-medium">{totalItems} item{totalItems > 1 ? 's' : ''} in your bag</span>
             </motion.div>
           )}
         </motion.div>
@@ -271,8 +246,8 @@ export default function Menu() {
                     }}
                     onClick={() => {
                       const diff = index - activeIndex;
-                      const normalizedDiff = ((diff + totalItems) % totalItems);
-                      const adjustedDiff = normalizedDiff > totalItems / 2 ? normalizedDiff - totalItems : normalizedDiff;
+                      const normalizedDiff = ((diff + totalItemsCount) % totalItemsCount);
+                      const adjustedDiff = normalizedDiff > totalItemsCount / 2 ? normalizedDiff - totalItemsCount : normalizedDiff;
                       if (adjustedDiff === 0) {
                         setSelectedItem(menuItem);
                       } else {

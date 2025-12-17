@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { AnimatedNavLink, AnimatedHamburger, AnimatedButton } from "@/components/ui/animated-button";
+import NavbarCart from "@/components/ui/NavbarCart";
 
 const Logo3D = () => {
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
@@ -109,6 +110,9 @@ export default function Navbar() {
               {link.name}
             </AnimatedNavLink>
           ))}
+          
+          <NavbarCart />
+          
           <AnimatedButton
             className="px-8 py-3 text-xs uppercase tracking-widest"
           >
@@ -116,10 +120,13 @@ export default function Navbar() {
           </AnimatedButton>
         </div>
 
-        <AnimatedHamburger
-          isOpen={isMobileMenuOpen}
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        />
+        <div className="flex items-center gap-4 md:hidden">
+          <NavbarCart />
+          <AnimatedHamburger
+            isOpen={isMobileMenuOpen}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          />
+        </div>
       </div>
 
       {isMobileMenuOpen && (

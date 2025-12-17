@@ -3,6 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { CartProvider } from "@/context/CartContext";
 import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
 import Intro from "@/components/sections/Intro";
@@ -20,7 +21,6 @@ function Router() {
 
 function App() {
   const [hasEntered, setHasEntered] = useState(() => {
-    // Check if user has already visited (store in localStorage)
     if (typeof window !== "undefined") {
       return localStorage.getItem("creperie_entered") === "true";
     }
@@ -39,18 +39,20 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <AnimatePresence mode="wait">
-          {!hasEntered ? (
-            <Intro key="intro" onEnter={handleEnter} />
-          ) : (
-            <div key="main">
-              <Router />
-            </div>
-          )}
-        </AnimatePresence>
-      </TooltipProvider>
+      <CartProvider>
+        <TooltipProvider>
+          <Toaster />
+          <AnimatePresence mode="wait">
+            {!hasEntered ? (
+              <Intro key="intro" onEnter={handleEnter} />
+            ) : (
+              <div key="main">
+                <Router />
+              </div>
+            )}
+          </AnimatePresence>
+        </TooltipProvider>
+      </CartProvider>
     </QueryClientProvider>
   );
 }
