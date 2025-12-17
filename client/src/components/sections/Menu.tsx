@@ -206,7 +206,7 @@ export default function Menu() {
           className="text-center mb-8 sm:mb-12 md:mb-16"
         >
           <span className="tracking-[0.2em] uppercase mb-2 sm:mb-4 block text-[#eb2d2d] text-[38px] font-black">Our Selection</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-medium text-foreground">Curated Indulgence</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-medium text-[#241008]">Curated Indulgence</h2>
           <p className="text-muted-foreground mt-2 sm:mt-4 max-w-xl mx-auto text-sm sm:text-base px-4">
             Click on any item to add to your bag
           </p>
