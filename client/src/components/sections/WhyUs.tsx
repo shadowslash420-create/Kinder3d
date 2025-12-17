@@ -48,7 +48,7 @@ export default function WhyUs() {
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-secondary/10 flex items-center justify-center text-primary mb-3 sm:mb-4">
                     {feature.icon}
                   </div>
-                  <h3 className="font-bold text-base sm:text-lg mb-1 sm:mb-2">{feature.title}</h3>
+                  <h3 className="font-bold text-base sm:text-lg mb-1 sm:mb-2 text-[#ff1c1c]">{feature.title}</h3>
                   <p className="text-xs sm:text-sm text-muted-foreground">{feature.description}</p>
                 </motion.div>
               ))}
