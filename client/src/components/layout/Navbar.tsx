@@ -224,23 +224,67 @@ export default function Navbar() {
             </svg>
             About
           </a>
-          {navLinks.slice(2).map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={() => setIsMobileMenuOpen(false)}
-              style={{
-                color: 'white',
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
-                letterSpacing: '0.15em',
-                fontSize: '1.5rem',
-                textDecoration: 'none',
-              }}
-            >
-              {link.name}
-            </a>
-          ))}
+          <a
+            href="#menu"
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{
+              color: 'white',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              letterSpacing: '0.15em',
+              fontSize: '1.5rem',
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+            }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <g clipPath="url(#clip0_menu_mobile)">
+                <path d="M2 13.5498V10.4698C2 8.13977 3.89 6.25977 6.21 6.25977H13.58C15.91 6.25977 17.79 8.14977 17.79 10.4698V17.7898C17.79 20.1198 15.9 21.9998 13.58 21.9998H6.21C3.89 21.9998 2 20.1098 2 17.7898" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M5.5 4V2.25" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M9.5 4V2.25" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M13.5 4V2.25" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M22 13.1592C22 15.4792 20.11 17.3692 17.79 17.3692V8.94922C20.11 8.94922 22 10.8292 22 13.1592Z" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M2 12H17.51" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </g>
+              <defs>
+                <clipPath id="clip0_menu_mobile">
+                  <rect width="24" height="24" fill="white"/>
+                </clipPath>
+              </defs>
+            </svg>
+            Menu
+          </a>
+          <a
+            href="#contact"
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{
+              color: 'white',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              letterSpacing: '0.15em',
+              fontSize: '1.5rem',
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+            }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="#fff">
+              <g clipPath="url(#clip0_contact_mobile)">
+                <path opacity="0.4" d="M19.6 13.98C19.55 13.89 19.51 13.8 19.48 13.7L19.2 12.68L19.17 12.58C18.98 12.08 18.53 11.74 17.97 11.74C17.42 11.74 16.94 12.07 16.75 12.57L16.69 12.74L16.43 13.69C16.29 14.19 15.92 14.56 15.41 14.71L14.45 14.96C13.85 15.13 13.47 15.63 13.47 16.24C13.47 16.66 13.67 17.03 13.98 17.27L8.99 19.77C3.23 22.65 0.88 20.29 3.76 14.54L4.63 12.81C4.88 12.3 4.88 11.71 4.63 11.2L3.76 9.46001C0.88 3.71001 3.24 1.35001 8.99 4.23001L17.55 8.51001C20.5 9.98001 21.17 12.17 19.6 13.98Z" fill="white"/>
+                <path d="M15.07 12C15.07 12.41 14.73 12.75 14.32 12.75H8.91998C8.50998 12.75 8.16998 12.41 8.16998 12C8.16998 11.59 8.50998 11.25 8.91998 11.25H14.32C14.73 11.25 15.07 11.59 15.07 12Z" fill="white"/>
+                <path d="M21.47 16.26C21.47 16.33 21.43 16.49 21.24 16.55L20.26 16.82C19.41 17.05 18.77 17.69 18.54 18.54L18.28 19.5C18.22 19.72 18.05 19.74 17.97 19.74C17.89 19.74 17.72 19.72 17.66 19.5L17.4 18.53C17.17 17.69 16.52 17.05 15.68 16.82L14.71 16.56C14.5 16.5 14.48 16.32 14.48 16.25C14.48 16.17 14.5 15.99 14.71 15.93L15.69 15.67C16.53 15.43 17.17 14.79 17.4 13.95L17.68 12.93C17.75 12.76 17.91 12.73 17.97 12.73C18.03 12.73 18.2 12.75 18.26 12.91L18.54 13.94C18.77 14.78 19.42 15.42 20.26 15.66L21.26 15.94C21.46 16.02 21.47 16.2 21.47 16.26Z" fill="white"/>
+              </g>
+              <defs>
+                <clipPath id="clip0_contact_mobile">
+                  <rect width="24" height="24" fill="white"/>
+                </clipPath>
+              </defs>
+            </svg>
+            Contact
+          </a>
           <button 
             style={{
               marginTop: '32px',
