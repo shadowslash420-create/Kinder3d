@@ -45,7 +45,7 @@ export default function WhyUs() {
                   transition={{ delay: idx * 0.1 }}
                   className="flex flex-col items-start"
                 >
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-secondary/10 flex items-center justify-center text-primary mb-3 sm:mb-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-3 sm:mb-4 text-[#ff0000]">
                     {feature.icon}
                   </div>
                   <h3 className="font-bold text-base sm:text-lg mb-1 sm:mb-2 text-[#ff1c1c]">{feature.title}</h3>
