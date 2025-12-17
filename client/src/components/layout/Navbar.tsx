@@ -14,7 +14,14 @@ export default function Navbar() {
   };
 
   const handleOrderNow = () => {
-    setLocation("/menu");
+    const menuSection = document.getElementById('menu');
+    if (menuSection) {
+      menuSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleMyOrders = () => {
+    setLocation("/my-orders");
   };
 
   const handleLogout = async () => {
@@ -115,6 +122,43 @@ export default function Navbar() {
           >
             Order Now
           </button>
+
+          {!loading && user && (
+            <button
+              onClick={handleMyOrders}
+              style={{
+                padding: '8px 16px',
+                fontSize: '0.75rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                fontWeight: '600',
+                color: 'white',
+                backgroundColor: 'transparent',
+                border: '1px solid white',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'white';
+                e.currentTarget.style.color = '#4A3728';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = 'white';
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+                <path d="M3 6h18"/>
+                <path d="M16 10a4 4 0 0 1-8 0"/>
+              </svg>
+              My Orders
+            </button>
+          )}
 
           {!loading && (
             user ? (
@@ -406,6 +450,38 @@ export default function Navbar() {
           >
             Order Now
           </button>
+
+          {!loading && user && (
+            <button
+              onClick={() => {
+                handleMyOrders();
+                setIsMobileMenuOpen(false);
+              }}
+              style={{
+                marginTop: '16px',
+                padding: '16px 32px',
+                fontSize: '1rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                fontWeight: '600',
+                color: 'white',
+                backgroundColor: 'transparent',
+                border: '2px solid white',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+                <path d="M3 6h18"/>
+                <path d="M16 10a4 4 0 0 1-8 0"/>
+              </svg>
+              My Orders
+            </button>
+          )}
 
           {!loading && (
             user ? (
