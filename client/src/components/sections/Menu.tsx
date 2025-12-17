@@ -183,12 +183,12 @@ export default function Menu() {
 
   return (
     <section id="menu" className="py-16 sm:py-24 md:py-32 bg-[#FDFBF7] relative overflow-hidden">
-      <div className="absolute inset-0 z-0 opacity-80">
+      <div className="absolute inset-0 z-0 opacity-60">
         <FloatingLines 
-          linesGradient={['#C17B5A', '#A85D3F', '#D4A574', '#8B5A3C', '#B8886F']}
+          linesGradient={['#9A6B4A', '#7D5A42', '#B8886F', '#6B4D38', '#8B6B52']}
           enabledWaves={['top', 'middle', 'bottom']}
-          lineCount={[12, 18, 24]}
-          lineDistance={[6, 5, 3]}
+          lineCount={[10, 14, 18]}
+          lineDistance={[7, 5, 4]}
           bendRadius={5.0}
           bendStrength={-0.5}
           interactive={true}
