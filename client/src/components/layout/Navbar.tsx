@@ -190,7 +190,41 @@ export default function Navbar() {
             </svg>
             Home
           </a>
-          {navLinks.slice(1).map((link) => (
+          <a
+            href="#about"
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{
+              color: 'white',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              letterSpacing: '0.15em',
+              fontSize: '1.5rem',
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+            }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <g clipPath="url(#clip0_about_mobile)">
+                <path d="M17 21H7C3 21 2 20 2 16V8C2 4 3 3 7 3H17C21 3 22 4 22 8V16C22 20 21 21 17 21Z" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <g opacity="0.4">
+                  <path d="M14 8H19" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M15 12H19" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M17 16H19" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M8.50043 11.2899C9.50007 11.2899 10.3104 10.4796 10.3104 9.47992C10.3104 8.48029 9.50007 7.66992 8.50043 7.66992C7.50079 7.66992 6.69043 8.48029 6.69043 9.47992C6.69043 10.4796 7.50079 11.2899 8.50043 11.2899Z" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M12 16.3298C11.86 14.8798 10.71 13.7398 9.26 13.6098C8.76 13.5598 8.25 13.5598 7.74 13.6098C6.29 13.7498 5.14 14.8798 5 16.3298" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </g>
+              </g>
+              <defs>
+                <clipPath id="clip0_about_mobile">
+                  <rect width="24" height="24" fill="white"/>
+                </clipPath>
+              </defs>
+            </svg>
+            About
+          </a>
+          {navLinks.slice(2).map((link) => (
             <a
               key={link.name}
               href={link.href}
