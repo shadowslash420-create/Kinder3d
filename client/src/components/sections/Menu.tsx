@@ -300,7 +300,7 @@ export default function Menu() {
                             {menuItem.category}
                           </span>
                           <h3 className="font-serif text-2xl font-bold mb-1">{menuItem.name}</h3>
-                          <p className="text-lg font-medium text-primary">{menuItem.price}</p>
+                          <p className="text-lg font-medium text-[#ffb76e]">{menuItem.price}</p>
                         </div>
                       </div>
                       <div className="p-5 bg-white">
