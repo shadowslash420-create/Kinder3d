@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import chefImage from "@assets/stock_images/chef_pouring_chocola_d3a3e47e.jpg";
+import diningImage from "@assets/51216_150042_Maps_1765939512903.jpg";
 
 export default function About() {
   const stats = [
@@ -23,8 +23,8 @@ export default function About() {
           >
             <div className="relative z-10 rounded-sm overflow-hidden aspect-[3/4]">
               <img 
-                src={chefImage} 
-                alt="Chef making crepes" 
+                src={diningImage} 
+                alt="Luxury dining interior" 
                 className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700" />
