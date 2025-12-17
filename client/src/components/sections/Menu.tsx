@@ -304,7 +304,7 @@ export default function Menu() {
                         </div>
                       </div>
                       <div className="p-5 bg-white">
-                        <p className="text-muted-foreground text-sm leading-relaxed">
+                        <p className="text-sm leading-relaxed text-[#570e0e]">
                           {menuItem.description}
                         </p>
                       </div>
