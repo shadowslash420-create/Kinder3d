@@ -10,6 +10,7 @@ import { AnimatePresence } from "framer-motion";
 
 const Home = lazy(() => import("@/pages/Home"));
 const NotFound = lazy(() => import("@/pages/not-found"));
+const Login = lazy(() => import("@/pages/Login"));
 const Intro = lazy(() => import("@/components/sections/Intro"));
 const AdminLogin = lazy(() => import("@/pages/admin/AdminLogin"));
 const Dashboard = lazy(() => import("@/pages/admin/Dashboard"));
@@ -31,6 +32,7 @@ function Router() {
     <Suspense fallback={<PageLoader />}>
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/login" component={Login} />
         <Route path="/admin" component={AdminLogin} />
         <Route path="/admin/dashboard" component={Dashboard} />
         <Route path="/admin/orders" component={Orders} />

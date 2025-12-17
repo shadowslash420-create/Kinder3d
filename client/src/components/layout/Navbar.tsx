@@ -1,20 +1,16 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import NavbarCart from "@/components/ui/NavbarCart";
 import { useAuth } from "@/context/AuthContext";
-import { signInWithGoogle } from "@/lib/firebase";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, loading, logout } = useAuth();
+  const [, setLocation] = useLocation();
 
-  const handleLogin = async () => {
-    try {
-      await signInWithGoogle();
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
+  const handleLogin = () => {
+    setLocation("/login");
   };
 
   const handleLogout = async () => {
