@@ -53,7 +53,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '40px' }} className="hidden md:flex">
+        <nav style={{ alignItems: 'center', gap: '40px' }} className="hidden md:flex">
           {navLinks.map((link) => (
             <a
               key={link.name}
