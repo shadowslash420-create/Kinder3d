@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 // 3D Logo Component
 const Logo3D = () => {
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -17,31 +18,52 @@ const Logo3D = () => {
 
   const handleMouseLeave = () => {
     setRotate({ x: 0, y: 0 });
+    setIsHovered(false);
   };
 
   return (
     <div
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="h-10 flex items-center cursor-pointer perspective"
+      onMouseEnter={() => setIsHovered(true)}
+      className="h-12 flex items-center cursor-pointer perspective relative"
       style={{
         perspective: "1000px"
       }}
     >
+      {/* Glowing Background */}
+      <motion.div
+        animate={{
+          opacity: isHovered ? 1 : 0.6,
+          scale: isHovered ? 1.05 : 1
+        }}
+        transition={{ duration: 0.3 }}
+        className="absolute inset-0 rounded-lg blur-xl"
+        style={{
+          background: "linear-gradient(135deg, #EF4444 0%, #DC2626 50%, #991B1B 100%)",
+          filter: "blur(12px)",
+          zIndex: -1
+        }}
+      />
+
       <motion.div
         animate={{
           rotateX: rotate.x,
-          rotateY: rotate.y
+          rotateY: rotate.y,
+          scale: isHovered ? 1.08 : 1
         }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        className="font-serif font-bold tracking-tighter text-xl whitespace-nowrap"
+        className="font-serif font-bold tracking-tighter text-2xl whitespace-nowrap px-4 py-2 rounded-lg"
         style={{
           transformStyle: "preserve-3d",
-          textShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
+          textShadow: isHovered 
+            ? "0 0 30px rgba(239, 68, 68, 1), 0 0 60px rgba(239, 68, 68, 0.8), 0 4px 20px rgba(0, 0, 0, 0.4)"
+            : "0 0 20px rgba(239, 68, 68, 0.8), 0 4px 15px rgba(0, 0, 0, 0.3)",
           background: "linear-gradient(135deg, #EF4444 0%, #DC2626 50%, #991B1B 100%)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
-          backgroundClip: "text"
+          backgroundClip: "text",
+          letterSpacing: "0.05em"
         }}
       >
         Crêperie Kinder 5
