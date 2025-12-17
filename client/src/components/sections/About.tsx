@@ -1,12 +1,6 @@
 import { motion } from "framer-motion";
 import diningImage from "@assets/51216_150042_Maps_1765939512903.jpg";
-import GridMotion from "@/components/ui/GridMotion";
-import img1 from "@assets/image_1765941279050.png";
-import img2 from "@assets/image_1765941539952.png";
-import img3 from "@assets/image_1765941548568.png";
-import img4 from "@assets/image_1765941561252.png";
-import img5 from "@assets/image_1765941570860.png";
-import img6 from "@assets/image_1765941577728.png";
+import PrismaticBurst from "@/components/ui/PrismaticBurst";
 
 export default function About() {
   const stats = [
@@ -15,41 +9,21 @@ export default function About() {
     { value: "50+", label: "Variations" },
   ];
 
-  const gridItems = [
-    img1,
-    <div key='jsx-item-1' className="font-serif text-lg text-white/80">Passion</div>,
-    img2,
-    <div key='jsx-item-2' className="font-serif text-lg text-white/80">Quality</div>,
-    img3,
-    <div key='jsx-item-3' className="font-serif text-lg text-white/80">Tradition</div>,
-    img4,
-    <div key='jsx-item-4' className="font-serif text-lg text-white/80">Love</div>,
-    img5,
-    <div key='jsx-item-5' className="font-serif text-lg text-white/80">Fresh</div>,
-    img6,
-    <div key='jsx-item-6' className="font-serif text-lg text-white/80">Craft</div>,
-    img1,
-    <div key='jsx-item-7' className="font-serif text-lg text-white/80">Joy</div>,
-    img2,
-    <div key='jsx-item-8' className="font-serif text-lg text-white/80">Family</div>,
-    img3,
-    <div key='jsx-item-9' className="font-serif text-lg text-white/80">Warmth</div>,
-    img4,
-    <div key='jsx-item-10' className="font-serif text-lg text-white/80">Heritage</div>,
-    img5,
-    <div key='jsx-item-11' className="font-serif text-lg text-white/80">Care</div>,
-    img6,
-    <div key='jsx-item-12' className="font-serif text-lg text-white/80">Sweet</div>,
-    img1,
-    <div key='jsx-item-13' className="font-serif text-lg text-white/80">Delicious</div>,
-    img2,
-    <div key='jsx-item-14' className="font-serif text-lg text-white/80">Authentic</div>,
-  ];
-
   return (
     <section id="about" className="py-16 sm:py-24 md:py-32 relative overflow-hidden min-h-screen">
-      <div className="absolute inset-0 z-0">
-        <GridMotion items={gridItems} gradientColor="rgba(253, 251, 247, 0.9)" />
+      <div className="absolute inset-0 z-0" style={{ width: '100%', height: '100%' }}>
+        <PrismaticBurst
+          animationType="rotate3d"
+          intensity={2}
+          speed={0.5}
+          distort={1.0}
+          paused={false}
+          offset={{ x: 0, y: 0 }}
+          hoverDampness={0.25}
+          rayCount={24}
+          mixBlendMode="lighten"
+          colors={['#ff007a', '#4d3dff', '#ffffff']}
+        />
       </div>
       
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
