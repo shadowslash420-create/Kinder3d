@@ -71,17 +71,11 @@
   }
 }
 
-/* Custom Scrollbar for Chrome/Safari/Webkit */
+/* Hide Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  display: none;
 }
-::-webkit-scrollbar-track {
-  background: hsl(36 33% 97%);
-}
-::-webkit-scrollbar-thumb {
-  background: hsl(25 29% 80%);
-  border-radius: 5px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(25 29% 60%);
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
