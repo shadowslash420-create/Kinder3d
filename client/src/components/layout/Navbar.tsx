@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AnimatedNavLink, AnimatedHamburger, AnimatedButton } from "@/components/ui/animated-button";
 
-// 3D Logo Component
 const Logo3D = () => {
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
@@ -31,7 +29,6 @@ const Logo3D = () => {
         perspective: "1000px"
       }}
     >
-      {/* Subtle Glowing Background */}
       <motion.div
         animate={{
           opacity: isHovered ? 0.5 : 0.25,
@@ -98,59 +95,33 @@ export default function Navbar() {
       transition={{ duration: 0.8, ease: "circOut" }}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
-        <Link href="/">
-          <a className="relative group">
-            <Logo3D />
-          </a>
+        <Link href="/" className="relative group">
+          <Logo3D />
         </Link>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-10">
           {navLinks.map((link) => (
-            <a
+            <AnimatedNavLink
               key={link.name}
               href={link.href}
-              className="text-xs font-bold uppercase tracking-[0.15em] text-foreground/80 hover:text-primary transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[1px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
+              className="text-xs"
             >
               {link.name}
-            </a>
+            </AnimatedNavLink>
           ))}
-          <Button className="rounded-full bg-foreground hover:bg-primary text-white px-8 h-10 text-xs uppercase tracking-widest transition-colors duration-500 shadow-lg">
+          <AnimatedButton
+            className="px-8 py-3 text-xs uppercase tracking-widest"
+          >
             Reserve
-          </Button>
+          </AnimatedButton>
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <motion.button
-          className="md:hidden p-2 rounded-full transition-colors relative"
+        <AnimatedHamburger
+          isOpen={isMobileMenuOpen}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          style={{
-            color: "#FFFFFF",
-            textShadow: "0 0 10px rgba(239, 68, 68, 0.7), 0 0 20px rgba(239, 68, 68, 0.4)",
-            filter: "drop-shadow(0 0 8px rgba(239, 68, 68, 0.6))"
-          }}
-        >
-          {/* Subtle Glow Background */}
-          <motion.div
-            animate={{
-              opacity: isMobileMenuOpen ? 0.3 : 0.15,
-              scale: isMobileMenuOpen ? 1.02 : 1
-            }}
-            transition={{ duration: 0.3 }}
-            className="absolute inset-0 rounded-full"
-            style={{
-              background: "linear-gradient(135deg, #EF4444 0%, #DC2626 50%, #991B1B 100%)",
-              filter: "blur(6px)",
-              zIndex: -1
-            }}
-          />
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </motion.button>
+        />
       </div>
 
-      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
@@ -160,27 +131,33 @@ export default function Navbar() {
         >
           <div className="flex flex-col p-8 space-y-6 items-center justify-center h-full pb-20">
             {navLinks.map((link, i) => (
-              <motion.a
+              <motion.div
                 key={link.name}
-                href={link.href}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="text-3xl font-serif text-foreground hover:text-primary transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
               >
-                {link.name}
-              </motion.a>
+                <AnimatedNavLink
+                  href={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-2xl"
+                >
+                  {link.name}
+                </AnimatedNavLink>
+              </motion.div>
             ))}
             <motion.div
-               initial={{ opacity: 0 }}
-               animate={{ opacity: 1 }}
-               transition={{ delay: 0.5 }}
-               className="pt-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="pt-8"
             >
-              <Button className="w-full rounded-full bg-primary text-white px-12 py-6 text-lg">
+              <AnimatedButton
+                className="px-12 py-6 text-lg"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 Book Table
-              </Button>
+              </AnimatedButton>
             </motion.div>
           </div>
         </motion.div>
