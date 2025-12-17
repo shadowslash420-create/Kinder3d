@@ -10,24 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2, Image } from "lucide-react";
-
-interface Category {
-  id: string;
-  name: string;
-}
-
-interface MenuItem {
-  id: string;
-  name: string;
-  description: string | null;
-  price: string;
-  imageUrl: string | null;
-  categoryId: string | null;
-  isAvailable: boolean;
-  isFeatured: boolean;
-  preparationTime: number | null;
-  ingredients: string | null;
-}
+import { menuService, categoryService, type MenuItem, type Category } from "@/lib/firebase";
 
 export default function MenuItems() {
   const { toast } = useToast();
@@ -40,32 +23,24 @@ export default function MenuItems() {
     name: "",
     description: "",
     price: "",
+    imageUrl: "",
     categoryId: "",
     isAvailable: true,
     isFeatured: false,
     preparationTime: "",
     ingredients: "",
   });
-  const [imageFile, setImageFile] = useState<File | null>(null);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const [itemsRes, catsRes] = await Promise.all([
-        fetch("/api/menu-items"),
-        fetch("/api/categories"),
-      ]);
-      setItems(await itemsRes.json());
-      setCategories(await catsRes.json());
-    } catch (error) {
-      toast({ title: "Error", description: "Failed to fetch data", variant: "destructive" });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchData();
+    const unsubMenu = menuService.subscribe((data) => {
+      setItems(data);
+      setLoading(false);
+    });
+    const unsubCat = categoryService.subscribe(setCategories);
+    return () => {
+      unsubMenu();
+      unsubCat();
+    };
   }, []);
 
   const openCreate = () => {
@@ -74,13 +49,13 @@ export default function MenuItems() {
       name: "",
       description: "",
       price: "",
+      imageUrl: "",
       categoryId: "",
       isAvailable: true,
       isFeatured: false,
       preparationTime: "",
       ingredients: "",
     });
-    setImageFile(null);
     setDialogOpen(true);
   };
 
@@ -89,42 +64,38 @@ export default function MenuItems() {
     setFormData({
       name: item.name,
       description: item.description || "",
-      price: item.price,
+      price: item.price.toString(),
+      imageUrl: item.imageUrl || "",
       categoryId: item.categoryId || "",
       isAvailable: item.isAvailable,
       isFeatured: item.isFeatured,
       preparationTime: item.preparationTime?.toString() || "",
       ingredients: item.ingredients || "",
     });
-    setImageFile(null);
     setDialogOpen(true);
   };
 
   const handleSubmit = async () => {
-    const form = new FormData();
-    form.append("name", formData.name);
-    form.append("description", formData.description);
-    form.append("price", formData.price);
-    if (formData.categoryId) form.append("categoryId", formData.categoryId);
-    form.append("isAvailable", String(formData.isAvailable));
-    form.append("isFeatured", String(formData.isFeatured));
-    if (formData.preparationTime) form.append("preparationTime", formData.preparationTime);
-    if (formData.ingredients) form.append("ingredients", formData.ingredients);
-    if (imageFile) form.append("image", imageFile);
+    const payload = {
+      name: formData.name,
+      description: formData.description || undefined,
+      price: parseFloat(formData.price) || 0,
+      imageUrl: formData.imageUrl || undefined,
+      categoryId: formData.categoryId || undefined,
+      isAvailable: formData.isAvailable,
+      isFeatured: formData.isFeatured,
+      preparationTime: formData.preparationTime ? parseInt(formData.preparationTime) : undefined,
+      ingredients: formData.ingredients || undefined,
+    };
 
     try {
-      const url = editingItem
-        ? `/api/admin/menu-items/${editingItem.id}`
-        : "/api/admin/menu-items";
-      const res = await fetch(url, {
-        method: editingItem ? "PUT" : "POST",
-        body: form,
-      });
-
-      if (!res.ok) throw new Error("Failed to save");
+      if (editingItem) {
+        await menuService.update(editingItem.id, payload);
+      } else {
+        await menuService.create(payload);
+      }
       toast({ title: "Success", description: `Menu item ${editingItem ? "updated" : "created"}` });
       setDialogOpen(false);
-      fetchData();
     } catch (error) {
       toast({ title: "Error", description: "Failed to save menu item", variant: "destructive" });
     }
@@ -134,16 +105,14 @@ export default function MenuItems() {
     if (!confirm("Are you sure you want to delete this item?")) return;
 
     try {
-      const res = await fetch(`/api/admin/menu-items/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete");
+      await menuService.delete(id);
       toast({ title: "Success", description: "Menu item deleted" });
-      fetchData();
     } catch (error) {
       toast({ title: "Error", description: "Failed to delete menu item", variant: "destructive" });
     }
   };
 
-  const getCategoryName = (id: string | null) => {
+  const getCategoryName = (id: string | undefined) => {
     if (!id) return "Uncategorized";
     return categories.find((c) => c.id === id)?.name || "Unknown";
   };
@@ -193,7 +162,7 @@ export default function MenuItems() {
                       <h3 className="font-semibold">{item.name}</h3>
                       <p className="text-sm text-slate-500">{getCategoryName(item.categoryId)}</p>
                     </div>
-                    <span className="font-bold text-red-600">DA {item.price}</span>
+                    <span className="font-bold text-red-600">DA {item.price.toFixed(2)}</span>
                   </div>
                   {item.description && (
                     <p className="text-sm text-slate-600 mt-2 line-clamp-2">{item.description}</p>
@@ -279,12 +248,12 @@ export default function MenuItems() {
               </div>
             </div>
             <div>
-              <Label htmlFor="image">Image</Label>
+              <Label htmlFor="imageUrl">Image URL</Label>
               <Input
-                id="image"
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                id="imageUrl"
+                value={formData.imageUrl}
+                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                placeholder="https://example.com/image.jpg"
               />
             </div>
             <div>

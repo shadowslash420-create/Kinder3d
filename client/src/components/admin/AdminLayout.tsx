@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { auth, onAuthStateChanged, getUserRole, logOut, type UserRole } from "@/lib/firebase";
 import {
   LayoutDashboard, ShoppingCart, UtensilsCrossed, FolderOpen,
-  LogOut, Menu, X, ChevronRight
+  LogOut, Menu, X, ChevronRight, MessageSquare, Star, Users
 } from "lucide-react";
 
 interface AdminLayoutProps {
@@ -15,32 +16,55 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [admin, setAdmin] = useState<{ name: string; email: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [role, setRole] = useState<UserRole | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/admin/me")
-      .then((res) => {
-        if (!res.ok) throw new Error("Not authenticated");
-        return res.json();
-      })
-      .then(setAdmin)
-      .catch(() => setLocation("/admin"));
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (!firebaseUser) {
+        setLocation("/admin");
+        return;
+      }
+      
+      const userRole = await getUserRole(firebaseUser);
+      if (userRole !== "admin" && userRole !== "staff_a" && userRole !== "staff_b") {
+        setLocation("/admin");
+        return;
+      }
+      
+      setUser({ 
+        name: firebaseUser.displayName || firebaseUser.email?.split("@")[0] || "User",
+        email: firebaseUser.email || ""
+      });
+      setRole(userRole);
+      setLoading(false);
+    });
+    
+    return () => unsubscribe();
   }, [setLocation]);
 
   const handleLogout = async () => {
-    await fetch("/api/admin/logout", { method: "POST" });
+    await logOut();
     toast({ title: "Logged out", description: "You have been logged out successfully." });
     setLocation("/admin");
   };
 
-  const navItems = [
-    { path: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { path: "/admin/orders", label: "Orders", icon: ShoppingCart },
-    { path: "/admin/menu", label: "Menu Items", icon: UtensilsCrossed },
-    { path: "/admin/categories", label: "Categories", icon: FolderOpen },
-  ];
+  const isAdmin = role === "admin";
+  const isStaffA = role === "staff_a";
+  const isStaffB = role === "staff_b";
 
-  if (!admin) {
+  const navItems = [
+    { path: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard, visible: isAdmin },
+    { path: "/admin/orders", label: "Orders", icon: ShoppingCart, visible: isAdmin || isStaffA },
+    { path: "/admin/menu", label: "Menu Items", icon: UtensilsCrossed, visible: isAdmin },
+    { path: "/admin/categories", label: "Categories", icon: FolderOpen, visible: isAdmin },
+    { path: "/admin/reviews", label: "Reviews", icon: Star, visible: isAdmin || isStaffB },
+    { path: "/admin/messages", label: "Messages", icon: MessageSquare, visible: isAdmin || isStaffB },
+    { path: "/admin/staff", label: "Staff", icon: Users, visible: isAdmin },
+  ].filter(item => item.visible);
+
+  if (loading) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -92,10 +116,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </nav>
 
         <div className="p-4 border-t border-slate-700">
-          {sidebarOpen && (
+          {sidebarOpen && user && (
             <div className="mb-3">
-              <p className="font-medium text-sm">{admin.name}</p>
-              <p className="text-xs text-slate-400">{admin.email}</p>
+              <p className="font-medium text-sm">{user.name}</p>
+              <p className="text-xs text-slate-400">{user.email}</p>
+              <p className="text-xs text-red-400 capitalize mt-1">
+                {role?.replace("_", " ")}
+              </p>
             </div>
           )}
           <Button

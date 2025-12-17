@@ -2,38 +2,49 @@ import { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, ShoppingCart, TrendingUp, Package } from "lucide-react";
-
-interface Analytics {
-  totalOrders: number;
-  totalRevenue: number;
-  averageOrderValue: number;
-  ordersByStatus: Record<string, number>;
-  revenueByDay: { date: string; revenue: number }[];
-}
-
-interface PopularItem {
-  menuItemId: string;
-  name: string;
-  totalQuantity: number;
-  totalRevenue: number;
-}
+import { orderService, menuService, type Order, type MenuItem } from "@/lib/firebase";
 
 export default function Dashboard() {
-  const [analytics, setAnalytics] = useState<Analytics | null>(null);
-  const [popularItems, setPopularItems] = useState<PopularItem[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      fetch("/api/admin/analytics").then((r) => r.json()),
-      fetch("/api/admin/popular-items?limit=5").then((r) => r.json()),
-    ])
-      .then(([analyticsData, itemsData]) => {
-        setAnalytics(analyticsData);
-        setPopularItems(itemsData);
-      })
-      .finally(() => setLoading(false));
+    const unsubOrders = orderService.subscribe(setOrders);
+    const unsubMenu = menuService.subscribe(setMenuItems);
+    setLoading(false);
+    return () => {
+      unsubOrders();
+      unsubMenu();
+    };
   }, []);
+
+  const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+  const averageOrderValue = orders.length > 0 ? totalRevenue / orders.length : 0;
+  
+  const ordersByStatus = orders.reduce((acc, order) => {
+    acc[order.status] = (acc[order.status] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const popularItems = orders.flatMap(order => order.items)
+    .reduce((acc, item) => {
+      const existing = acc.find(i => i.menuItemId === item.menuItemId);
+      if (existing) {
+        existing.totalQuantity += item.quantity;
+        existing.totalRevenue += item.price * item.quantity;
+      } else {
+        acc.push({
+          menuItemId: item.menuItemId,
+          name: item.name,
+          totalQuantity: item.quantity,
+          totalRevenue: item.price * item.quantity
+        });
+      }
+      return acc;
+    }, [] as { menuItemId: string; name: string; totalQuantity: number; totalRevenue: number }[])
+    .sort((a, b) => b.totalQuantity - a.totalQuantity)
+    .slice(0, 5);
 
   if (loading) {
     return (
@@ -48,25 +59,25 @@ export default function Dashboard() {
   const stats = [
     {
       title: "Total Revenue",
-      value: `DA ${analytics?.totalRevenue.toFixed(2) || "0.00"}`,
+      value: `DA ${totalRevenue.toFixed(2)}`,
       icon: DollarSign,
       color: "bg-green-500",
     },
     {
       title: "Total Orders",
-      value: analytics?.totalOrders || 0,
+      value: orders.length,
       icon: ShoppingCart,
       color: "bg-blue-500",
     },
     {
       title: "Average Order",
-      value: `DA ${analytics?.averageOrderValue.toFixed(2) || "0.00"}`,
+      value: `DA ${averageOrderValue.toFixed(2)}`,
       icon: TrendingUp,
       color: "bg-purple-500",
     },
     {
       title: "Pending Orders",
-      value: analytics?.ordersByStatus?.pending || 0,
+      value: ordersByStatus["pending"] || 0,
       icon: Package,
       color: "bg-orange-500",
     },
@@ -108,13 +119,13 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {Object.entries(analytics?.ordersByStatus || {}).map(([status, count]) => (
+                {Object.entries(ordersByStatus).map(([status, count]) => (
                   <div key={status} className="flex items-center justify-between">
-                    <span className="capitalize text-slate-600">{status}</span>
+                    <span className="capitalize text-slate-600">{status.replace("_", " ")}</span>
                     <span className="font-semibold">{count}</span>
                   </div>
                 ))}
-                {Object.keys(analytics?.ordersByStatus || {}).length === 0 && (
+                {Object.keys(ordersByStatus).length === 0 && (
                   <p className="text-slate-500 text-center py-4">No orders yet</p>
                 )}
               </div>
@@ -145,36 +156,6 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Revenue Trend</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {analytics?.revenueByDay && analytics.revenueByDay.length > 0 ? (
-              <div className="h-64 flex items-end gap-2">
-                {analytics.revenueByDay.slice(-14).map((day) => {
-                  const maxRevenue = Math.max(...analytics.revenueByDay.map((d) => d.revenue));
-                  const height = maxRevenue > 0 ? (day.revenue / maxRevenue) * 100 : 0;
-                  return (
-                    <div key={day.date} className="flex-1 flex flex-col items-center gap-1">
-                      <div
-                        className="w-full bg-red-500 rounded-t"
-                        style={{ height: `${Math.max(height, 4)}%` }}
-                        title={`DA ${day.revenue.toFixed(2)}`}
-                      />
-                      <span className="text-xs text-slate-500 rotate-45 origin-left">
-                        {new Date(day.date).toLocaleDateString("en", { month: "short", day: "numeric" })}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="text-slate-500 text-center py-12">No revenue data yet</p>
-            )}
-          </CardContent>
-        </Card>
       </div>
     </AdminLayout>
   );

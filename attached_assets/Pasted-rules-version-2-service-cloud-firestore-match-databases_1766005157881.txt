@@ -1,0 +1,109 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ==================== HELPER FUNCTIONS ====================
+    
+    // Check if current user is admin
+    function isAdmin() {
+      return request.auth != null && 
+             request.auth.token.email == 'oussamaanis2005@gmail.com';
+    }
+    
+    // Check if current user is staff with role A (manage orders by updating status)
+    function isStaffA() {
+      return request.auth != null &&
+             request.auth.token.email != null &&
+             (
+               (exists(/databases/$(database)/documents/staff/$(request.auth.token.email)) &&
+                get(/databases/$(database)/documents/staff/$(request.auth.token.email)).data.role == 'Staff A')
+             );
+    }
+    
+    // Check if status is valid
+    function isValidStatus(status) {
+      return status in ['pending', 'received', 'preparing', 'ready', 'picked_up', 'in_transit', 'cancelled'];
+    }
+    
+    // Check if current user is staff with role B (manage messages & reviews only)
+    function isStaffB() {
+      return request.auth != null &&
+             request.auth.token.email != null &&
+             (
+               (exists(/databases/$(database)/documents/staff/$(request.auth.token.email)) &&
+                get(/databases/$(database)/documents/staff/$(request.auth.token.email)).data.role == 'Staff B')
+             );
+    }
+    
+    // ==================== MENU COLLECTION ====================
+    match /menu/{menuId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // ==================== CATEGORIES COLLECTION ====================
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // ==================== ORDERS COLLECTION ====================
+    match /orders/{orderId} {
+      allow create: if request.auth != null; // Customers must be logged in
+      
+      // Admin: full read access
+      // Staff A: read-only access to view orders
+      // Customers: read own orders by email match
+      allow read: if isAdmin() || 
+                     (isStaffA() && request.auth != null) ||
+                     (request.auth != null && request.auth.token.email == resource.data.email) ||
+                     (request.auth != null && request.auth.uid == resource.data.userId);
+      
+      // Admin: full update access
+      // Staff A: can update status and notes only (status must be valid)
+      allow update: if isAdmin() || 
+                       (isStaffA() && 
+                        ((request.resource.data.status != null && isValidStatus(request.resource.data.status)) || 
+                         request.resource.data.notes != null));
+      
+      // Admin: full delete access
+      // Customers: can delete their own pending orders only
+      allow delete: if isAdmin() || 
+                       (request.auth != null && 
+                        request.auth.token.email == resource.data.email && 
+                        resource.data.status == 'pending');
+    }
+    
+    // ==================== SETTINGS COLLECTION ====================
+    match /settings/{settingId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // ==================== REVIEWS/FEEDBACK COLLECTION ====================
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.auth != null; // Customers must be logged in
+      
+      // Admin: full access
+      // Staff B: can approve/delete reviews (update/delete)
+      allow update, delete: if isAdmin() || isStaffB();
+    }
+    
+    // ==================== CONTACT MESSAGES COLLECTION ====================
+    match /contact_messages/{messageId} {
+      allow read: if request.auth != null; // Any authenticated user can read (Staff B, Admin, customers)
+      allow create: if true; // Anyone can submit contact message
+      
+      // Admin: full access
+      // Staff B: can approve/delete messages (update/delete)
+      allow update, delete: if isAdmin() || isStaffB();
+    }
+    
+    // ==================== STAFF COLLECTION ====================
+    match /staff/{staffId} {
+      allow read: if true; // Allow reading staff for login/role checking
+      allow create, update, delete: if isAdmin();
+    }
+  }
+}

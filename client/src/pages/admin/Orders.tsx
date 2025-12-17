@@ -1,46 +1,36 @@
 import { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Search, Download, Eye, RefreshCw } from "lucide-react";
-
-interface OrderItem {
-  menuItemId: string;
-  name: string;
-  quantity: number;
-  price: number;
-  notes?: string;
-}
-
-interface Order {
-  id: string;
-  orderNumber: string;
-  customerName: string;
-  customerPhone: string | null;
-  customerEmail: string | null;
-  items: OrderItem[];
-  subtotal: string;
-  tax: string;
-  total: string;
-  status: string;
-  paymentStatus: string;
-  notes: string | null;
-  createdAt: string;
-}
+import { Search, Eye, RefreshCw } from "lucide-react";
+import { orderService, type Order } from "@/lib/firebase";
 
 const statusColors: Record<string, string> = {
   pending: "bg-yellow-100 text-yellow-800",
-  confirmed: "bg-blue-100 text-blue-800",
+  received: "bg-blue-100 text-blue-800",
   preparing: "bg-purple-100 text-purple-800",
   ready: "bg-green-100 text-green-800",
-  delivered: "bg-gray-100 text-gray-800",
+  picked_up: "bg-gray-100 text-gray-800",
+  in_transit: "bg-indigo-100 text-indigo-800",
   cancelled: "bg-red-100 text-red-800",
 };
+
+const statusOptions = [
+  { value: "pending", label: "Pending" },
+  { value: "received", label: "Received" },
+  { value: "preparing", label: "Preparing" },
+  { value: "ready", label: "Ready" },
+  { value: "picked_up", label: "Picked Up" },
+  { value: "in_transit", label: "In Transit" },
+  { value: "cancelled", label: "Cancelled" },
+];
 
 export default function Orders() {
   const { toast } = useToast();
@@ -49,51 +39,44 @@ export default function Orders() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-
-  const fetchOrders = async () => {
-    setLoading(true);
-    const params = new URLSearchParams();
-    if (search) params.set("search", search);
-    if (statusFilter) params.set("status", statusFilter);
-
-    try {
-      const res = await fetch(`/api/admin/orders?${params}`);
-      const data = await res.json();
-      setOrders(data);
-    } catch (error) {
-      toast({ title: "Error", description: "Failed to fetch orders", variant: "destructive" });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [notes, setNotes] = useState("");
 
   useEffect(() => {
-    fetchOrders();
-  }, [statusFilter]);
+    const unsubscribe = orderService.subscribe((data) => {
+      setOrders(data);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
-  const handleSearch = () => fetchOrders();
-
-  const handleExport = () => {
-    const params = new URLSearchParams();
-    if (statusFilter) params.set("status", statusFilter);
-    window.open(`/api/admin/orders/export?${params}`, "_blank");
-  };
+  const filteredOrders = orders.filter(order => {
+    const matchesSearch = !search || 
+      order.customerName.toLowerCase().includes(search.toLowerCase()) ||
+      order.orderNumber.toLowerCase().includes(search.toLowerCase());
+    const matchesStatus = !statusFilter || order.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const updateStatus = async (orderId: string, status: string) => {
     try {
-      const res = await fetch(`/api/admin/orders/${orderId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      });
-      if (!res.ok) throw new Error("Failed to update");
+      await orderService.update(orderId, { status: status as Order["status"] });
       toast({ title: "Success", description: "Order status updated" });
-      fetchOrders();
       if (selectedOrder?.id === orderId) {
-        setSelectedOrder({ ...selectedOrder, status });
+        setSelectedOrder({ ...selectedOrder, status: status as Order["status"] });
       }
     } catch (error) {
       toast({ title: "Error", description: "Failed to update status", variant: "destructive" });
+    }
+  };
+
+  const updateNotes = async () => {
+    if (!selectedOrder) return;
+    try {
+      await orderService.update(selectedOrder.id, { notes });
+      toast({ title: "Success", description: "Notes updated" });
+      setSelectedOrder({ ...selectedOrder, notes });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to update notes", variant: "destructive" });
     }
   };
 
@@ -105,9 +88,6 @@ export default function Orders() {
             <h1 className="text-2xl font-bold text-slate-900">Orders</h1>
             <p className="text-slate-600">Manage and track all orders</p>
           </div>
-          <Button onClick={handleExport} variant="outline">
-            <Download className="h-4 w-4 mr-2" /> Export CSV
-          </Button>
         </div>
 
         <Card>
@@ -118,9 +98,8 @@ export default function Orders() {
                   placeholder="Search by name or order #..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 />
-                <Button onClick={handleSearch} variant="secondary">
+                <Button variant="secondary">
                   <Search className="h-4 w-4" />
                 </Button>
               </div>
@@ -130,17 +109,11 @@ export default function Orders() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">All statuses</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="confirmed">Confirmed</SelectItem>
-                  <SelectItem value="preparing">Preparing</SelectItem>
-                  <SelectItem value="ready">Ready</SelectItem>
-                  <SelectItem value="delivered">Delivered</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                  {statusOptions.map(opt => (
+                    <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
-              <Button onClick={fetchOrders} variant="ghost" size="icon">
-                <RefreshCw className="h-4 w-4" />
-              </Button>
             </div>
           </CardContent>
         </Card>
@@ -167,14 +140,14 @@ export default function Orders() {
                         Loading...
                       </td>
                     </tr>
-                  ) : orders.length === 0 ? (
+                  ) : filteredOrders.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="p-8 text-center text-slate-500">
                         No orders found
                       </td>
                     </tr>
                   ) : (
-                    orders.map((order) => (
+                    filteredOrders.map((order) => (
                       <tr key={order.id} className="border-b hover:bg-slate-50">
                         <td className="p-4 font-mono text-sm">{order.orderNumber}</td>
                         <td className="p-4">
@@ -182,18 +155,21 @@ export default function Orders() {
                           <div className="text-sm text-slate-500">{order.customerPhone}</div>
                         </td>
                         <td className="p-4 text-sm">{order.items.length} items</td>
-                        <td className="p-4 font-medium">DA {order.total}</td>
+                        <td className="p-4 font-medium">DA {order.total.toFixed(2)}</td>
                         <td className="p-4">
-                          <Badge className={statusColors[order.status]}>{order.status}</Badge>
+                          <Badge className={statusColors[order.status]}>{order.status.replace("_", " ")}</Badge>
                         </td>
                         <td className="p-4 text-sm text-slate-500">
-                          {new Date(order.createdAt).toLocaleDateString()}
+                          {order.createdAt.toLocaleDateString()}
                         </td>
                         <td className="p-4">
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => setSelectedOrder(order)}
+                            onClick={() => {
+                              setSelectedOrder(order);
+                              setNotes(order.notes || "");
+                            }}
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
@@ -226,12 +202,12 @@ export default function Orders() {
                 </div>
                 <div>
                   <p className="text-sm text-slate-500">Email</p>
-                  <p className="font-medium">{selectedOrder.customerEmail || "-"}</p>
+                  <p className="font-medium">{selectedOrder.email || "-"}</p>
                 </div>
                 <div>
                   <p className="text-sm text-slate-500">Date</p>
                   <p className="font-medium">
-                    {new Date(selectedOrder.createdAt).toLocaleString()}
+                    {selectedOrder.createdAt.toLocaleString()}
                   </p>
                 </div>
               </div>
@@ -249,7 +225,7 @@ export default function Orders() {
                   ))}
                   <div className="border-t pt-2 mt-2 flex justify-between font-bold">
                     <span>Total</span>
-                    <span>DA {selectedOrder.total}</span>
+                    <span>DA {selectedOrder.total.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
@@ -264,22 +240,24 @@ export default function Orders() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="confirmed">Confirmed</SelectItem>
-                    <SelectItem value="preparing">Preparing</SelectItem>
-                    <SelectItem value="ready">Ready</SelectItem>
-                    <SelectItem value="delivered">Delivered</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                    {statusOptions.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
 
-              {selectedOrder.notes && (
-                <div>
-                  <p className="text-sm text-slate-500">Notes</p>
-                  <p className="text-sm">{selectedOrder.notes}</p>
-                </div>
-              )}
+              <div>
+                <Label>Notes</Label>
+                <Textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Add notes for this order..."
+                />
+                <Button onClick={updateNotes} size="sm" className="mt-2">
+                  Save Notes
+                </Button>
+              </div>
             </div>
           )}
         </DialogContent>

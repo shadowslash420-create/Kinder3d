@@ -9,15 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2, FolderOpen } from "lucide-react";
-
-interface Category {
-  id: string;
-  name: string;
-  description: string | null;
-  imageUrl: string | null;
-  displayOrder: number;
-  isActive: boolean;
-}
+import { categoryService, type Category } from "@/lib/firebase";
 
 export default function Categories() {
   const { toast } = useToast();
@@ -32,20 +24,12 @@ export default function Categories() {
     isActive: true,
   });
 
-  const fetchCategories = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/categories");
-      setCategories(await res.json());
-    } catch (error) {
-      toast({ title: "Error", description: "Failed to fetch categories", variant: "destructive" });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchCategories();
+    const unsubscribe = categoryService.subscribe((data) => {
+      setCategories(data);
+      setLoading(false);
+    });
+    return () => unsubscribe();
   }, []);
 
   const openCreate = () => {
@@ -73,40 +57,32 @@ export default function Categories() {
   const handleSubmit = async () => {
     const payload = {
       name: formData.name,
-      description: formData.description || null,
+      description: formData.description || undefined,
       displayOrder: parseInt(formData.displayOrder) || 0,
       isActive: formData.isActive,
     };
 
     try {
-      const url = editingCategory
-        ? `/api/admin/categories/${editingCategory.id}`
-        : "/api/admin/categories";
-      const res = await fetch(url, {
-        method: editingCategory ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error("Failed to save");
+      if (editingCategory) {
+        await categoryService.update(editingCategory.id, payload);
+      } else {
+        await categoryService.create(payload);
+      }
       toast({ title: "Success", description: `Category ${editingCategory ? "updated" : "created"}` });
       setDialogOpen(false);
-      fetchCategories();
     } catch (error) {
       toast({ title: "Error", description: "Failed to save category", variant: "destructive" });
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this category? Menu items in this category will become uncategorized.")) {
+    if (!confirm("Are you sure you want to delete this category?")) {
       return;
     }
 
     try {
-      const res = await fetch(`/api/admin/categories/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete");
+      await categoryService.delete(id);
       toast({ title: "Success", description: "Category deleted" });
-      fetchCategories();
     } catch (error) {
       toast({ title: "Error", description: "Failed to delete category", variant: "destructive" });
     }

@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Lock, Mail } from "lucide-react";
+import { Lock, Mail, Chrome } from "lucide-react";
+import { signInWithEmail, signInWithGoogle, getUserRole, auth, onAuthStateChanged } from "@/lib/firebase";
 
 export default function AdminLogin() {
   const [, setLocation] = useLocation();
@@ -13,21 +14,56 @@ export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const role = await getUserRole(user);
+        if (role === "admin" || role === "staff_a" || role === "staff_b") {
+          setLocation("/admin/dashboard");
+        }
+      }
+      setCheckingAuth(false);
+    });
+    return () => unsubscribe();
+  }, [setLocation]);
+
+  const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const res = await fetch("/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const result = await signInWithEmail(email, password);
+      const role = await getUserRole(result.user);
+      
+      if (role !== "admin" && role !== "staff_a" && role !== "staff_b") {
+        throw new Error("You don't have admin access");
+      }
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Login failed");
+      toast({ title: "Welcome back!", description: "You have been logged in successfully." });
+      setLocation("/admin/dashboard");
+    } catch (error: any) {
+      let message = error.message;
+      if (error.code === "auth/invalid-credential") {
+        message = "Invalid email or password";
+      } else if (error.code === "auth/user-not-found") {
+        message = "No account found with this email";
+      }
+      toast({ title: "Login Failed", description: message, variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    try {
+      const result = await signInWithGoogle();
+      const role = await getUserRole(result.user);
+      
+      if (role !== "admin" && role !== "staff_a" && role !== "staff_b") {
+        throw new Error("You don't have admin access. Contact the administrator.");
       }
 
       toast({ title: "Welcome back!", description: "You have been logged in successfully." });
@@ -39,6 +75,14 @@ export default function AdminLogin() {
     }
   };
 
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="w-12 h-12 border-3 border-white border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-white/10 backdrop-blur-lg border-white/20">
@@ -48,8 +92,28 @@ export default function AdminLogin() {
             Sign in to manage your creperie
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <CardContent className="space-y-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full bg-white hover:bg-gray-100 text-gray-800"
+            onClick={handleGoogleLogin}
+            disabled={loading}
+          >
+            <Chrome className="mr-2 h-4 w-4" />
+            Continue with Google
+          </Button>
+          
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-white/20" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-slate-800 px-2 text-slate-400">Or continue with email</span>
+            </div>
+          </div>
+
+          <form onSubmit={handleEmailLogin} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-white">Email</Label>
               <div className="relative">

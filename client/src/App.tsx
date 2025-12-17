@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { lazy, Suspense, useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 
@@ -15,6 +16,9 @@ const Dashboard = lazy(() => import("@/pages/admin/Dashboard"));
 const Orders = lazy(() => import("@/pages/admin/Orders"));
 const MenuItems = lazy(() => import("@/pages/admin/MenuItems"));
 const Categories = lazy(() => import("@/pages/admin/Categories"));
+const Reviews = lazy(() => import("@/pages/admin/Reviews"));
+const Messages = lazy(() => import("@/pages/admin/Messages"));
+const Staff = lazy(() => import("@/pages/admin/Staff"));
 
 const PageLoader = () => (
   <div className="fixed inset-0 bg-[#FDFBF7] flex items-center justify-center">
@@ -32,6 +36,9 @@ function Router() {
         <Route path="/admin/orders" component={Orders} />
         <Route path="/admin/menu" component={MenuItems} />
         <Route path="/admin/categories" component={Categories} />
+        <Route path="/admin/reviews" component={Reviews} />
+        <Route path="/admin/messages" component={Messages} />
+        <Route path="/admin/staff" component={Staff} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
@@ -68,32 +75,36 @@ function App() {
   if (isAdminRoute) {
     return (
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </AuthProvider>
       </QueryClientProvider>
     );
   }
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CartProvider>
-        <TooltipProvider>
-          <Toaster />
-          <AnimatePresence mode="wait">
-            {!hasEntered ? (
-              <Suspense fallback={<PageLoader />}>
-                <Intro key="intro" onEnter={handleEnter} />
-              </Suspense>
-            ) : (
-              <div key="main">
-                <Router />
-              </div>
-            )}
-          </AnimatePresence>
-        </TooltipProvider>
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <TooltipProvider>
+            <Toaster />
+            <AnimatePresence mode="wait">
+              {!hasEntered ? (
+                <Suspense fallback={<PageLoader />}>
+                  <Intro key="intro" onEnter={handleEnter} />
+                </Suspense>
+              ) : (
+                <div key="main">
+                  <Router />
+                </div>
+              )}
+            </AnimatePresence>
+          </TooltipProvider>
+        </CartProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
