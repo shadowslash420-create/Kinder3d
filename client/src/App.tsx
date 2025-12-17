@@ -21,6 +21,12 @@ const Reviews = lazy(() => import("@/pages/admin/Reviews"));
 const Messages = lazy(() => import("@/pages/admin/Messages"));
 const Staff = lazy(() => import("@/pages/admin/Staff"));
 
+const CustomerLogin = lazy(() => import("@/pages/CustomerLogin"));
+const MenuPage = lazy(() => import("@/pages/MenuPage"));
+const CartPage = lazy(() => import("@/pages/CartPage"));
+const CheckoutPage = lazy(() => import("@/pages/CheckoutPage"));
+const MyOrdersPage = lazy(() => import("@/pages/MyOrdersPage"));
+
 const PageLoader = () => (
   <div className="fixed inset-0 bg-[#FDFBF7] flex items-center justify-center">
     <div className="w-12 h-12 border-3 border-primary border-t-transparent rounded-full animate-spin" />
@@ -33,6 +39,11 @@ function Router() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/login" component={Login} />
+        <Route path="/customer-login" component={CustomerLogin} />
+        <Route path="/menu" component={MenuPage} />
+        <Route path="/cart" component={CartPage} />
+        <Route path="/checkout" component={CheckoutPage} />
+        <Route path="/my-orders" component={MyOrdersPage} />
         <Route path="/admin" component={AdminLogin} />
         <Route path="/admin/dashboard" component={Dashboard} />
         <Route path="/admin/orders" component={Orders} />
@@ -51,6 +62,9 @@ function App() {
   const [location] = useLocation();
   const isAdminRoute = location.startsWith("/admin");
   const isLoginRoute = location === "/login";
+  
+  const pathWithoutQuery = location.split("?")[0];
+  const isCustomerRoute = ["/customer-login", "/menu", "/cart", "/checkout", "/my-orders"].includes(pathWithoutQuery) || pathWithoutQuery.startsWith("/my-orders");
 
   const [hasEntered, setHasEntered] = useState(() => {
     if (typeof window !== "undefined") {
@@ -83,6 +97,21 @@ function App() {
             <Toaster />
             <Router />
           </TooltipProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    );
+  }
+
+  if (isCustomerRoute) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <CartProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Router />
+            </TooltipProvider>
+          </CartProvider>
         </AuthProvider>
       </QueryClientProvider>
     );

@@ -10,7 +10,11 @@ export default function Navbar() {
   const [, setLocation] = useLocation();
 
   const handleLogin = () => {
-    setLocation("/login");
+    setLocation("/customer-login");
+  };
+
+  const handleOrderNow = () => {
+    setLocation("/menu");
   };
 
   const handleLogout = async () => {
@@ -92,6 +96,7 @@ export default function Navbar() {
           <NavbarCart />
           
           <button 
+            onClick={handleOrderNow}
             style={{
               padding: '12px 32px',
               fontSize: '0.75rem',
@@ -108,7 +113,7 @@ export default function Navbar() {
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#B91C1C'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#DC2626'}
           >
-            Reserve
+            Order Now
           </button>
 
           {!loading && (
@@ -394,9 +399,12 @@ export default function Navbar() {
               borderRadius: '6px',
               cursor: 'pointer',
             }}
-            onClick={() => setIsMobileMenuOpen(false)}
+            onClick={() => {
+              handleOrderNow();
+              setIsMobileMenuOpen(false);
+            }}
           >
-            Book Table
+            Order Now
           </button>
 
           {!loading && (

@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { Link } from "wouter";
 import luxuryCrepe from "@assets/stock_images/luxury_crepe_with_ki_74d12ec0.jpg";
 import ShoppingCart from "@/components/ui/ShoppingCart";
 import { useCart } from "@/context/CartContext";
@@ -8,50 +9,50 @@ import FloatingLines from "@/components/ui/FloatingLines";
 
 const menuItems = [
   {
-    id: 1,
+    id: "demo-1",
     name: "Kinder Classic",
     description: "Golden crepe filled with Nutella, hazelnut cream, and strawberries.",
-    price: "520 DA",
+    price: 520,
     category: "Signature",
     image: luxuryCrepe
   },
   {
-    id: 2,
+    id: "demo-2",
     name: "Double Chocolate",
     description: "Dark chocolate crepe with chocolate sauce and whipped cream.",
-    price: "480 DA",
+    price: 480,
     category: "Signature",
     image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=800"
   },
   {
-    id: 3,
+    id: "demo-3",
     name: "Berry Sensation",
     description: "Fresh mixed berries, cream, and powdered sugar on a delicate crepe.",
-    price: "550 DA",
+    price: 550,
     category: "Fruity",
     image: "https://images.unsplash.com/photo-1504113882839-58e39d385ef4?auto=format&fit=crop&q=80&w=800"
   },
   {
-    id: 4,
+    id: "demo-4",
     name: "Premium Waffle",
     description: "Belgian waffle with ice cream, chocolate drizzle, and almonds.",
-    price: "650 DA",
+    price: 650,
     category: "Waffles",
     image: "https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&q=80&w=800"
   },
   {
-    id: 5,
+    id: "demo-5",
     name: "Caramel Dream",
     description: "Salted caramel sauce with vanilla ice cream and crushed biscuits.",
-    price: "580 DA",
+    price: 580,
     category: "Signature",
     image: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=800"
   },
   {
-    id: 6,
+    id: "demo-6",
     name: "Tropical Bliss",
     description: "Mango, passion fruit, and coconut cream on a light crepe.",
-    price: "600 DA",
+    price: 600,
     category: "Fruity",
     image: "https://images.unsplash.com/photo-1476887334197-56adbf254e1a?auto=format&fit=crop&q=80&w=800"
   },
@@ -94,13 +95,14 @@ export default function Menu() {
   const handleAddToCart = (item: typeof menuItems[0]) => {
     addToCart({
       id: item.id,
+      menuItemId: item.id,
       name: item.name,
       price: item.price,
-      image: item.image
+      imageUrl: item.image
     });
   };
 
-  const handleRemoveFromCart = (itemId: number) => {
+  const handleRemoveFromCart = (itemId: string) => {
     removeFromCart(itemId);
   };
 
@@ -304,7 +306,7 @@ export default function Menu() {
                             {menuItem.category}
                           </span>
                           <h3 className="font-serif text-2xl font-bold mb-1">{menuItem.name}</h3>
-                          <p className="text-lg font-medium text-[#ffb76e]">{menuItem.price}</p>
+                          <p className="text-lg font-medium text-[#ffb76e]">{menuItem.price} DA</p>
                         </div>
                       </div>
                       <div className="p-5 bg-white">
@@ -354,9 +356,11 @@ export default function Menu() {
           transition={{ delay: 0.5 }}
           className="mt-12 text-center"
         >
-          <button className="border-b border-primary pb-1 hover:text-primary transition-colors font-serif italic text-[19px] text-[#290000]">
-            View Full Menu
-          </button>
+          <Link href="/menu">
+            <span className="border-b border-primary pb-1 hover:text-primary transition-colors font-serif italic text-[19px] text-[#290000] cursor-pointer">
+              View Full Menu & Order Online
+            </span>
+          </Link>
         </motion.div>
       </div>
       <AnimatePresence>
@@ -404,7 +408,7 @@ export default function Menu() {
                 
                 <div className="flex items-center justify-between">
                   <span className="text-2xl font-serif font-bold text-primary">
-                    {selectedItem.price}
+                    {selectedItem.price} DA
                   </span>
                   
                   <ShoppingCart

@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, type User } from "firebase/auth";
-import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot, serverTimestamp, type DocumentData, Timestamp } from "firebase/firestore";
+import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, setDoc, query, where, orderBy, onSnapshot, serverTimestamp, type DocumentData, Timestamp } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -70,13 +70,14 @@ export interface Order {
   orderNumber: string;
   customerName: string;
   customerPhone?: string;
+  customerAddress?: string;
   email?: string;
   userId?: string;
   items: OrderItem[];
   subtotal: number;
   tax: number;
   total: number;
-  status: "pending" | "received" | "preparing" | "ready" | "picked_up" | "in_transit" | "cancelled";
+  status: "pending" | "received" | "preparing" | "ready" | "picked_up" | "in_transit" | "delivered" | "cancelled";
   paymentStatus: "pending" | "paid" | "refunded";
   paymentMethod?: string;
   notes?: string;
@@ -111,6 +112,21 @@ export interface Settings {
   id: string;
   key: string;
   value: any;
+}
+
+export interface CartItem {
+  id: string;
+  menuItemId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  imageUrl?: string;
+}
+
+export interface Cart {
+  userId: string;
+  items: CartItem[];
+  updatedAt: Date;
 }
 
 export type UserRole = "admin" | "staff_a" | "staff_b" | "customer";
@@ -278,10 +294,25 @@ export const orderService = {
     })) as Order[];
   },
   
-  async getByUser(userId: string, email: string): Promise<Order[]> {
+  async getByUser(userId: string): Promise<Order[]> {
     const q = query(
       collection(db, "orders"),
       where("userId", "==", userId),
+      orderBy("createdAt", "desc")
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: convertTimestamp(doc.data().createdAt),
+      updatedAt: convertTimestamp(doc.data().updatedAt),
+    })) as Order[];
+  },
+
+  async getByEmail(email: string): Promise<Order[]> {
+    const q = query(
+      collection(db, "orders"),
+      where("email", "==", email),
       orderBy("createdAt", "desc")
     );
     const snapshot = await getDocs(q);
@@ -325,6 +356,63 @@ export const orderService = {
       callback(orders);
     }, (error) => {
       console.error("Error fetching orders:", error);
+      callback([]);
+    });
+  },
+
+  subscribeToUserOrders(userId: string, callback: (orders: Order[]) => void) {
+    const q = query(
+      collection(db, "orders"),
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc")
+    );
+    return onSnapshot(q, (snapshot) => {
+      const orders = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: convertTimestamp(doc.data().createdAt),
+        updatedAt: convertTimestamp(doc.data().updatedAt),
+      })) as Order[];
+      callback(orders);
+    }, (error) => {
+      console.error("Error fetching user orders:", error);
+      callback([]);
+    });
+  }
+};
+
+export const cartService = {
+  async getCart(userId: string): Promise<CartItem[]> {
+    const docRef = await getDoc(doc(db, "carts", userId));
+    if (!docRef.exists()) return [];
+    return docRef.data().items || [];
+  },
+
+  async saveCart(userId: string, items: CartItem[]): Promise<void> {
+    await setDoc(doc(db, "carts", userId), {
+      userId,
+      items,
+      updatedAt: serverTimestamp(),
+    });
+  },
+
+  async clearCart(userId: string): Promise<void> {
+    await setDoc(doc(db, "carts", userId), {
+      userId,
+      items: [],
+      updatedAt: serverTimestamp(),
+    });
+  },
+
+  subscribeToCart(userId: string, callback: (items: CartItem[]) => void) {
+    return onSnapshot(doc(db, "carts", userId), (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        callback(docSnapshot.data().items || []);
+      } else {
+        callback([]);
+      }
+    }, (error) => {
+      console.error("Error fetching cart:", error);
       callback([]);
     });
   }
@@ -488,5 +576,11 @@ export const settingsService = {
     });
   }
 };
+
+export function generateOrderNumber(): string {
+  const timestamp = Date.now().toString(36).toUpperCase();
+  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `ORD-${timestamp}-${random}`;
+}
 
 export { onAuthStateChanged, type User };
