@@ -157,12 +157,12 @@ export default function Intro({ onEnter }: IntroProps) {
         initial={{ opacity: 0, y: 40 }}
         animate={isExiting ? { opacity: 0, y: 60 } : { opacity: 1, y: 0 }}
         transition={isExiting ? { duration: 0.7, ease: "easeIn" } : { duration: 0.8, delay: 0.4 }}
-        className="absolute bottom-0 left-0 right-0 text-center px-6 py-12 bg-gradient-to-t from-[#FDFBF7] via-[#FDFBF7]/80 to-transparent space-y-6 z-20"
+        className="absolute bottom-0 left-0 right-0 text-center px-4 sm:px-6 py-8 sm:py-10 md:py-12 bg-gradient-to-t from-[#FDFBF7] via-[#FDFBF7]/80 to-transparent space-y-4 sm:space-y-6 z-20"
       >
         <div>
           <h1 
             ref={titleRef}
-            className="text-6xl md:text-7xl lg:text-8xl font-serif font-bold mb-4 text-foreground leading-tight overflow-hidden"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold mb-2 sm:mb-4 text-foreground leading-tight overflow-hidden"
             style={{ perspective: '1000px' }}
           >
             <span className="creperie-text block">Creperie</span>
@@ -170,7 +170,7 @@ export default function Intro({ onEnter }: IntroProps) {
           </h1>
           <p 
             ref={subtitleRef}
-            className="text-lg md:text-xl text-muted-foreground font-light max-w-2xl mx-auto"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground font-light max-w-xs sm:max-w-md md:max-w-xl lg:max-w-2xl mx-auto px-2"
             style={{ opacity: 0 }}
           >
             Welcome to Batna's finest crepes, waffles, and desserts. Crafted with passion, served with joy.
@@ -187,15 +187,15 @@ export default function Intro({ onEnter }: IntroProps) {
             ref={buttonRef}
             onClick={handleEnter}
             disabled={isExiting}
-            className="relative text-2xl font-semibold cursor-pointer bg-transparent border-none outline-none text-gray-800 hover:text-white px-14 py-4 flex items-center gap-3 disabled:opacity-80 disabled:cursor-not-allowed transition-colors duration-300"
+            className="relative text-lg sm:text-xl md:text-2xl font-semibold cursor-pointer bg-transparent border-none outline-none text-gray-800 hover:text-white px-8 sm:px-10 md:px-14 py-3 sm:py-4 flex items-center gap-2 sm:gap-3 disabled:opacity-80 disabled:cursor-not-allowed transition-colors duration-300"
           >
-            <span className="relative z-10 flex items-center gap-3">
+            <span className="relative z-10 flex items-center gap-2 sm:gap-3">
               Enter
               <motion.div
                 animate={{ x: [0, 5, 0] }}
                 transition={{ duration: 1, repeat: Infinity }}
               >
-                <ArrowRight className="w-7 h-7" />
+                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
               </motion.div>
             </span>
             <div
@@ -213,12 +213,12 @@ export default function Intro({ onEnter }: IntroProps) {
       </motion.div>
 
       <motion.div
-        className="absolute top-10 right-10 w-40 h-40 rounded-full border border-primary/20 z-10"
+        className="absolute top-6 right-6 sm:top-10 sm:right-10 w-20 h-20 sm:w-28 sm:h-28 md:w-40 md:h-40 rounded-full border border-primary/20 z-10"
         animate={{ rotate: 360 }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
       />
       <motion.div
-        className="absolute bottom-40 left-10 w-32 h-32 rounded-full bg-primary/5 z-10"
+        className="absolute bottom-32 sm:bottom-40 left-4 sm:left-10 w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full bg-primary/5 z-10"
         animate={{ scale: [1, 1.2, 1] }}
         transition={{ duration: 4, repeat: Infinity }}
       />

@@ -120,7 +120,7 @@ export default function Hero() {
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
-    <section id="hero" className="relative h-screen w-full overflow-hidden flex items-center">
+    <section id="hero" className="relative min-h-screen w-full overflow-hidden flex items-center">
       {/* Background Image */}
       <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
         <img 
@@ -128,20 +128,20 @@ export default function Hero() {
           alt="Luxury Dining Background" 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20 md:from-black/40 md:via-black/20 md:to-transparent" />
       </motion.div>
 
-      <div className="container mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-screen py-24 md:py-20">
         {/* Text Content */}
-        <div className="max-w-xl pt-20">
+        <div className="max-w-xl pt-16 md:pt-20">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 1 }}
-            className="flex items-center gap-3 mb-8"
+            className="flex items-center gap-3 mb-4 sm:mb-8"
           >
-            <div className="h-[1px] w-12 bg-primary"></div>
-            <span className="text-primary font-medium tracking-[0.2em] text-sm uppercase">
+            <div className="h-[1px] w-8 sm:w-12 bg-primary"></div>
+            <span className="text-primary font-medium tracking-[0.15em] sm:tracking-[0.2em] text-xs sm:text-sm uppercase">
               Batna, Algeria
             </span>
           </motion.div>
@@ -150,7 +150,7 @@ export default function Hero() {
             variants={letterContainer}
             initial="hidden"
             animate="show"
-            className="text-6xl md:text-8xl font-serif font-bold leading-[0.9] mb-8 tracking-tighter"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-serif font-bold leading-[0.9] mb-4 sm:mb-8 tracking-tighter"
             style={{
               color: "#FFFFFF",
               textShadow: "0 4px 30px rgba(0, 0, 0, 0.7), 0 2px 10px rgba(255, 215, 0, 0.4)"
@@ -177,7 +177,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 1 }}
-            className="text-xl mb-12 leading-relaxed max-w-md font-light"
+            className="text-base sm:text-lg md:text-xl mb-8 sm:mb-12 leading-relaxed max-w-md font-light"
             style={{
               color: "#FFFFFF",
               textShadow: "0 2px 15px rgba(0, 0, 0, 0.6)"
@@ -190,9 +190,9 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5 }}
-            className="flex flex-wrap gap-6"
+            className="flex flex-wrap gap-4 sm:gap-6"
           >
-            <MagneticButton className="rounded-full px-10 py-7 text-lg bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/20 transition-all duration-500">
+            <MagneticButton className="rounded-full px-6 sm:px-10 py-4 sm:py-7 text-base sm:text-lg bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/20 transition-all duration-500">
               Explore Menu
             </MagneticButton>
           </motion.div>
@@ -200,9 +200,9 @@ export default function Hero() {
 
       </div>
       
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator - Hidden on mobile */}
       <motion.div 
-        className="absolute bottom-10 left-10 flex items-center gap-4 text-muted-foreground/40 mix-blend-multiply"
+        className="absolute bottom-10 left-4 sm:left-10 hidden sm:flex items-center gap-4 text-muted-foreground/40 mix-blend-multiply"
         animate={{ opacity: [0.4, 1, 0.4] }}
         transition={{ repeat: Infinity, duration: 4 }}
       >

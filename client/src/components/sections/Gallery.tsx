@@ -59,14 +59,14 @@ export default function Gallery() {
 
   return (
     <section ref={triggerRef} id="gallery" className="h-screen bg-[#1a1a1a] text-white overflow-hidden flex flex-col justify-center relative">
-      <div className="absolute top-12 left-6 md:left-24 z-10 max-w-lg">
-        <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-4 block">The Gallery</span>
-        <h2 className="text-5xl md:text-7xl font-serif font-medium leading-tight">Visual <br/> Symphony</h2>
+      <div className="absolute top-8 sm:top-12 left-4 sm:left-6 md:left-24 z-10 max-w-lg px-2 sm:px-0">
+        <span className="text-primary font-bold tracking-[0.15em] sm:tracking-[0.2em] text-xs uppercase mb-2 sm:mb-4 block">The Gallery</span>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-serif font-medium leading-tight">Visual <br/> Symphony</h2>
       </div>
 
-      <div ref={containerRef} className="flex gap-16 pl-6 md:pl-24 items-center h-[60vh] mt-20">
+      <div ref={containerRef} className="flex gap-6 sm:gap-10 md:gap-16 pl-4 sm:pl-6 md:pl-24 items-center h-[50vh] sm:h-[55vh] md:h-[60vh] mt-16 sm:mt-20">
         {images.map((src, i) => (
-          <div key={i} className="gallery-item flex-shrink-0 relative w-[30vw] min-w-[300px] h-[50vh] rounded-sm overflow-hidden group">
+          <div key={i} className="gallery-item flex-shrink-0 relative w-[70vw] sm:w-[45vw] md:w-[30vw] min-w-[250px] sm:min-w-[280px] md:min-w-[300px] h-[40vh] sm:h-[45vh] md:h-[50vh] rounded-sm overflow-hidden group">
             <img 
               src={src} 
               alt={`Gallery ${i}`} 
@@ -79,9 +79,9 @@ export default function Gallery() {
         <div className="w-[10vw] flex-shrink-0" />
       </div>
       
-      <div className="absolute bottom-12 right-12 md:right-24 flex gap-4 items-center text-white/30 text-sm tracking-widest uppercase">
+      <div className="absolute bottom-6 sm:bottom-12 right-4 sm:right-12 md:right-24 hidden sm:flex gap-4 items-center text-white/30 text-xs sm:text-sm tracking-widest uppercase">
          <span>Scroll to Discover</span>
-         <div className="w-16 h-px bg-white/30" />
+         <div className="w-12 sm:w-16 h-px bg-white/30" />
       </div>
     </section>
   );

@@ -103,7 +103,7 @@ export default function Menu() {
     removeFromCart(itemId);
   };
 
-  const getCardStyle = (index: number) => {
+  const getCardStyle = (index: number, isMobile: boolean = false) => {
     const diff = index - activeIndex;
     const normalizedDiff = ((diff + totalItemsCount) % totalItemsCount);
     const adjustedDiff = normalizedDiff > totalItemsCount / 2 ? normalizedDiff - totalItemsCount : normalizedDiff;
@@ -122,6 +122,8 @@ export default function Menu() {
     let opacity = 0;
     let zIndex = 0;
 
+    const xMultiplier = isMobile ? 0.55 : 1;
+
     if (isCenter) {
       x = 0;
       z = 100;
@@ -130,58 +132,67 @@ export default function Menu() {
       opacity = 1;
       zIndex = 5;
     } else if (isLeft1) {
-      x = -280;
+      x = -280 * xMultiplier;
       z = 0;
-      rotateY = 35;
-      scale = 0.85;
-      opacity = 1;
+      rotateY = isMobile ? 25 : 35;
+      scale = isMobile ? 0.7 : 0.85;
+      opacity = isMobile ? 0.7 : 1;
       zIndex = 4;
     } else if (isRight1) {
-      x = 280;
+      x = 280 * xMultiplier;
       z = 0;
-      rotateY = -35;
-      scale = 0.85;
-      opacity = 1;
+      rotateY = isMobile ? -25 : -35;
+      scale = isMobile ? 0.7 : 0.85;
+      opacity = isMobile ? 0.7 : 1;
       zIndex = 4;
     } else if (isLeft2) {
-      x = -480;
+      x = -480 * xMultiplier;
       z = -100;
-      rotateY = 50;
-      scale = 0.65;
-      opacity = 0.6;
+      rotateY = isMobile ? 35 : 50;
+      scale = isMobile ? 0.5 : 0.65;
+      opacity = isMobile ? 0.3 : 0.6;
       zIndex = 3;
     } else if (isRight2) {
-      x = 480;
+      x = 480 * xMultiplier;
       z = -100;
-      rotateY = -50;
-      scale = 0.65;
-      opacity = 0.6;
+      rotateY = isMobile ? -35 : -50;
+      scale = isMobile ? 0.5 : 0.65;
+      opacity = isMobile ? 0.3 : 0.6;
       zIndex = 3;
     } else if (absPosition <= 3) {
-      x = adjustedDiff > 0 ? 600 : -600;
+      x = (adjustedDiff > 0 ? 600 : -600) * xMultiplier;
       z = -200;
       rotateY = adjustedDiff > 0 ? -60 : 60;
       scale = 0.5;
-      opacity = 0.3;
+      opacity = isMobile ? 0 : 0.3;
       zIndex = 2;
     }
 
     return { x, z, rotateY, scale, opacity, zIndex };
   };
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
-    <section id="menu" className="py-32 bg-[#FDFBF7] relative overflow-hidden">
-      <div className="container mx-auto px-6">
+    <section id="menu" className="py-16 sm:py-24 md:py-32 bg-[#FDFBF7] relative overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 md:mb-16"
         >
-          <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-4 block">Our Selection</span>
-          <h2 className="text-5xl md:text-6xl font-serif font-medium text-foreground">Curated Indulgence</h2>
-          <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
+          <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-2 sm:mb-4 block">Our Selection</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-medium text-foreground">Curated Indulgence</h2>
+          <p className="text-muted-foreground mt-2 sm:mt-4 max-w-xl mx-auto text-sm sm:text-base px-4">
             Click on any item to add to your bag
           </p>
           
@@ -189,7 +200,7 @@ export default function Menu() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full"
+              className="mt-3 sm:mt-4 inline-flex items-center gap-2 bg-primary/10 text-primary px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-sm"
             >
               <span className="font-medium">{totalItems} item{totalItems > 1 ? 's' : ''} in your bag</span>
             </motion.div>
@@ -197,7 +208,7 @@ export default function Menu() {
         </motion.div>
 
         <div 
-          className="relative h-[600px] flex items-center justify-center"
+          className="relative h-[450px] sm:h-[500px] md:h-[600px] flex items-center justify-center"
           style={{ perspective: "1200px" }}
         >
           <div 
@@ -206,15 +217,14 @@ export default function Menu() {
           >
             <AnimatePresence mode="popLayout">
               {menuItems.map((menuItem, index) => {
-                const style = getCardStyle(index);
+                const style = getCardStyle(index, isMobile);
                 const isCenter = style.zIndex === 5;
                 
                 return (
                   <motion.div
                     key={menuItem.id}
-                    className="absolute cursor-pointer"
+                    className="absolute cursor-pointer w-[240px] sm:w-[280px] md:w-[320px]"
                     style={{
-                      width: "320px",
                       transformStyle: "preserve-3d",
                       zIndex: style.zIndex,
                     }}
@@ -292,19 +302,19 @@ export default function Menu() {
 
           <button
             onClick={handlePrev}
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-white/90 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all duration-300 group"
+            className="absolute left-2 sm:left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/90 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all duration-300 group"
           >
-            <ChevronLeft className="w-6 h-6 group-hover:scale-110 transition-transform" />
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform" />
           </button>
           <button
             onClick={handleNext}
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-white/90 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all duration-300 group"
+            className="absolute right-2 sm:right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/90 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all duration-300 group"
           >
-            <ChevronRight className="w-6 h-6 group-hover:scale-110 transition-transform" />
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform" />
           </button>
         </div>
 
-        <div className="flex justify-center gap-3 mt-8">
+        <div className="flex justify-center gap-2 sm:gap-3 mt-6 sm:mt-8">
           {menuItems.map((_, index) => (
             <button
               key={index}
