@@ -296,7 +296,7 @@ export default function Menu() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                          <span className="text-xs uppercase tracking-wider opacity-80 mb-1 block">
+                          <span className="uppercase tracking-wider opacity-80 mb-1 block font-medium text-[13px]">
                             {menuItem.category}
                           </span>
                           <h3 className="font-serif text-2xl font-bold mb-1">{menuItem.name}</h3>
