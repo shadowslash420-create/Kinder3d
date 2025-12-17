@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
+import RequireRole from "@/components/admin/RequireRole";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2, Image } from "lucide-react";
 import { menuService, categoryService, type MenuItem, type Category } from "@/lib/firebase";
 
-export default function MenuItems() {
+function MenuItemsContent() {
   const { toast } = useToast();
   const [items, setItems] = useState<MenuItem[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -300,5 +301,13 @@ export default function MenuItems() {
         </DialogContent>
       </Dialog>
     </AdminLayout>
+  );
+}
+
+export default function MenuItems() {
+  return (
+    <RequireRole allowedRoles={["admin"]}>
+      <MenuItemsContent />
+    </RequireRole>
   );
 }

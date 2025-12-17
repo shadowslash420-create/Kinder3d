@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
+import RequireRole from "@/components/admin/RequireRole";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Eye, Check, Trash2, Mail } from "lucide-react";
 import { contactService, type ContactMessage } from "@/lib/firebase";
 
-export default function Messages() {
+function MessagesContent() {
   const { toast } = useToast();
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -170,5 +171,13 @@ export default function Messages() {
         </DialogContent>
       </Dialog>
     </AdminLayout>
+  );
+}
+
+export default function Messages() {
+  return (
+    <RequireRole allowedRoles={["admin", "staff_b"]}>
+      <MessagesContent />
+    </RequireRole>
   );
 }

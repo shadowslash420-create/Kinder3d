@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
+import RequireRole from "@/components/admin/RequireRole";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Search, Eye, RefreshCw } from "lucide-react";
+import { Search, Eye } from "lucide-react";
 import { orderService, type Order } from "@/lib/firebase";
 
 const statusColors: Record<string, string> = {
@@ -32,7 +33,7 @@ const statusOptions = [
   { value: "cancelled", label: "Cancelled" },
 ];
 
-export default function Orders() {
+function OrdersContent() {
   const { toast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -263,5 +264,13 @@ export default function Orders() {
         </DialogContent>
       </Dialog>
     </AdminLayout>
+  );
+}
+
+export default function Orders() {
+  return (
+    <RequireRole allowedRoles={["admin", "staff_a"]}>
+      <OrdersContent />
+    </RequireRole>
   );
 }

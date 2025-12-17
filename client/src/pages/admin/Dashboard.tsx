@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
+import RequireRole from "@/components/admin/RequireRole";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, ShoppingCart, TrendingUp, Package } from "lucide-react";
 import { orderService, menuService, type Order, type MenuItem } from "@/lib/firebase";
 
-export default function Dashboard() {
+function DashboardContent() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -158,5 +159,13 @@ export default function Dashboard() {
         </div>
       </div>
     </AdminLayout>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <RequireRole allowedRoles={["admin"]}>
+      <DashboardContent />
+    </RequireRole>
   );
 }

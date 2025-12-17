@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
+import RequireRole from "@/components/admin/RequireRole";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +13,7 @@ import { Plus, Trash2, User } from "lucide-react";
 import { staffService, type StaffMember, db } from "@/lib/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
-export default function Staff() {
+function StaffContent() {
   const { toast } = useToast();
   const [staff, setStaff] = useState<StaffMember[]>([]);
   const [loading, setLoading] = useState(true);
@@ -207,5 +208,13 @@ export default function Staff() {
         </DialogContent>
       </Dialog>
     </AdminLayout>
+  );
+}
+
+export default function Staff() {
+  return (
+    <RequireRole allowedRoles={["admin"]}>
+      <StaffContent />
+    </RequireRole>
   );
 }

@@ -35,10 +35,15 @@ Preferred communication style: Simple, everyday language.
 - **Schema Location**: `shared/schema.ts` - defines admins, categories, menuItems, and orders tables
 - **Migrations**: Drizzle Kit for schema migrations (`drizzle-kit push`)
 
-### Authentication
-- **Admin Auth**: Express sessions with session secret from environment variable
-- **Password Hashing**: bcryptjs for secure password storage
-- **Session Storage**: In-memory by default (consider connect-pg-simple for production)
+### Authentication & Firebase
+- **Firebase Authentication**: Google Sign-In and Email/Password authentication
+- **Role-Based Access Control**: 
+  - **Admin** (oussamaanis2005@gmail.com): Full access to all features
+  - **Staff A**: Can manage orders (view and update status/notes)
+  - **Staff B**: Can manage reviews and contact messages
+  - **Customer**: Can view menu, place orders, leave reviews
+- **Firestore Database**: Real-time data synchronization for menu, categories, orders, reviews, contact_messages, staff, and settings
+- **Firebase Config**: Stored in environment secrets (FIREBASE_API_KEY, FIREBASE_AUTH_DOMAIN, FIREBASE_PROJECT_ID, etc.)
 
 ### Project Structure
 ```
@@ -82,6 +87,12 @@ Preferred communication style: Simple, everyday language.
 ### Environment Variables Required
 - `DATABASE_URL`: PostgreSQL connection string
 - `SESSION_SECRET`: (Optional) Secret for session encryption, auto-generated if not provided
+- `FIREBASE_API_KEY`: Firebase web API key
+- `FIREBASE_AUTH_DOMAIN`: Firebase auth domain
+- `FIREBASE_PROJECT_ID`: Firebase project ID
+- `FIREBASE_STORAGE_BUCKET`: Firebase storage bucket
+- `FIREBASE_MESSAGING_SENDER_ID`: Firebase messaging sender ID
+- `FIREBASE_APP_ID`: Firebase app ID
 
 ### Font Loading
 - Google Fonts: Playfair Display, DM Sans (loaded via CDN in index.html)
