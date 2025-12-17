@@ -165,8 +165,8 @@ export default function Intro({ onEnter }: IntroProps) {
             className="text-6xl md:text-7xl lg:text-8xl font-serif font-bold mb-4 text-foreground leading-tight overflow-hidden"
             style={{ perspective: '1000px' }}
           >
-            <span className="creperie-text block text-[#8B7355]">Creperie</span>
-            <span className="kinder-text block text-[#E07A5F]">Kinder 5</span>
+            <span className="creperie-text block">Creperie</span>
+            <span className="kinder-text text-primary block">Kinder 5</span>
           </h1>
           <p 
             ref={subtitleRef}
