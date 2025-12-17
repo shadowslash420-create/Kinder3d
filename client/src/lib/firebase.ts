@@ -11,18 +11,8 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-console.log("Firebase config check:", {
-  hasApiKey: !!firebaseConfig.apiKey,
-  hasAuthDomain: !!firebaseConfig.authDomain,
-  hasProjectId: !!firebaseConfig.projectId,
-  apiKey: firebaseConfig.apiKey?.substring(0, 10) + "...",
-  authDomain: firebaseConfig.authDomain,
-  projectId: firebaseConfig.projectId
-});
-
 if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId) {
-  console.error("Missing Firebase configuration values:", firebaseConfig);
-  throw new Error("Missing Firebase configuration. Please set VITE_FIREBASE_* environment variables in your Replit Secrets.");
+  throw new Error("Missing Firebase configuration. Please set FIREBASE_* environment variables in your Replit Secrets.");
 }
 
 const app = initializeApp(firebaseConfig);
