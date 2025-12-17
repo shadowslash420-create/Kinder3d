@@ -231,14 +231,14 @@ function MenuItemsContent() {
               <div>
                 <Label htmlFor="category">Category</Label>
                 <Select
-                  value={formData.categoryId}
-                  onValueChange={(val) => setFormData({ ...formData, categoryId: val })}
+                  value={formData.categoryId || "none"}
+                  onValueChange={(val) => setFormData({ ...formData, categoryId: val === "none" ? "" : val })}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">No category</SelectItem>
+                    <SelectItem value="none">No category</SelectItem>
                     {categories.map((cat) => (
                       <SelectItem key={cat.id} value={cat.id}>
                         {cat.name}
