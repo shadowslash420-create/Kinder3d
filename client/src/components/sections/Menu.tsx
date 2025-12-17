@@ -350,7 +350,7 @@ export default function Menu() {
           transition={{ delay: 0.5 }}
           className="mt-12 text-center"
         >
-          <button className="text-foreground border-b border-primary pb-1 hover:text-primary transition-colors font-serif italic text-lg">
+          <button className="border-b border-primary pb-1 hover:text-primary transition-colors font-serif italic text-[19px] text-[#290000]">
             View Full Menu
           </button>
         </motion.div>
