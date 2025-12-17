@@ -56,7 +56,8 @@ export function AnimatedButton({
       ref={buttonRef}
       onClick={onClick}
       disabled={disabled}
-      className={`relative font-semibold cursor-pointer bg-transparent border-none outline-none transition-colors duration-300 text-white hover:text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${className}`}
+      className={`relative font-semibold cursor-pointer bg-transparent border-none outline-none transition-colors duration-300 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${className}`}
+      style={{ color: '#FFFFFF' }}
     >
       <span className="relative z-10">{children}</span>
       <div
@@ -123,7 +124,8 @@ export function AnimatedNavLink({ children, href, onClick, className = "" }: Ani
       ref={linkRef}
       href={href}
       onClick={onClick}
-      className={`relative font-bold uppercase tracking-[0.15em] cursor-pointer bg-transparent border-none outline-none text-white hover:text-white transition-colors duration-300 px-2 py-1 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${className}`}
+      className={`relative font-bold uppercase tracking-[0.15em] cursor-pointer bg-transparent border-none outline-none transition-colors duration-300 px-2 py-1 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${className}`}
+      style={{ color: '#FFFFFF' }}
     >
       <span className="relative z-10">{children}</span>
       <div
