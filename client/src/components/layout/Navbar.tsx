@@ -83,7 +83,6 @@ export default function Navbar() {
     { name: "Home", href: "#hero" },
     { name: "About", href: "#about" },
     { name: "Menu", href: "#menu" },
-    { name: "Experience", href: "#gallery" },
     { name: "Contact", href: "#contact" },
   ];
 

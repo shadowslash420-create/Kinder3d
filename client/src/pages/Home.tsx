@@ -4,7 +4,6 @@ import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import Menu from "@/components/sections/Menu";
 import WhyUs from "@/components/sections/WhyUs";
-import Gallery from "@/components/sections/Gallery";
 import Contact from "@/components/sections/Contact";
 import { useEffect } from "react";
 import Lenis from "lenis";
@@ -40,7 +39,6 @@ export default function Home() {
         <About />
         <Menu />
         <WhyUs />
-        <Gallery />
         <Contact />
       </main>
       <Footer />
