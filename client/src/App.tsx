@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -10,6 +10,11 @@ import { AnimatePresence } from "framer-motion";
 const Home = lazy(() => import("@/pages/Home"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 const Intro = lazy(() => import("@/components/sections/Intro"));
+const AdminLogin = lazy(() => import("@/pages/admin/AdminLogin"));
+const Dashboard = lazy(() => import("@/pages/admin/Dashboard"));
+const Orders = lazy(() => import("@/pages/admin/Orders"));
+const MenuItems = lazy(() => import("@/pages/admin/MenuItems"));
+const Categories = lazy(() => import("@/pages/admin/Categories"));
 
 const PageLoader = () => (
   <div className="fixed inset-0 bg-[#FDFBF7] flex items-center justify-center">
@@ -22,6 +27,11 @@ function Router() {
     <Suspense fallback={<PageLoader />}>
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/admin" component={AdminLogin} />
+        <Route path="/admin/dashboard" component={Dashboard} />
+        <Route path="/admin/orders" component={Orders} />
+        <Route path="/admin/menu" component={MenuItems} />
+        <Route path="/admin/categories" component={Categories} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
@@ -29,6 +39,9 @@ function Router() {
 }
 
 function App() {
+  const [location] = useLocation();
+  const isAdminRoute = location.startsWith("/admin");
+
   const [hasEntered, setHasEntered] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("creperie_entered") === "true";
@@ -51,6 +64,17 @@ function App() {
   const handleEnter = () => {
     setHasEntered(true);
   };
+
+  if (isAdminRoute) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </QueryClientProvider>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
