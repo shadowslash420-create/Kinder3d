@@ -49,7 +49,7 @@ export default function WhyUs() {
                     {feature.icon}
                   </div>
                   <h3 className="font-bold text-base sm:text-lg mb-1 sm:mb-2 text-[#ff1c1c]">{feature.title}</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground">{feature.description}</p>
+                  <p className="text-xs sm:text-sm text-[#e8e6e3]">{feature.description}</p>
                 </motion.div>
               ))}
             </div>
