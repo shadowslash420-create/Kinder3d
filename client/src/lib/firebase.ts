@@ -199,10 +199,17 @@ export const menuService = {
   },
   
   async update(id: string, item: Partial<MenuItem>): Promise<void> {
-    await updateDoc(doc(db, "menu", id), {
-      ...item,
-      updatedAt: serverTimestamp(),
-    });
+    try {
+      console.log("Updating menu item:", id, item);
+      await updateDoc(doc(db, "menu", id), {
+        ...item,
+        updatedAt: serverTimestamp(),
+      });
+      console.log("Menu item updated successfully");
+    } catch (error: any) {
+      console.error("Error updating menu item:", error.code, error.message);
+      throw error;
+    }
   },
   
   async delete(id: string): Promise<void> {
