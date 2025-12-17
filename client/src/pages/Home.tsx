@@ -1,33 +1,55 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
-import About from "@/components/sections/About";
-import Menu from "@/components/sections/Menu";
-import Reviews from "@/components/sections/Reviews";
-import WhyUs from "@/components/sections/WhyUs";
-import Contact from "@/components/sections/Contact";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import Lenis from "lenis";
 
+const About = lazy(() => import("@/components/sections/About"));
+const Menu = lazy(() => import("@/components/sections/Menu"));
+const Reviews = lazy(() => import("@/components/sections/Reviews"));
+const WhyUs = lazy(() => import("@/components/sections/WhyUs"));
+const Contact = lazy(() => import("@/components/sections/Contact"));
+
+const SectionLoader = () => (
+  <div className="min-h-[50vh] flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
+
 export default function Home() {
+  const lenisRef = useRef<Lenis | null>(null);
+  const rafIdRef = useRef<number | null>(null);
   
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      smoothWheel: true,
-    });
+    const initLenis = () => {
+      if (lenisRef.current) return;
+      
+      lenisRef.current = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        smoothWheel: true,
+      });
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
+      function raf(time: number) {
+        lenisRef.current?.raf(time);
+        rafIdRef.current = requestAnimationFrame(raf);
+      }
+
+      rafIdRef.current = requestAnimationFrame(raf);
+    };
+
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(initLenis, { timeout: 2000 });
+    } else {
+      setTimeout(initLenis, 100);
     }
 
-    requestAnimationFrame(raf);
-
     return () => {
-      lenis.destroy();
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+      lenisRef.current?.destroy();
     };
   }, []);
 
@@ -57,11 +79,21 @@ export default function Home() {
       <Navbar />
       <main className="relative z-10">
         <Hero />
-        <About />
-        <Menu />
-        <Reviews />
-        <WhyUs />
-        <Contact />
+        <Suspense fallback={<SectionLoader />}>
+          <About />
+        </Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <Menu />
+        </Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <Reviews />
+        </Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <WhyUs />
+        </Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <Contact />
+        </Suspense>
       </main>
       <Footer />
     </div>

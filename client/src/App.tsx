@@ -4,18 +4,27 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CartProvider } from "@/context/CartContext";
-import Home from "@/pages/Home";
-import NotFound from "@/pages/not-found";
-import Intro from "@/components/sections/Intro";
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
+
+const Home = lazy(() => import("@/pages/Home"));
+const NotFound = lazy(() => import("@/pages/not-found"));
+const Intro = lazy(() => import("@/components/sections/Intro"));
+
+const PageLoader = () => (
+  <div className="fixed inset-0 bg-[#FDFBF7] flex items-center justify-center">
+    <div className="w-12 h-12 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route component={NotFound} />
-    </Switch>
+    <Suspense fallback={<PageLoader />}>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 
@@ -33,6 +42,12 @@ function App() {
     }
   }, [hasEntered]);
 
+  useEffect(() => {
+    if (!hasEntered) {
+      import("@/pages/Home");
+    }
+  }, [hasEntered]);
+
   const handleEnter = () => {
     setHasEntered(true);
   };
@@ -44,7 +59,9 @@ function App() {
           <Toaster />
           <AnimatePresence mode="wait">
             {!hasEntered ? (
-              <Intro key="intro" onEnter={handleEnter} />
+              <Suspense fallback={<PageLoader />}>
+                <Intro key="intro" onEnter={handleEnter} />
+              </Suspense>
             ) : (
               <div key="main">
                 <Router />

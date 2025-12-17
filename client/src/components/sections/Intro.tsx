@@ -150,6 +150,9 @@ export default function Intro({ onEnter }: IntroProps) {
           src="/kinder-hero.jpg"
           alt="Kinder Mascot"
           className="w-full h-full object-cover drop-shadow-2xl"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
         />
       </motion.div>
 

@@ -127,6 +127,9 @@ export default function Hero() {
           src="/kinder-luxury.jpg" 
           alt="Luxury Dining Background" 
           className="w-full h-full object-cover"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20 md:from-black/40 md:via-black/20 md:to-transparent" />
       </motion.div>
