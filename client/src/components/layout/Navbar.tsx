@@ -102,16 +102,17 @@ export default function Navbar() {
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             style={{
-              padding: '12px',
+              padding: '8px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              width: '48px',
-              height: '48px',
+              width: '44px',
+              height: '44px',
               background: 'none',
               border: 'none',
               cursor: 'pointer',
+              gap: '5px',
             }}
             aria-label="Toggle menu"
           >
@@ -121,14 +122,13 @@ export default function Navbar() {
               backgroundColor: 'white',
               borderRadius: '9999px',
               transition: 'all 0.3s',
-              transform: isMobileMenuOpen ? 'rotate(45deg) translateY(8px)' : 'none',
+              transform: isMobileMenuOpen ? 'rotate(45deg) translateY(7px)' : 'none',
             }} />
             <div style={{
               width: '24px',
               height: '2px',
               backgroundColor: 'white',
               borderRadius: '9999px',
-              marginTop: '8px',
               transition: 'all 0.3s',
               opacity: isMobileMenuOpen ? 0 : 1,
             }} />
@@ -137,9 +137,8 @@ export default function Navbar() {
               height: '2px',
               backgroundColor: 'white',
               borderRadius: '9999px',
-              marginTop: '8px',
               transition: 'all 0.3s',
-              transform: isMobileMenuOpen ? 'rotate(-45deg) translateY(-8px)' : 'none',
+              transform: isMobileMenuOpen ? 'rotate(-45deg) translateY(-7px)' : 'none',
             }} />
           </button>
         </div>
