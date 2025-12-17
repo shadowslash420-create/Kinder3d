@@ -31,17 +31,17 @@ const Logo3D = () => {
         perspective: "1000px"
       }}
     >
-      {/* Glowing Background */}
+      {/* Subtle Glowing Background */}
       <motion.div
         animate={{
-          opacity: isHovered ? 1 : 0.6,
-          scale: isHovered ? 1.05 : 1
+          opacity: isHovered ? 0.5 : 0.25,
+          scale: isHovered ? 1.02 : 1
         }}
         transition={{ duration: 0.3 }}
-        className="absolute inset-0 rounded-lg blur-xl"
+        className="absolute inset-0 rounded-lg"
         style={{
           background: "linear-gradient(135deg, #EF4444 0%, #DC2626 50%, #991B1B 100%)",
-          filter: "blur(12px)",
+          filter: "blur(8px)",
           zIndex: -1
         }}
       />
@@ -50,20 +50,18 @@ const Logo3D = () => {
         animate={{
           rotateX: rotate.x,
           rotateY: rotate.y,
-          scale: isHovered ? 1.08 : 1
+          scale: isHovered ? 1.05 : 1
         }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className="font-serif font-bold tracking-tighter text-2xl whitespace-nowrap px-4 py-2 rounded-lg"
         style={{
           transformStyle: "preserve-3d",
+          color: "#FFFFFF",
           textShadow: isHovered 
-            ? "0 0 30px rgba(239, 68, 68, 1), 0 0 60px rgba(239, 68, 68, 0.8), 0 4px 20px rgba(0, 0, 0, 0.4)"
-            : "0 0 20px rgba(239, 68, 68, 0.8), 0 4px 15px rgba(0, 0, 0, 0.3)",
-          background: "linear-gradient(135deg, #EF4444 0%, #DC2626 50%, #991B1B 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-          letterSpacing: "0.05em"
+            ? "0 0 15px rgba(239, 68, 68, 0.9), 0 0 30px rgba(239, 68, 68, 0.6)"
+            : "0 0 10px rgba(239, 68, 68, 0.7), 0 0 20px rgba(239, 68, 68, 0.4)",
+          letterSpacing: "0.05em",
+          filter: "drop-shadow(0 0 8px rgba(239, 68, 68, 0.6))"
         }}
       >
         Crêperie Kinder 5
