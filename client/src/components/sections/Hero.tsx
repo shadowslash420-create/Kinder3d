@@ -195,9 +195,6 @@ export default function Hero() {
             <MagneticButton className="rounded-full px-10 py-7 text-lg bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/20 transition-all duration-500">
               Explore Menu
             </MagneticButton>
-            <Button variant="ghost" size="lg" className="rounded-full px-8 text-lg h-14 text-foreground hover:bg-transparent hover:text-primary transition-colors group">
-              Watch Film <div className="ml-3 w-10 h-10 rounded-full border border-current flex items-center justify-center group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-all"><ArrowRight className="w-4 h-4" /></div>
-            </Button>
           </motion.div>
         </div>
 
