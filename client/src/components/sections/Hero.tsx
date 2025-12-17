@@ -105,6 +105,13 @@ const letterAnimation: any = {
       stiffness: 100,
     }
   },
+  hover: {
+    y: -5,
+    scale: 1.1,
+    color: "#FFD700",
+    textShadow: "0 0 20px rgba(255, 215, 0, 0.8)",
+    transition: { duration: 0.3 }
+  }
 };
 
 export default function Hero() {
@@ -143,22 +150,38 @@ export default function Hero() {
             variants={letterContainer}
             initial="hidden"
             animate="show"
-            className="text-6xl md:text-8xl font-serif font-bold leading-[0.9] mb-8 text-foreground tracking-tighter"
+            className="text-6xl md:text-8xl font-serif font-bold leading-[0.9] mb-8 tracking-tighter"
+            style={{
+              color: "#FFFFFF",
+              textShadow: "0 4px 30px rgba(0, 0, 0, 0.7), 0 2px 10px rgba(255, 215, 0, 0.4)"
+            }}
           >
-            <span className="text-primary">Creperie</span>
+            <span className="text-primary drop-shadow-[0_4px_15px_rgba(239,68,68,0.6)]">Creperie</span>
             <br />
             {"Kinder 5".split("").map((char, i) => (
-              <motion.span key={i} variants={letterAnimation} className="inline-block">
+              <motion.span 
+                key={i} 
+                variants={letterAnimation} 
+                whileHover="hover"
+                className="inline-block cursor-pointer"
+                style={{
+                  textShadow: "0 4px 30px rgba(0, 0, 0, 0.7), 0 2px 10px rgba(255, 215, 0, 0.4)"
+                }}
+              >
                 {char}
               </motion.span>
             ))}
           </motion.h1>
           
           <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 1 }}
-            className="text-xl text-muted-foreground mb-12 leading-relaxed max-w-md font-light"
+            className="text-xl mb-12 leading-relaxed max-w-md font-light"
+            style={{
+              color: "#FFFFFF",
+              textShadow: "0 2px 15px rgba(0, 0, 0, 0.6)"
+            }}
           >
             Finest crepes, waffles, and desserts in Batna. From our kitchen to your table, crafted with passion and precision.
           </motion.p>
