@@ -117,7 +117,7 @@ export default function Hero() {
       {/* Background Image */}
       <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
         <img 
-          src="/luxury-dining.jpg" 
+          src="/kinder-luxury.jpg" 
           alt="Luxury Dining Background" 
           className="w-full h-full object-cover"
         />
