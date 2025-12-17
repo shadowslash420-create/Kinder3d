@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import luxuryCrepe from "@assets/stock_images/luxury_crepe_with_ki_74d12ec0.jpg";
 import ShoppingCart from "@/components/ui/ShoppingCart";
 import { useCart } from "@/context/CartContext";
+import FloatingLines from "@/components/ui/FloatingLines";
 
 const menuItems = [
   {
@@ -182,7 +183,21 @@ export default function Menu() {
 
   return (
     <section id="menu" className="py-16 sm:py-24 md:py-32 bg-[#FDFBF7] relative overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6">
+      <div className="absolute inset-0 z-0 opacity-40">
+        <FloatingLines 
+          linesGradient={['#D4A574', '#C17B5A', '#E8C4A0', '#B8886F', '#F0D9C4']}
+          enabledWaves={['top', 'middle', 'bottom']}
+          lineCount={[10, 15, 20]}
+          lineDistance={[8, 6, 4]}
+          bendRadius={5.0}
+          bendStrength={-0.5}
+          interactive={true}
+          parallax={true}
+          animationSpeed={0.8}
+          mixBlendMode="multiply"
+        />
+      </div>
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
