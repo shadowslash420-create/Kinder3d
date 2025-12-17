@@ -30,11 +30,11 @@ export default function Navbar() {
         left: 0,
         right: 0,
         zIndex: 99999,
-        backgroundColor: '#1a1a1a',
+        backgroundColor: '#4A3728',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
         padding: isScrolled ? '12px 0' : '16px 0',
         transition: 'padding 0.3s ease',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
+        boxShadow: '0 4px 20px rgba(74, 55, 40, 0.4)',
       }}
     >
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -152,7 +152,7 @@ export default function Navbar() {
             inset: 0,
             top: '80px',
             zIndex: 40,
-            backgroundColor: '#1a1a1a',
+            backgroundColor: '#4A3728',
             borderTop: '1px solid rgba(255, 255, 255, 0.1)',
             display: 'flex',
             flexDirection: 'column',
