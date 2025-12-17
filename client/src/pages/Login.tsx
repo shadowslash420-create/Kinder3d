@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { signInWithGoogle, signInWithEmail, signUpWithEmail } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
+import Waves from "@/components/Waves";
 
 export default function Login() {
   const [, setLocation] = useLocation();
@@ -79,21 +80,50 @@ export default function Login() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #4A3728 0%, #2D1F17 100%)",
+        position: "relative",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         padding: "24px",
+        overflow: "hidden",
       }}
     >
+      <Waves
+        lineColor="rgba(220, 38, 38, 0.3)"
+        backgroundColor="#2D1F17"
+        waveSpeedX={0.015}
+        waveSpeedY={0.008}
+        waveAmpX={40}
+        waveAmpY={20}
+        xGap={12}
+        yGap={36}
+        friction={0.9}
+        tension={0.01}
+        maxCursorMove={120}
+        style={{ zIndex: 0 }}
+      />
+
       <div
         style={{
-          backgroundColor: "white",
+          position: "absolute",
+          inset: 0,
+          background: "radial-gradient(ellipse at center, transparent 0%, rgba(45, 31, 23, 0.6) 100%)",
+          zIndex: 1,
+          pointerEvents: "none",
+        }}
+      />
+
+      <div
+        style={{
+          position: "relative",
+          zIndex: 2,
+          backgroundColor: "rgba(255, 255, 255, 0.97)",
           borderRadius: "16px",
           padding: "48px",
           maxWidth: "420px",
           width: "100%",
-          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(220, 38, 38, 0.1)",
+          backdropFilter: "blur(10px)",
         }}
       >
         <Link href="/">

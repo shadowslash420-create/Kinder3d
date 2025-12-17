@@ -50,6 +50,7 @@ function Router() {
 function App() {
   const [location] = useLocation();
   const isAdminRoute = location.startsWith("/admin");
+  const isLoginRoute = location === "/login";
 
   const [hasEntered, setHasEntered] = useState(() => {
     if (typeof window !== "undefined") {
@@ -74,7 +75,7 @@ function App() {
     setHasEntered(true);
   };
 
-  if (isAdminRoute) {
+  if (isAdminRoute || isLoginRoute) {
     return (
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
