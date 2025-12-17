@@ -201,10 +201,13 @@ export const menuService = {
   async update(id: string, item: Partial<MenuItem>): Promise<void> {
     try {
       console.log("Updating menu item:", id, item);
-      await updateDoc(doc(db, "menu", id), {
-        ...item,
-        updatedAt: serverTimestamp(),
-      });
+      const cleanedItem: Record<string, any> = { updatedAt: serverTimestamp() };
+      for (const [key, value] of Object.entries(item)) {
+        if (value !== undefined) {
+          cleanedItem[key] = value;
+        }
+      }
+      await updateDoc(doc(db, "menu", id), cleanedItem);
       console.log("Menu item updated successfully");
     } catch (error: any) {
       console.error("Error updating menu item:", error.code, error.message);
