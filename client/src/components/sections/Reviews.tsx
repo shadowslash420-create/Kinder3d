@@ -25,12 +25,11 @@ export default function Reviews() {
           <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-4 block">
             Testimonials
           </span>
-          <h2 className="text-4xl md:text-5xl font-serif font-medium text-foreground">
+          <h2 className="text-4xl md:text-5xl font-serif font-medium text-[#bda89d]">
             What Our Guests Say
           </h2>
         </motion.div>
       </div>
-
       <div className="marquee">
         <div className="marquee__inner">
           <div className="marquee__group">
@@ -49,7 +48,6 @@ export default function Reviews() {
           </div>
         </div>
       </div>
-
       <style>{`
         .marquee {
           overflow: hidden;
