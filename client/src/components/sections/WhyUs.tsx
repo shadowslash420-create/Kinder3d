@@ -30,7 +30,7 @@ export default function WhyUs() {
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
           <div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold mb-4 sm:mb-6">Why We Are Different</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold mb-4 sm:mb-6 text-[#bdaea2]">Why We Are Different</h2>
             <p className="text-muted-foreground mb-8 sm:mb-10 md:mb-12 max-w-md text-sm sm:text-base">
               It's not just a crepe; it's an experience. We combine traditional techniques with modern indulgence.
             </p>
