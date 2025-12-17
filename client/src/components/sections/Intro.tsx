@@ -111,7 +111,7 @@ export default function Intro({ onEnter }: IntroProps) {
             ref={buttonRef}
             onClick={handleEnter}
             disabled={isExiting}
-            className="relative text-2xl font-semibold cursor-pointer bg-transparent border-none outline-none text-foreground hover:text-white px-14 py-4 flex items-center gap-3 disabled:opacity-80 disabled:cursor-not-allowed transition-colors duration-300"
+            className="relative text-2xl font-semibold cursor-pointer bg-transparent border-none outline-none text-gray-800 hover:text-white px-14 py-4 flex items-center gap-3 disabled:opacity-80 disabled:cursor-not-allowed transition-colors duration-300"
           >
             <span className="relative z-10 flex items-center gap-3">
               Enter
