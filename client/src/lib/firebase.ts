@@ -202,20 +202,23 @@ export const menuService = {
         updatedAt: convertTimestamp(doc.data().updatedAt),
       })) as MenuItem[];
       callback(items);
+    }, (error) => {
+      console.error("Error fetching menu items:", error);
+      callback([]);
     });
   }
 };
 
 export const categoryService = {
   async getAll(): Promise<Category[]> {
-    const q = query(collection(db, "categories"), orderBy("displayOrder"));
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({
+    const snapshot = await getDocs(collection(db, "categories"));
+    const categories = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
       createdAt: convertTimestamp(doc.data().createdAt),
       updatedAt: convertTimestamp(doc.data().updatedAt),
     })) as Category[];
+    return categories.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
   },
   
   async getById(id: string): Promise<Category | null> {
@@ -245,15 +248,20 @@ export const categoryService = {
   },
   
   subscribe(callback: (categories: Category[]) => void) {
-    const q = query(collection(db, "categories"), orderBy("displayOrder"));
-    return onSnapshot(q, (snapshot) => {
+    console.log("Subscribing to categories collection...");
+    return onSnapshot(collection(db, "categories"), (snapshot) => {
+      console.log("Categories snapshot received, count:", snapshot.docs.length);
       const categories = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
         createdAt: convertTimestamp(doc.data().createdAt),
         updatedAt: convertTimestamp(doc.data().updatedAt),
       })) as Category[];
+      categories.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
       callback(categories);
+    }, (error) => {
+      console.error("Error fetching categories:", error);
+      callback([]);
     });
   }
 };
@@ -315,6 +323,9 @@ export const orderService = {
         updatedAt: convertTimestamp(doc.data().updatedAt),
       })) as Order[];
       callback(orders);
+    }, (error) => {
+      console.error("Error fetching orders:", error);
+      callback([]);
     });
   }
 };
