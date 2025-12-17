@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import diningImage from "@assets/51216_150042_Maps_1765939512903.jpg";
+import diningImage from "@assets/uiughuyguygyti7_210241_Maps_1766002062020.jpg";
 import GridMotion from "@/components/ui/GridMotion";
 
 export default function About() {
