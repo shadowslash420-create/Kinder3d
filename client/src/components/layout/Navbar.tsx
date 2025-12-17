@@ -88,8 +88,8 @@ export default function Navbar() {
     <motion.nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out border-b ${
         isScrolled
-          ? "bg-white/80 backdrop-blur-xl border-white/20 py-4 shadow-[0_4px_30px_rgba(0,0,0,0.03)]"
-          : "bg-transparent border-transparent py-6"
+          ? "bg-[#1a1a1a]/95 backdrop-blur-xl border-white/10 py-4 shadow-[0_4px_30px_rgba(0,0,0,0.2)]"
+          : "bg-[#1a1a1a]/90 backdrop-blur-md border-transparent py-6"
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -134,7 +134,7 @@ export default function Navbar() {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "100vh" }}
           exit={{ opacity: 0, height: 0 }}
-          className="md:hidden bg-[#FDFBF7] fixed inset-0 top-[72px] z-40 border-t border-border overflow-hidden"
+          className="md:hidden bg-[#1a1a1a] fixed inset-0 top-[72px] z-40 border-t border-white/10 overflow-hidden"
         >
           <div className="flex flex-col p-8 space-y-6 items-center justify-center h-full pb-20">
             {navLinks.map((link, i) => (
