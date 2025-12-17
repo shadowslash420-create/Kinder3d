@@ -91,8 +91,9 @@ export default function Navbar() {
           ? "bg-[#1a1a1a]/90 border-white/10 py-3 shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
           : "bg-[#1a1a1a]/85 border-white/5 py-4"
       }`}
-      initial={{ y: 0 }}
-      animate={{ y: 0 }}
+      initial={{ y: 0, opacity: 1 }}
+      animate={{ y: 0, opacity: 1 }}
+      style={{ visibility: 'visible' }}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         <Link href="/" className="relative group">
