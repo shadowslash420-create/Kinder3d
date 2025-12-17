@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import NavbarCart from "@/components/ui/NavbarCart";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { scrollY } = useScroll();
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsScrolled(latest > 50);
-  });
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navLinks = [
     { name: "Home", href: "#hero" },
@@ -21,12 +24,20 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 border-b ${
-        isScrolled
-          ? "bg-[#1a1a1a]/95 backdrop-blur-md border-white/10 py-3 shadow-lg"
-          : "bg-[#1a1a1a]/90 backdrop-blur-sm border-white/5 py-4"
-      }`}
-      style={{ opacity: 1, visibility: 'visible' }}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 9999,
+        backgroundColor: isScrolled ? 'rgba(26, 26, 26, 0.95)' : 'rgba(26, 26, 26, 0.90)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        padding: isScrolled ? '12px 0' : '16px 0',
+        transition: 'all 0.3s ease',
+        boxShadow: isScrolled ? '0 4px 30px rgba(0, 0, 0, 0.3)' : 'none',
+      }}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         <Link href="/" className="relative group">
@@ -75,7 +86,17 @@ export default function Navbar() {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-[#1a1a1a] fixed inset-0 top-[72px] z-40 border-t border-white/10">
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            top: '72px',
+            zIndex: 40,
+            backgroundColor: '#1a1a1a',
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+          }}
+          className="md:hidden"
+        >
           <div className="flex flex-col p-8 space-y-6 items-center justify-center h-full pb-20">
             {navLinks.map((link) => (
               <a
