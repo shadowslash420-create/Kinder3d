@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import luxuryCrepe from "@assets/stock_images/luxury_crepe_with_ki_74d12ec0.jpg";
 import ShoppingCart from "@/components/ui/ShoppingCart";
 import { useCart } from "@/context/CartContext";
@@ -181,22 +181,26 @@ export default function Menu() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  const floatingLinesBackground = useMemo(() => (
+    <div className="absolute inset-0 z-0">
+      <FloatingLines 
+        linesGradient={['#8B4513', '#A0522D', '#CD853F', '#D2691E', '#B8860B']}
+        enabledWaves={['top', 'middle', 'bottom']}
+        lineCount={[12, 16, 20]}
+        lineDistance={[6, 5, 4]}
+        bendRadius={5.0}
+        bendStrength={-0.5}
+        interactive={true}
+        parallax={true}
+        animationSpeed={0.8}
+        mixBlendMode="normal"
+      />
+    </div>
+  ), []);
+
   return (
     <section id="menu" className="py-16 sm:py-24 md:py-32 bg-[#FDFBF7] relative overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <FloatingLines 
-          linesGradient={['#8B4513', '#A0522D', '#CD853F', '#D2691E', '#B8860B']}
-          enabledWaves={['top', 'middle', 'bottom']}
-          lineCount={[12, 16, 20]}
-          lineDistance={[6, 5, 4]}
-          bendRadius={5.0}
-          bendStrength={-0.5}
-          interactive={true}
-          parallax={true}
-          animationSpeed={0.8}
-          mixBlendMode="normal"
-        />
-      </div>
+      {floatingLinesBackground}
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
