@@ -4,6 +4,52 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// 3D Logo Component
+const Logo3D = () => {
+  const [rotate, setRotate] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientY - rect.top - rect.height / 2) / 10;
+    const y = (e.clientX - rect.left - rect.width / 2) / 10;
+    setRotate({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setRotate({ x: 0, y: 0 });
+  };
+
+  return (
+    <div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="h-10 flex items-center cursor-pointer perspective"
+      style={{
+        perspective: "1000px"
+      }}
+    >
+      <motion.div
+        animate={{
+          rotateX: rotate.x,
+          rotateY: rotate.y
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        className="font-serif font-bold tracking-tighter text-xl whitespace-nowrap"
+        style={{
+          transformStyle: "preserve-3d",
+          textShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
+          background: "linear-gradient(135deg, #EF4444 0%, #DC2626 50%, #991B1B 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text"
+        }}
+      >
+        Crêperie Kinder 5
+      </motion.div>
+    </div>
+  );
+};
+
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -34,8 +80,8 @@ export default function Navbar() {
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         <Link href="/">
-          <a className="text-2xl font-serif font-bold text-foreground tracking-tighter relative group">
-            Kinder<span className="text-primary group-hover:text-gold transition-colors duration-500">Délice</span>
+          <a className="relative group">
+            <Logo3D />
           </a>
         </Link>
 
