@@ -10,8 +10,9 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, Image } from "lucide-react";
+import { Plus, Pencil, Trash2, Image as ImageIcon } from "lucide-react";
 import { menuService, categoryService, type MenuItem, type Category } from "@/lib/firebase";
+import ImageUpload from "@/components/ui/ImageUpload";
 
 function MenuItemsContent() {
   const { toast } = useToast();
@@ -148,7 +149,7 @@ function MenuItemsContent() {
                     />
                   ) : (
                     <div className="flex items-center justify-center h-full">
-                      <Image className="h-12 w-12 text-slate-300" />
+                      <ImageIcon className="h-12 w-12 text-slate-300" />
                     </div>
                   )}
                   {!item.isAvailable && (
@@ -249,12 +250,11 @@ function MenuItemsContent() {
               </div>
             </div>
             <div>
-              <Label htmlFor="imageUrl">Image URL</Label>
-              <Input
-                id="imageUrl"
+              <Label>Image</Label>
+              <ImageUpload
                 value={formData.imageUrl}
-                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                placeholder="https://example.com/image.jpg"
+                onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+                onError={(error) => toast({ title: "Upload Error", description: error, variant: "destructive" })}
               />
             </div>
             <div>
