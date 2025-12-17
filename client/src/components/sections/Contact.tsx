@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-16 sm:py-24 md:py-32 bg-foreground text-[#FDFBF7] relative overflow-hidden">
+    <section id="contact" className="py-16 sm:py-24 md:py-32 text-[#FDFBF7] relative overflow-hidden">
       {/* Background Texture/Noise could go here */}
       
       <div className="container mx-auto px-4 sm:px-6 relative z-10">

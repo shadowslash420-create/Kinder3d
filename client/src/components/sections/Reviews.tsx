@@ -13,7 +13,7 @@ const reviews = [
 
 export default function Reviews() {
   return (
-    <section className="py-16 bg-[#FDFBF7] overflow-hidden">
+    <section className="py-16 overflow-hidden">
       <div className="container mx-auto px-6 mb-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -48,8 +48,8 @@ export default function About() {
 
   return (
     <section id="about" className="py-16 sm:py-24 md:py-32 relative overflow-hidden min-h-screen">
-      <div className="absolute inset-0 z-0">
-        <GridMotion items={gridItems} gradientColor="rgba(253, 251, 247, 0.9)" />
+      <div className="absolute inset-0 z-0 opacity-30">
+        <GridMotion items={gridItems} gradientColor="transparent" />
       </div>
       
       <div className="container mx-auto px-4 sm:px-6 relative z-10">

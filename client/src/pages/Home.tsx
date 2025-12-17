@@ -12,7 +12,6 @@ import Lenis from "lenis";
 export default function Home() {
   
   useEffect(() => {
-    // Smooth scroll setup
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -33,9 +32,30 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-background text-foreground overflow-x-hidden">
+    <div className="w-full min-h-screen text-foreground overflow-x-hidden relative">
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          background: `linear-gradient(
+            180deg,
+            #1a1a1a 0%,
+            #2d1810 8%,
+            #6B4423 18%,
+            #A67B5B 28%,
+            #F3E5AB 38%,
+            #FDFBF7 48%,
+            #F3E5AB 58%,
+            #A67B5B 68%,
+            #6B4423 78%,
+            #2d1810 88%,
+            #1a1a1a 100%
+          )`,
+          backgroundSize: '100% 600vh',
+          backgroundAttachment: 'fixed'
+        }}
+      />
       <Navbar />
-      <main>
+      <main className="relative z-10">
         <Hero />
         <About />
         <Menu />

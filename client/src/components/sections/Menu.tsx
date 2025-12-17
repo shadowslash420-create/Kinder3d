@@ -199,7 +199,7 @@ export default function Menu() {
   ), []);
 
   return (
-    <section id="menu" className="py-16 sm:py-24 md:py-32 bg-[#FDFBF7] relative overflow-hidden">
+    <section id="menu" className="py-16 sm:py-24 md:py-32 relative overflow-hidden">
       {floatingLinesBackground}
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div 
