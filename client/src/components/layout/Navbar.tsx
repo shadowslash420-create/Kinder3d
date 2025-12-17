@@ -1,10 +1,29 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import NavbarCart from "@/components/ui/NavbarCart";
+import { useAuth } from "@/context/AuthContext";
+import { signInWithGoogle } from "@/lib/firebase";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, loading, logout } = useAuth();
+
+  const handleLogin = async () => {
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,6 +114,86 @@ export default function Navbar() {
           >
             Reserve
           </button>
+
+          {!loading && (
+            user ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                {user.photoURL && (
+                  <img 
+                    src={user.photoURL} 
+                    alt="Profile" 
+                    style={{ 
+                      width: '32px', 
+                      height: '32px', 
+                      borderRadius: '50%',
+                      border: '2px solid white'
+                    }} 
+                  />
+                )}
+                <button
+                  onClick={handleLogout}
+                  style={{
+                    padding: '8px 16px',
+                    fontSize: '0.75rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    fontWeight: '600',
+                    color: 'white',
+                    backgroundColor: 'transparent',
+                    border: '1px solid white',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'white';
+                    e.currentTarget.style.color = '#4A3728';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = 'white';
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handleLogin}
+                style={{
+                  padding: '8px 16px',
+                  fontSize: '0.75rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  fontWeight: '600',
+                  color: 'white',
+                  backgroundColor: 'transparent',
+                  border: '1px solid white',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'white';
+                  e.currentTarget.style.color = '#4A3728';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = 'white';
+                }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                  <polyline points="10 17 15 12 10 7"/>
+                  <line x1="15" y1="12" x2="3" y2="12"/>
+                </svg>
+                Sign In
+              </button>
+            )
+          )}
         </nav>
 
         <div className="flex items-center gap-4 md:hidden">
@@ -303,6 +402,86 @@ export default function Navbar() {
           >
             Book Table
           </button>
+
+          {!loading && (
+            user ? (
+              <div style={{ 
+                marginTop: '24px', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                gap: '12px' 
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  {user.photoURL && (
+                    <img 
+                      src={user.photoURL} 
+                      alt="Profile" 
+                      style={{ 
+                        width: '40px', 
+                        height: '40px', 
+                        borderRadius: '50%',
+                        border: '2px solid white'
+                      }} 
+                    />
+                  )}
+                  <span style={{ color: 'white', fontSize: '1rem' }}>
+                    {user.displayName || user.email}
+                  </span>
+                </div>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  style={{
+                    padding: '16px 32px',
+                    fontSize: '1rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    fontWeight: '600',
+                    color: 'white',
+                    backgroundColor: 'transparent',
+                    border: '2px solid white',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  handleLogin();
+                  setIsMobileMenuOpen(false);
+                }}
+                style={{
+                  marginTop: '24px',
+                  padding: '16px 32px',
+                  fontSize: '1rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  fontWeight: '600',
+                  color: 'white',
+                  backgroundColor: 'transparent',
+                  border: '2px solid white',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                  <polyline points="10 17 15 12 10 7"/>
+                  <line x1="15" y1="12" x2="3" y2="12"/>
+                </svg>
+                Sign In
+              </button>
+            )
+          )}
         </div>
       )}
     </header>
