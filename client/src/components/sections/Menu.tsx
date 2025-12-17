@@ -1,7 +1,16 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import luxuryCrepe from "@assets/stock_images/luxury_crepe_with_ki_74d12ec0.jpg";
+import ShoppingCart from "@/components/ui/ShoppingCart";
+
+interface CartItem {
+  id: number;
+  name: string;
+  price: string;
+  quantity: number;
+  image: string;
+}
 
 const menuItems = [
   {
@@ -57,6 +66,8 @@ const menuItems = [
 export default function Menu() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<typeof menuItems[0] | null>(null);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const totalItems = menuItems.length;
 
   const handleNext = useCallback(() => {
@@ -68,19 +79,52 @@ export default function Menu() {
   }, [totalItems]);
 
   useEffect(() => {
-    if (isDragging) return;
+    if (isDragging || selectedItem) return;
     const interval = setInterval(handleNext, 4000);
     return () => clearInterval(interval);
-  }, [handleNext, isDragging]);
+  }, [handleNext, isDragging, selectedItem]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedItem) {
+        if (e.key === 'Escape') setSelectedItem(null);
+        return;
+      }
       if (e.key === 'ArrowLeft') handlePrev();
       if (e.key === 'ArrowRight') handleNext();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleNext, handlePrev]);
+  }, [handleNext, handlePrev, selectedItem]);
+
+  const getItemQuantity = (itemId: number) => {
+    const cartItem = cart.find(item => item.id === itemId);
+    return cartItem?.quantity || 0;
+  };
+
+  const handleAddToCart = (item: typeof menuItems[0]) => {
+    setCart(prev => {
+      const existing = prev.find(i => i.id === item.id);
+      if (existing) {
+        return prev.map(i => 
+          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+        );
+      }
+      return [...prev, { id: item.id, name: item.name, price: item.price, quantity: 1, image: item.image }];
+    });
+  };
+
+  const handleRemoveFromCart = (itemId: number) => {
+    setCart(prev => {
+      const existing = prev.find(i => i.id === itemId);
+      if (existing && existing.quantity > 1) {
+        return prev.map(i => 
+          i.id === itemId ? { ...i, quantity: i.quantity - 1 } : i
+        );
+      }
+      return prev.filter(i => i.id !== itemId);
+    });
+  };
 
   const getCardStyle = (index: number) => {
     const diff = index - activeIndex;
@@ -148,6 +192,8 @@ export default function Menu() {
     return { x, z, rotateY, scale, opacity, zIndex };
   };
 
+  const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
   return (
     <section id="menu" className="py-32 bg-[#FDFBF7] relative overflow-hidden">
       <div className="container mx-auto px-6">
@@ -161,8 +207,18 @@ export default function Menu() {
           <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-4 block">Our Selection</span>
           <h2 className="text-5xl md:text-6xl font-serif font-medium text-foreground">Curated Indulgence</h2>
           <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
-            Drag or use arrows to explore our signature creations
+            Click on any item to add to your bag
           </p>
+          
+          {totalCartItems > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-4 inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full"
+            >
+              <span className="font-medium">{totalCartItems} item{totalCartItems > 1 ? 's' : ''} in your bag</span>
+            </motion.div>
+          )}
         </motion.div>
 
         <div 
@@ -176,6 +232,7 @@ export default function Menu() {
             <AnimatePresence mode="popLayout">
               {menuItems.map((menuItem, index) => {
                 const style = getCardStyle(index);
+                const isCenter = style.zIndex === 5;
                 
                 return (
                   <motion.div
@@ -216,13 +273,20 @@ export default function Menu() {
                       const diff = index - activeIndex;
                       const normalizedDiff = ((diff + totalItems) % totalItems);
                       const adjustedDiff = normalizedDiff > totalItems / 2 ? normalizedDiff - totalItems : normalizedDiff;
-                      if (adjustedDiff !== 0) {
+                      if (adjustedDiff === 0) {
+                        setSelectedItem(menuItem);
+                      } else {
                         setActiveIndex(index);
                       }
                     }}
-                    whileHover={style.zIndex === 5 ? { scale: 1.02 } : {}}
+                    whileHover={isCenter ? { scale: 1.02 } : {}}
                   >
-                    <div className="bg-white rounded-2xl overflow-hidden shadow-2xl">
+                    <div className="bg-white rounded-2xl overflow-hidden shadow-2xl relative">
+                      {getItemQuantity(menuItem.id) > 0 && (
+                        <div className="absolute top-3 right-3 z-20 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">
+                          {getItemQuantity(menuItem.id)}
+                        </div>
+                      )}
                       <div className="relative aspect-[4/5] overflow-hidden">
                         <img 
                           src={menuItem.image} 
@@ -291,6 +355,66 @@ export default function Menu() {
           </button>
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {selectedItem && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setSelectedItem(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="bg-white rounded-3xl overflow-hidden shadow-2xl max-w-lg w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <img
+                  src={selectedItem.image}
+                  alt={selectedItem.name}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                <button
+                  onClick={() => setSelectedItem(null)}
+                  className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-foreground hover:bg-white transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <span className="text-xs uppercase tracking-wider opacity-80 mb-2 block">
+                    {selectedItem.category}
+                  </span>
+                  <h3 className="font-serif text-3xl font-bold">{selectedItem.name}</h3>
+                </div>
+              </div>
+              
+              <div className="p-6">
+                <p className="text-muted-foreground leading-relaxed mb-6">
+                  {selectedItem.description}
+                </p>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl font-serif font-bold text-primary">
+                    {selectedItem.price}
+                  </span>
+                  
+                  <ShoppingCart
+                    count={getItemQuantity(selectedItem.id)}
+                    onAdd={() => handleAddToCart(selectedItem)}
+                    onRemove={() => handleRemoveFromCart(selectedItem.id)}
+                  />
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
