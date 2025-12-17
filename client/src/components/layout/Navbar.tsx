@@ -122,12 +122,33 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu Toggle */}
-        <button
-          className="md:hidden text-foreground p-2 hover:bg-foreground/5 rounded-full transition-colors"
+        <motion.button
+          className="md:hidden p-2 rounded-full transition-colors relative"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          style={{
+            color: "#FFFFFF",
+            textShadow: "0 0 10px rgba(239, 68, 68, 0.7), 0 0 20px rgba(239, 68, 68, 0.4)",
+            filter: "drop-shadow(0 0 8px rgba(239, 68, 68, 0.6))"
+          }}
         >
+          {/* Subtle Glow Background */}
+          <motion.div
+            animate={{
+              opacity: isMobileMenuOpen ? 0.3 : 0.15,
+              scale: isMobileMenuOpen ? 1.02 : 1
+            }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: "linear-gradient(135deg, #EF4444 0%, #DC2626 50%, #991B1B 100%)",
+              filter: "blur(6px)",
+              zIndex: -1
+            }}
+          />
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        </motion.button>
       </div>
 
       {/* Mobile Menu Overlay */}
