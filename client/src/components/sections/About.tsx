@@ -1,12 +1,6 @@
 import { motion } from "framer-motion";
 import diningImage from "@assets/51216_150042_Maps_1765939512903.jpg";
 import GridMotion from "@/components/ui/GridMotion";
-import img1 from "@assets/image_1765941279050.png";
-import img2 from "@assets/image_1765941539952.png";
-import img3 from "@assets/image_1765941548568.png";
-import img4 from "@assets/image_1765941561252.png";
-import img5 from "@assets/image_1765941570860.png";
-import img6 from "@assets/image_1765941577728.png";
 
 export default function About() {
   const stats = [
@@ -15,35 +9,41 @@ export default function About() {
     { value: "50+", label: "Variations" },
   ];
 
+  const colors = {
+    brown: '#6B4423',
+    vanilla: '#F3E5AB',
+    lightBrown: '#A67B5B'
+  };
+
   const gridItems = [
-    img1,
-    <div key='jsx-item-1' className="font-serif text-lg text-white/80">Passion</div>,
-    img2,
-    <div key='jsx-item-2' className="font-serif text-lg text-white/80">Quality</div>,
-    img3,
-    <div key='jsx-item-3' className="font-serif text-lg text-white/80">Tradition</div>,
-    img4,
-    <div key='jsx-item-4' className="font-serif text-lg text-white/80">Love</div>,
-    img5,
-    <div key='jsx-item-5' className="font-serif text-lg text-white/80">Fresh</div>,
-    img6,
-    <div key='jsx-item-6' className="font-serif text-lg text-white/80">Craft</div>,
-    img1,
-    <div key='jsx-item-7' className="font-serif text-lg text-white/80">Joy</div>,
-    img2,
-    <div key='jsx-item-8' className="font-serif text-lg text-white/80">Family</div>,
-    img3,
-    <div key='jsx-item-9' className="font-serif text-lg text-white/80">Warmth</div>,
-    img4,
-    <div key='jsx-item-10' className="font-serif text-lg text-white/80">Heritage</div>,
-    img5,
-    <div key='jsx-item-11' className="font-serif text-lg text-white/80">Care</div>,
-    img6,
-    <div key='jsx-item-12' className="font-serif text-lg text-white/80">Sweet</div>,
-    img1,
-    <div key='jsx-item-13' className="font-serif text-lg text-white/80">Delicious</div>,
-    img2,
-    <div key='jsx-item-14' className="font-serif text-lg text-white/80">Authentic</div>,
+    <div key='block-1' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
+    <div key='block-2' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
+    <div key='block-3' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
+    <div key='block-4' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
+    <div key='block-5' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
+    <div key='block-6' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
+    <div key='block-7' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
+    <div key='block-8' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
+    <div key='block-9' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
+    <div key='block-10' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
+    <div key='block-11' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
+    <div key='block-12' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
+    <div key='block-13' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
+    <div key='block-14' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
+    <div key='block-15' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
+    <div key='block-16' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
+    <div key='block-17' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
+    <div key='block-18' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
+    <div key='block-19' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
+    <div key='block-20' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
+    <div key='block-21' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
+    <div key='block-22' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
+    <div key='block-23' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
+    <div key='block-24' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
+    <div key='block-25' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
+    <div key='block-26' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
+    <div key='block-27' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
+    <div key='block-28' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
   ];
 
   return (
