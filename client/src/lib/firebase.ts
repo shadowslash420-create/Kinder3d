@@ -210,13 +210,16 @@ export const menuService = {
   },
   
   subscribe(callback: (items: MenuItem[]) => void) {
+    console.log("Subscribing to menu collection...");
     return onSnapshot(collection(db, "menu"), (snapshot) => {
+      console.log("Menu snapshot received, count:", snapshot.docs.length);
       const items = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
         createdAt: convertTimestamp(doc.data().createdAt),
         updatedAt: convertTimestamp(doc.data().updatedAt),
       })) as MenuItem[];
+      console.log("Available items after filtering:", items.filter(i => i.isAvailable).length);
       callback(items);
     }, (error) => {
       console.error("Error fetching menu items:", error);
