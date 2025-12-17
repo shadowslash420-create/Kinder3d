@@ -71,6 +71,15 @@ Preferred communication style: Simple, everyday language.
 4. **Typography**: Playfair Display for headings, DM Sans for body text
 5. **Mobile-First**: Responsive design with dedicated mobile menu and touch-friendly interactions
 
+## Recent Changes
+
+### December 17, 2025 - Customer Ordering System
+- **Customer Authentication**: Email/password and Google sign-in via Firebase
+- **Shopping Cart**: Firebase-persisted cart that syncs across sessions
+- **Menu Browsing**: Category-filtered menu page with add-to-cart functionality
+- **Checkout**: Customer details form (name, phone, address) with COD payment
+- **Order Tracking**: My Orders page with real-time status updates
+
 ## External Dependencies
 
 ### Database
