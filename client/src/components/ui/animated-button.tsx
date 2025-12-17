@@ -133,7 +133,7 @@ export function AnimatedNavLink({ children, href, onClick, className = "" }: Ani
           top: "100%",
           height: "2px",
           width: "100%",
-          backgroundColor: "#006b92"
+          backgroundColor: "#DC2626"
         }}
       />
     </a>
