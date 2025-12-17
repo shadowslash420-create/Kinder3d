@@ -1,8 +1,8 @@
-import { motion } from "framer-motion";
-import { Plus } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
 import luxuryCrepe from "@assets/stock_images/luxury_crepe_with_ki_74d12ec0.jpg";
 
-// Mock data - Authentic Menu
 const menuItems = [
   {
     id: 1,
@@ -36,88 +36,260 @@ const menuItems = [
     category: "Waffles",
     image: "https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&q=80&w=800"
   },
+  {
+    id: 5,
+    name: "Caramel Dream",
+    description: "Salted caramel sauce with vanilla ice cream and crushed biscuits.",
+    price: "580 DA",
+    category: "Signature",
+    image: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    id: 6,
+    name: "Tropical Bliss",
+    description: "Mango, passion fruit, and coconut cream on a light crepe.",
+    price: "600 DA",
+    category: "Fruity",
+    image: "https://images.unsplash.com/photo-1476887334197-56adbf254e1a?auto=format&fit=crop&q=80&w=800"
+  },
 ];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const item: any = {
-  hidden: { opacity: 0, y: 40 },
-  show: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 50,
-      damping: 20
-    }
-  }
-};
-
 export default function Menu() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const totalItems = menuItems.length;
+
+  const handleNext = useCallback(() => {
+    setActiveIndex((prev) => (prev + 1) % totalItems);
+  }, [totalItems]);
+
+  const handlePrev = useCallback(() => {
+    setActiveIndex((prev) => (prev - 1 + totalItems) % totalItems);
+  }, [totalItems]);
+
+  useEffect(() => {
+    if (isDragging) return;
+    const interval = setInterval(handleNext, 4000);
+    return () => clearInterval(interval);
+  }, [handleNext, isDragging]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') handlePrev();
+      if (e.key === 'ArrowRight') handleNext();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleNext, handlePrev]);
+
+  const getCardStyle = (index: number) => {
+    const diff = index - activeIndex;
+    const normalizedDiff = ((diff + totalItems) % totalItems);
+    const adjustedDiff = normalizedDiff > totalItems / 2 ? normalizedDiff - totalItems : normalizedDiff;
+    
+    const absPosition = Math.abs(adjustedDiff);
+    const isCenter = adjustedDiff === 0;
+    const isLeft1 = adjustedDiff === -1;
+    const isRight1 = adjustedDiff === 1;
+    const isLeft2 = adjustedDiff === -2;
+    const isRight2 = adjustedDiff === 2;
+    
+    let x = 0;
+    let z = 0;
+    let rotateY = 0;
+    let scale = 0.5;
+    let opacity = 0;
+    let zIndex = 0;
+
+    if (isCenter) {
+      x = 0;
+      z = 100;
+      rotateY = 0;
+      scale = 1;
+      opacity = 1;
+      zIndex = 5;
+    } else if (isLeft1) {
+      x = -280;
+      z = 0;
+      rotateY = 35;
+      scale = 0.85;
+      opacity = 1;
+      zIndex = 4;
+    } else if (isRight1) {
+      x = 280;
+      z = 0;
+      rotateY = -35;
+      scale = 0.85;
+      opacity = 1;
+      zIndex = 4;
+    } else if (isLeft2) {
+      x = -480;
+      z = -100;
+      rotateY = 50;
+      scale = 0.65;
+      opacity = 0.6;
+      zIndex = 3;
+    } else if (isRight2) {
+      x = 480;
+      z = -100;
+      rotateY = -50;
+      scale = 0.65;
+      opacity = 0.6;
+      zIndex = 3;
+    } else if (absPosition <= 3) {
+      x = adjustedDiff > 0 ? 600 : -600;
+      z = -200;
+      rotateY = adjustedDiff > 0 ? -60 : 60;
+      scale = 0.5;
+      opacity = 0.3;
+      zIndex = 2;
+    }
+
+    return { x, z, rotateY, scale, opacity, zIndex };
+  };
+
   return (
-    <section id="menu" className="py-32 bg-[#FDFBF7] relative">
+    <section id="menu" className="py-32 bg-[#FDFBF7] relative overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-20">
-          <div className="max-w-2xl">
-            <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-4 block">Our Selection</span>
-            <h2 className="text-5xl md:text-6xl font-serif font-medium text-foreground">Curated Indulgence</h2>
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-4 block">Our Selection</span>
+          <h2 className="text-5xl md:text-6xl font-serif font-medium text-foreground">Curated Indulgence</h2>
+          <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
+            Drag or use arrows to explore our signature creations
+          </p>
+        </motion.div>
+
+        <div 
+          className="relative h-[600px] flex items-center justify-center"
+          style={{ perspective: "1200px" }}
+        >
+          <div 
+            className="relative w-full h-full flex items-center justify-center"
+            style={{ transformStyle: "preserve-3d" }}
+          >
+            <AnimatePresence mode="popLayout">
+              {menuItems.map((menuItem, index) => {
+                const style = getCardStyle(index);
+                
+                return (
+                  <motion.div
+                    key={menuItem.id}
+                    className="absolute cursor-pointer"
+                    style={{
+                      width: "320px",
+                      transformStyle: "preserve-3d",
+                      zIndex: style.zIndex,
+                    }}
+                    initial={false}
+                    animate={{
+                      x: style.x,
+                      z: style.z,
+                      rotateY: style.rotateY,
+                      scale: style.scale,
+                      opacity: style.opacity,
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 100,
+                      damping: 20,
+                      mass: 1,
+                    }}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.1}
+                    onDragStart={() => setIsDragging(true)}
+                    onDragEnd={(_, info) => {
+                      setIsDragging(false);
+                      if (info.offset.x > 50) {
+                        handlePrev();
+                      } else if (info.offset.x < -50) {
+                        handleNext();
+                      }
+                    }}
+                    onClick={() => {
+                      const diff = index - activeIndex;
+                      const normalizedDiff = ((diff + totalItems) % totalItems);
+                      const adjustedDiff = normalizedDiff > totalItems / 2 ? normalizedDiff - totalItems : normalizedDiff;
+                      if (adjustedDiff !== 0) {
+                        setActiveIndex(index);
+                      }
+                    }}
+                    whileHover={style.zIndex === 5 ? { scale: 1.02 } : {}}
+                  >
+                    <div className="bg-white rounded-2xl overflow-hidden shadow-2xl">
+                      <div className="relative aspect-[4/5] overflow-hidden">
+                        <img 
+                          src={menuItem.image} 
+                          alt={menuItem.name}
+                          className="w-full h-full object-cover"
+                          draggable="false"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                          <span className="text-xs uppercase tracking-wider opacity-80 mb-1 block">
+                            {menuItem.category}
+                          </span>
+                          <h3 className="font-serif text-2xl font-bold mb-1">{menuItem.name}</h3>
+                          <p className="text-lg font-medium text-primary">{menuItem.price}</p>
+                        </div>
+                      </div>
+                      <div className="p-5 bg-white">
+                        <p className="text-muted-foreground text-sm leading-relaxed">
+                          {menuItem.description}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
           </div>
-          <button className="hidden md:block text-foreground border-b border-foreground/30 pb-1 hover:text-primary hover:border-primary transition-all font-serif italic text-lg">
-            View Full Menu
+
+          <button
+            onClick={handlePrev}
+            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-white/90 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all duration-300 group"
+          >
+            <ChevronLeft className="w-6 h-6 group-hover:scale-110 transition-transform" />
           </button>
+          <button
+            onClick={handleNext}
+            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-white/90 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all duration-300 group"
+          >
+            <ChevronRight className="w-6 h-6 group-hover:scale-110 transition-transform" />
+          </button>
+        </div>
+
+        <div className="flex justify-center gap-3 mt-8">
+          {menuItems.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveIndex(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                index === activeIndex 
+                  ? 'bg-primary w-8' 
+                  : 'bg-foreground/20 hover:bg-foreground/40'
+              }`}
+            />
+          ))}
         </div>
 
         <motion.div 
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
+          className="mt-12 text-center"
         >
-          {menuItems.map((menuItem) => (
-            <motion.div 
-              key={menuItem.id}
-              variants={item}
-              className="group cursor-pointer"
-            >
-              <div className="relative aspect-[3/4] overflow-hidden mb-6 bg-white shadow-sm group-hover:shadow-2xl transition-all duration-500 ease-out">
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 z-10 transition-colors duration-500" />
-                <img 
-                  src={menuItem.image} 
-                  alt={menuItem.name} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
-                />
-                <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
-                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary shadow-lg">
-                    <Plus size={24} />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="pr-4">
-                <div className="flex justify-between items-baseline mb-2 border-b border-border/50 pb-4 group-hover:border-primary/50 transition-colors duration-500">
-                  <h3 className="font-serif font-bold text-xl text-foreground group-hover:text-primary transition-colors">{menuItem.name}</h3>
-                  <span className="font-serif text-lg text-foreground">{menuItem.price}</span>
-                </div>
-                <p className="text-sm text-muted-foreground leading-relaxed mt-2 line-clamp-2">{menuItem.description}</p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-        
-        <div className="mt-16 text-center md:hidden">
           <button className="text-foreground border-b border-primary pb-1 hover:text-primary transition-colors font-serif italic text-lg">
             View Full Menu
           </button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
