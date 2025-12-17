@@ -1,69 +1,43 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Link } from "wouter";
-import luxuryCrepe from "@assets/stock_images/luxury_crepe_with_ki_74d12ec0.jpg";
 import ShoppingCart from "@/components/ui/ShoppingCart";
 import { useCart } from "@/context/CartContext";
 import FloatingLines from "@/components/ui/FloatingLines";
-
-const menuItems = [
-  {
-    id: "demo-1",
-    name: "Kinder Classic",
-    description: "Golden crepe filled with Nutella, hazelnut cream, and strawberries.",
-    price: 520,
-    category: "Signature",
-    image: luxuryCrepe
-  },
-  {
-    id: "demo-2",
-    name: "Double Chocolate",
-    description: "Dark chocolate crepe with chocolate sauce and whipped cream.",
-    price: 480,
-    category: "Signature",
-    image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: "demo-3",
-    name: "Berry Sensation",
-    description: "Fresh mixed berries, cream, and powdered sugar on a delicate crepe.",
-    price: 550,
-    category: "Fruity",
-    image: "https://images.unsplash.com/photo-1504113882839-58e39d385ef4?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: "demo-4",
-    name: "Premium Waffle",
-    description: "Belgian waffle with ice cream, chocolate drizzle, and almonds.",
-    price: 650,
-    category: "Waffles",
-    image: "https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: "demo-5",
-    name: "Caramel Dream",
-    description: "Salted caramel sauce with vanilla ice cream and crushed biscuits.",
-    price: 580,
-    category: "Signature",
-    image: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: "demo-6",
-    name: "Tropical Bliss",
-    description: "Mango, passion fruit, and coconut cream on a light crepe.",
-    price: 600,
-    category: "Fruity",
-    image: "https://images.unsplash.com/photo-1476887334197-56adbf254e1a?auto=format&fit=crop&q=80&w=800"
-  },
-];
+import { menuService, categoryService, type MenuItem, type Category } from "@/lib/firebase";
 
 export default function Menu() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<typeof menuItems[0] | null>(null);
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const { addToCart, removeFromCart, getItemQuantity, totalItems } = useCart();
-  const totalItemsCount = menuItems.length;
+
+  useEffect(() => {
+    const unsubMenu = menuService.subscribe((items) => {
+      setMenuItems(items.filter(item => item.isAvailable));
+      setLoading(false);
+    });
+    
+    const unsubCat = categoryService.subscribe((cats) => {
+      setCategories(cats.filter(cat => cat.isActive));
+    });
+
+    return () => {
+      unsubMenu();
+      unsubCat();
+    };
+  }, []);
+
+  const filteredItems = useMemo(() => {
+    if (!selectedCategory) return menuItems;
+    return menuItems.filter(item => item.categoryId === selectedCategory);
+  }, [menuItems, selectedCategory]);
+
+  const totalItemsCount = filteredItems.length;
 
   const handleNext = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % totalItemsCount);
@@ -92,15 +66,27 @@ export default function Menu() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNext, handlePrev, selectedItem]);
 
-  const handleAddToCart = (item: typeof menuItems[0]) => {
+  const handleAddToCart = (item: MenuItem) => {
     addToCart({
       id: item.id,
       menuItemId: item.id,
       name: item.name,
       price: item.price,
-      imageUrl: item.image
+      imageUrl: item.imageUrl
     });
   };
+
+  const getCategoryName = (categoryId?: string) => {
+    if (!categoryId) return "Uncategorized";
+    const cat = categories.find(c => c.id === categoryId);
+    return cat?.name || "Uncategorized";
+  };
+
+  useEffect(() => {
+    if (selectedCategory !== null) {
+      setActiveIndex(0);
+    }
+  }, [selectedCategory]);
 
   const handleRemoveFromCart = (itemId: string) => {
     removeFromCart(itemId);
@@ -228,6 +214,44 @@ export default function Menu() {
           )}
         </motion.div>
 
+        {categories.length > 0 && (
+          <div className="flex justify-center gap-2 sm:gap-3 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 ${
+                selectedCategory === null 
+                  ? 'bg-red-600 text-white shadow-lg' 
+                  : 'bg-white/80 text-[#290000] hover:bg-white'
+              }`}
+            >
+              All
+            </button>
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 ${
+                  selectedCategory === category.id 
+                    ? 'bg-red-600 text-white shadow-lg' 
+                    : 'bg-white/80 text-[#290000] hover:bg-white'
+                }`}
+              >
+                {category.name}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {loading ? (
+          <div className="h-[450px] sm:h-[500px] md:h-[600px] flex items-center justify-center">
+            <div className="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : filteredItems.length === 0 ? (
+          <div className="h-[450px] sm:h-[500px] md:h-[600px] flex items-center justify-center">
+            <p className="text-white text-lg">No items available in this category</p>
+          </div>
+        ) : (
+        <>
         <div 
           className="relative h-[450px] sm:h-[500px] md:h-[600px] flex items-center justify-center"
           style={{ perspective: "1200px" }}
@@ -237,7 +261,7 @@ export default function Menu() {
             style={{ transformStyle: "preserve-3d" }}
           >
             <AnimatePresence mode="popLayout">
-              {menuItems.map((menuItem, index) => {
+              {filteredItems.map((menuItem, index) => {
                 const style = getCardStyle(index, isMobile);
                 const isCenter = style.zIndex === 5;
                 
@@ -294,16 +318,22 @@ export default function Menu() {
                         </div>
                       )}
                       <div className="relative aspect-[4/5] overflow-hidden">
-                        <img 
-                          src={menuItem.image} 
-                          alt={menuItem.name}
-                          className="w-full h-full object-cover"
-                          draggable="false"
-                        />
+                        {menuItem.imageUrl ? (
+                          <img 
+                            src={menuItem.imageUrl} 
+                            alt={menuItem.name}
+                            className="w-full h-full object-cover"
+                            draggable="false"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400">
+                            No Image
+                          </div>
+                        )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                           <span className="uppercase tracking-wider opacity-80 mb-1 block font-medium text-[13px]">
-                            {menuItem.category}
+                            {getCategoryName(menuItem.categoryId)}
                           </span>
                           <h3 className="font-serif text-2xl font-bold mb-1">{menuItem.name}</h3>
                           <p className="text-lg font-medium text-[#ffb76e]">{menuItem.price} DA</p>
@@ -336,7 +366,7 @@ export default function Menu() {
         </div>
 
         <div className="flex justify-center gap-2 sm:gap-3 mt-6 sm:mt-8">
-          {menuItems.map((_, index) => (
+          {filteredItems.map((_, index) => (
             <button
               key={index}
               onClick={() => setActiveIndex(index)}
@@ -348,20 +378,9 @@ export default function Menu() {
             />
           ))}
         </div>
+        </>
+        )}
 
-        <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-          className="mt-12 text-center"
-        >
-          <Link href="/menu">
-            <span className="border-b border-primary pb-1 hover:text-primary transition-colors font-serif italic text-[19px] text-[#290000] cursor-pointer">
-              View Full Menu & Order Online
-            </span>
-          </Link>
-        </motion.div>
       </div>
       <AnimatePresence>
         {selectedItem && (
@@ -381,11 +400,17 @@ export default function Menu() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="relative aspect-[4/3] overflow-hidden">
-                <img
-                  src={selectedItem.image}
-                  alt={selectedItem.name}
-                  className="w-full h-full object-cover"
-                />
+                {selectedItem.imageUrl ? (
+                  <img
+                    src={selectedItem.imageUrl}
+                    alt={selectedItem.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400">
+                    No Image
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                 <button
                   onClick={() => setSelectedItem(null)}
@@ -395,7 +420,7 @@ export default function Menu() {
                 </button>
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <span className="text-xs uppercase tracking-wider opacity-80 mb-2 block">
-                    {selectedItem.category}
+                    {getCategoryName(selectedItem.categoryId)}
                   </span>
                   <h3 className="font-serif text-3xl font-bold">{selectedItem.name}</h3>
                 </div>
