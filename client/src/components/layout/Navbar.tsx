@@ -86,14 +86,13 @@ export default function Navbar() {
 
   return (
     <motion.nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out border-b ${
+      className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-500 ease-in-out border-b ${
         isScrolled
-          ? "bg-[#1a1a1a]/95 backdrop-blur-xl border-white/10 py-4 shadow-[0_4px_30px_rgba(0,0,0,0.2)]"
-          : "bg-[#1a1a1a]/90 backdrop-blur-md border-transparent py-6"
+          ? "bg-[#1a1a1a] border-white/10 py-3 shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+          : "bg-[#1a1a1a] border-white/5 py-4"
       }`}
-      initial={{ y: -100 }}
+      initial={{ y: 0 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.8, ease: "circOut" }}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         <Link href="/" className="relative group">
