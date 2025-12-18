@@ -253,7 +253,7 @@ export default function Menu() {
         ) : (
         <>
         <div 
-          className="relative h-[450px] sm:h-[500px] md:h-[600px] flex items-center justify-center"
+          className="relative z-20 h-[450px] sm:h-[500px] md:h-[600px] flex items-center justify-center"
           style={{ perspective: "1200px" }}
         >
           <div 
