@@ -24,7 +24,9 @@ export default function CustomerLogin() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Don't redirect users after login
+    if (user && !authLoading) {
+      setLocation("/");
+    }
   }, [user, authLoading, setLocation]);
 
   if (authLoading) {
