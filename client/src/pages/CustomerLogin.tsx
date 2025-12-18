@@ -112,18 +112,18 @@ export default function CustomerLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FDFBF7] to-[#F5EFE6] flex flex-col items-center justify-center p-4 relative">
+    <div className="min-h-screen bg-gradient-to-b from-[#FDFBF7] to-[#F5EFE6] flex flex-col items-center justify-center p-4">
       <WaveBackground />
       <Button 
         variant="ghost" 
-        className="absolute top-4 left-4 text-slate-600 hover:text-slate-900 z-10"
+        className="absolute top-4 left-4 text-slate-600 hover:text-slate-900 z-50"
         onClick={() => setLocation("/")}
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
         Back to Home
       </Button>
 
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-md relative z-20">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome</h1>
           <p className="text-slate-600">Sign in to order delicious crepes & waffles</p>

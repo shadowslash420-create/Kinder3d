@@ -10,71 +10,89 @@ export default function WaveBackground() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    let time = 0;
-    const waves = [
-      { amplitude: 40, frequency: 0.01, speed: 0.03, color: 'rgba(139, 69, 19, 0.15)', offset: 0 }, // Dark brown
-      { amplitude: 50, frequency: 0.008, speed: 0.025, color: 'rgba(220, 38, 38, 0.1)', offset: 100 }, // Red
-      { amplitude: 35, frequency: 0.012, speed: 0.035, color: 'rgba(218, 165, 32, 0.12)', offset: 200 }, // Goldenrod
-      { amplitude: 45, frequency: 0.009, speed: 0.028, color: 'rgba(160, 82, 45, 0.1)', offset: 300 }, // Sienna
-    ];
-
-    const drawWave = (wave: any, yOffset: number) => {
-      ctx!.beginPath();
-      ctx!.fillStyle = wave.color;
-
-      for (let x = 0; x <= canvas!.width; x += 10) {
-        const y = yOffset + Math.sin((x * wave.frequency) + time * wave.speed) * wave.amplitude;
-        if (x === 0) {
-          ctx!.moveTo(x, y);
-        } else {
-          ctx!.lineTo(x, y);
-        }
-      }
-
-      ctx!.lineTo(canvas!.width, canvas!.height);
-      ctx!.lineTo(0, canvas!.height);
-      ctx!.closePath();
-      ctx!.fill();
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     };
 
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    let animationId: number;
+    let time = 0;
+
     const animate = () => {
-      // Clear canvas with gradient background
+      // Clear with gradient background
       const gradient = ctx!.createLinearGradient(0, 0, 0, canvas!.height);
       gradient.addColorStop(0, '#FDFBF7');
       gradient.addColorStop(1, '#F5EFE6');
       ctx!.fillStyle = gradient;
       ctx!.fillRect(0, 0, canvas!.width, canvas!.height);
 
-      // Draw multiple waves
-      drawWave(waves[0], canvas!.height * 0.6);
-      drawWave(waves[1], canvas!.height * 0.65);
-      drawWave(waves[2], canvas!.height * 0.7);
-      drawWave(waves[3], canvas!.height * 0.75);
+      // Draw wave 1 - Dark Brown
+      ctx!.fillStyle = 'rgba(139, 69, 19, 0.2)';
+      ctx!.beginPath();
+      for (let x = 0; x <= canvas!.width; x += 20) {
+        const y = canvas!.height * 0.65 + Math.sin((x * 0.01) + time * 0.03) * 40;
+        if (x === 0) ctx!.moveTo(x, y);
+        else ctx!.lineTo(x, y);
+      }
+      ctx!.lineTo(canvas!.width, canvas!.height);
+      ctx!.lineTo(0, canvas!.height);
+      ctx!.closePath();
+      ctx!.fill();
 
-      time += 1;
-      requestAnimationFrame(animate);
+      // Draw wave 2 - Red
+      ctx!.fillStyle = 'rgba(220, 38, 38, 0.15)';
+      ctx!.beginPath();
+      for (let x = 0; x <= canvas!.width; x += 20) {
+        const y = canvas!.height * 0.70 + Math.sin((x * 0.008) + time * 0.025 + 100) * 50;
+        if (x === 0) ctx!.moveTo(x, y);
+        else ctx!.lineTo(x, y);
+      }
+      ctx!.lineTo(canvas!.width, canvas!.height);
+      ctx!.lineTo(0, canvas!.height);
+      ctx!.closePath();
+      ctx!.fill();
+
+      // Draw wave 3 - Gold
+      ctx!.fillStyle = 'rgba(218, 165, 32, 0.15)';
+      ctx!.beginPath();
+      for (let x = 0; x <= canvas!.width; x += 20) {
+        const y = canvas!.height * 0.75 + Math.sin((x * 0.012) + time * 0.035 + 200) * 35;
+        if (x === 0) ctx!.moveTo(x, y);
+        else ctx!.lineTo(x, y);
+      }
+      ctx!.lineTo(canvas!.width, canvas!.height);
+      ctx!.lineTo(0, canvas!.height);
+      ctx!.closePath();
+      ctx!.fill();
+
+      time++;
+      animationId = requestAnimationFrame(animate);
     };
 
     animate();
 
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', resizeCanvas);
     };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 -z-10"
-      style={{ width: '100%', height: '100%' }}
+      className="fixed inset-0"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }}
     />
   );
 }
