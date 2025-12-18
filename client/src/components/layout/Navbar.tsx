@@ -260,6 +260,8 @@ export default function Navbar() {
               border: 'none',
               cursor: 'pointer',
               gap: '5px',
+              zIndex: 100001,
+              visibility: 'visible',
             }}
             aria-label="Toggle menu"
           >
@@ -297,17 +299,18 @@ export default function Navbar() {
             position: 'fixed',
             inset: 0,
             top: '80px',
-            zIndex: 40,
+            zIndex: 100000,
             backgroundColor: '#4A3728',
             borderTop: '1px solid rgba(255, 255, 255, 0.1)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
-            padding: '32px',
+            justifyContent: 'flex-start',
+            padding: '32px 16px',
             gap: '24px',
+            overflowY: 'auto',
+            maxHeight: 'calc(100vh - 80px)',
           }}
-          className="md:hidden"
         >
           <a
             href="#hero"
