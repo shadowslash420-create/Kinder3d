@@ -65,13 +65,13 @@ export default function Navbar() {
         boxShadow: '0 4px 20px rgba(74, 55, 40, 0.4)',
       }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link href="/">
           <span 
             style={{
               fontFamily: 'Playfair Display, serif',
               fontWeight: 'bold',
-              fontSize: '1.5rem',
+              fontSize: 'clamp(1rem, 3vw, 1.5rem)',
               color: 'white',
               textShadow: '0 0 10px rgba(239, 68, 68, 0.7), 0 0 20px rgba(239, 68, 68, 0.4)',
               cursor: 'pointer',
@@ -81,7 +81,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '40px' }} className="hidden md:flex">
+        <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(20px, 3vw, 40px)' }} className="hidden md:flex">
           {navLinks.map((link) => (
             <a
               key={link.name}
@@ -91,7 +91,7 @@ export default function Navbar() {
                 fontWeight: 'bold',
                 textTransform: 'uppercase',
                 letterSpacing: '0.15em',
-                fontSize: '0.75rem',
+                fontSize: 'clamp(0.65rem, 1vw, 0.75rem)',
                 textDecoration: 'none',
                 transition: 'color 0.3s',
               }}
@@ -107,8 +107,8 @@ export default function Navbar() {
           <button 
             onClick={handleOrderNow}
             style={{
-              padding: '12px 32px',
-              fontSize: '0.75rem',
+              padding: 'clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 32px)',
+              fontSize: 'clamp(0.65rem, 1vw, 0.75rem)',
               textTransform: 'uppercase',
               letterSpacing: '0.15em',
               fontWeight: '600',

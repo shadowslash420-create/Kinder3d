@@ -134,17 +134,17 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20 md:from-black/40 md:via-black/20 md:to-transparent" />
       </motion.div>
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-screen py-24 md:py-20">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 lg:gap-12 items-center min-h-screen py-16 sm:py-20 md:py-24">
         {/* Text Content */}
-        <div className="max-w-xl pt-16 md:pt-20">
+        <div className="max-w-xl pt-12 sm:pt-16 md:pt-20">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 1 }}
-            className="flex items-center gap-3 mb-4 sm:mb-8"
+            className="flex items-center gap-3 mb-3 sm:mb-6 md:mb-8"
           >
-            <div className="h-[1px] w-8 sm:w-12 bg-primary"></div>
-            <span className="text-primary font-medium tracking-[0.15em] sm:tracking-[0.2em] text-xs sm:text-sm uppercase">
+            <div className="h-[1px] w-6 sm:w-8 md:w-12 bg-primary"></div>
+            <span className="text-primary font-medium tracking-[0.15em] text-[10px] sm:text-xs md:text-sm uppercase">
               Batna, Algeria
             </span>
           </motion.div>
@@ -153,7 +153,7 @@ export default function Hero() {
             variants={letterContainer}
             initial="hidden"
             animate="show"
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-serif font-bold leading-[0.9] mb-4 sm:mb-8 tracking-tighter"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl font-serif font-bold leading-[0.95] sm:leading-[0.9] mb-3 sm:mb-6 md:mb-8 tracking-tighter"
             style={{
               color: "#FFFFFF",
               textShadow: "0 4px 30px rgba(0, 0, 0, 0.7), 0 2px 10px rgba(255, 215, 0, 0.4)"
@@ -180,7 +180,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 1 }}
-            className="text-base sm:text-lg md:text-xl mb-8 sm:mb-12 leading-relaxed max-w-md font-light"
+            className="text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 md:mb-12 leading-relaxed max-w-md font-light"
             style={{
               color: "#FFFFFF",
               textShadow: "0 2px 15px rgba(0, 0, 0, 0.6)"
@@ -193,9 +193,9 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5 }}
-            className="flex flex-wrap gap-4 sm:gap-6"
+            className="flex flex-wrap gap-3 sm:gap-4 md:gap-6"
           >
-            <MagneticButton className="rounded-full px-6 sm:px-10 py-4 sm:py-7 text-base sm:text-lg bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/20 transition-all duration-500">
+            <MagneticButton className="rounded-full px-5 sm:px-8 md:px-10 py-3 sm:py-5 md:py-7 text-sm sm:text-base md:text-lg bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/20 transition-all duration-500">
               Explore Menu
             </MagneticButton>
           </motion.div>
