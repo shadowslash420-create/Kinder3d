@@ -215,7 +215,7 @@ export default function Menu() {
         </motion.div>
 
         {categories.length > 0 && (
-          <div className="flex justify-center gap-2 sm:gap-3 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+          <div className="flex justify-center gap-2 sm:gap-3 mb-8 overflow-x-auto pb-2 scrollbar-hide pl-4 sm:pl-6">
             <button
               onClick={() => setSelectedCategory(null)}
               className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 ${
