@@ -138,6 +138,7 @@ export async function registerRoutes(
       if (!category) return res.status(404).json({ error: "Category not found" });
       res.json(category);
     } catch (error) {
+      console.error("Update category error:", error);
       res.status(500).json({ error: "Failed to update category" });
     }
   });
