@@ -1,11 +1,17 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
+import { useLocation } from "wouter";
 
 export default function NavbarCart() {
   const { totalItems } = useCart();
+  const [, setLocation] = useLocation();
+
+  const handleCartClick = () => {
+    setLocation("/cart");
+  };
 
   return (
-    <div className="relative cursor-pointer" style={{ zoom: 1.2 }}>
+    <div className="relative cursor-pointer" style={{ zoom: 1.2 }} onClick={handleCartClick}>
       <motion.div
         className="relative"
         animate={totalItems > 0 ? { scale: [1, 1.1, 1] } : {}}
