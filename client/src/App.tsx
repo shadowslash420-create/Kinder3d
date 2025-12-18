@@ -24,6 +24,8 @@ const CustomerLogin = lazy(() => import("@/pages/CustomerLogin"));
 const CartPage = lazy(() => import("@/pages/CartPage"));
 const CheckoutPage = lazy(() => import("@/pages/CheckoutPage"));
 const MyOrdersPage = lazy(() => import("@/pages/MyOrdersPage"));
+const StaffA = lazy(() => import("@/pages/StaffA"));
+const StaffB = lazy(() => import("@/pages/StaffB"));
 
 const PageLoader = () => (
   <div className="fixed inset-0 bg-[#FDFBF7] flex items-center justify-center">
@@ -40,6 +42,8 @@ function Router() {
         <Route path="/cart" component={CartPage} />
         <Route path="/checkout" component={CheckoutPage} />
         <Route path="/my-orders" component={MyOrdersPage} />
+        <Route path="/staff-a" component={StaffA} />
+        <Route path="/staff-b" component={StaffB} />
         <Route path="/admin" component={AdminLogin} />
         <Route path="/admin/dashboard" component={Dashboard} />
         <Route path="/admin/orders" component={Orders} />
@@ -59,6 +63,7 @@ function App() {
   const isAdminRoute = location.startsWith("/admin");
   
   const pathWithoutQuery = location.split("?")[0];
+  const isStaffRoute = pathWithoutQuery === "/staff-a" || pathWithoutQuery === "/staff-b";
   const isCustomerRoute = ["/customer-login", "/cart", "/checkout", "/my-orders"].includes(pathWithoutQuery) || pathWithoutQuery.startsWith("/my-orders");
 
   const [hasEntered, setHasEntered] = useState(() => {
@@ -84,7 +89,7 @@ function App() {
     setHasEntered(true);
   };
 
-  if (isAdminRoute) {
+  if (isAdminRoute || isStaffRoute) {
     return (
       <QueryClientProvider client={queryClient}>
         <AuthProvider>

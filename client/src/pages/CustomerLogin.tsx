@@ -26,8 +26,12 @@ export default function CustomerLogin() {
   useEffect(() => {
     if (user && !authLoading) {
       // Redirect based on user role
-      if (role === "admin" || role === "staff_a" || role === "staff_b") {
+      if (role === "admin") {
         setLocation("/admin/dashboard");
+      } else if (role === "staff_a") {
+        setLocation("/staff-a");
+      } else if (role === "staff_b") {
+        setLocation("/staff-b");
       } else {
         // Regular customer
         setLocation("/");

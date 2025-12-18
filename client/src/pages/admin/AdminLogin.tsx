@@ -20,8 +20,12 @@ export default function AdminLogin() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const role = await getUserRole(user);
-        if (role === "admin" || role === "staff_a" || role === "staff_b") {
+        if (role === "admin") {
           setLocation("/admin/dashboard");
+        } else if (role === "staff_a") {
+          setLocation("/staff-a");
+        } else if (role === "staff_b") {
+          setLocation("/staff-b");
         } else if (!role) {
           // Customer trying to access admin - stay on login
           setCheckingAuth(false);
