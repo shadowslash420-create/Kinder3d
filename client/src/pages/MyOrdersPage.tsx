@@ -81,7 +81,7 @@ export default function MyOrdersPage() {
             <Button 
               variant="ghost" 
               size="icon"
-              onClick={() => setLocation("/menu")}
+              onClick={() => setLocation("/")}
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
@@ -118,7 +118,7 @@ export default function MyOrdersPage() {
               <h2 className="text-xl font-semibold text-slate-900 mb-2">No orders yet</h2>
               <p className="text-slate-600 mb-6">Your order history will appear here</p>
               <Button 
-                onClick={() => setLocation("/menu")}
+                onClick={() => setLocation("/")}
                 className="bg-red-600 hover:bg-red-700"
               >
                 Browse Menu
