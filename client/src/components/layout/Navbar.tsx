@@ -61,7 +61,7 @@ export default function Navbar() {
         padding: isScrolled ? '12px 0' : '40px 0',
         transition: 'padding 0.3s ease',
         boxShadow: '0 4px 20px rgba(74, 55, 40, 0.4)',
-        clipPath: 'polygon(0 0, 200% -100%, 80% 100%, 0 100%)',
+        clipPath: 'polygon(0 0, 200% -100%, 80% 100%, 15% 100%)',
       }}
     >
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
