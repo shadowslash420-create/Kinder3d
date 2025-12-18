@@ -395,12 +395,17 @@ export const orderService = {
 
   subscribeToUserOrdersByEmailAndId(userId: string, email: string | null, callback: (orders: Order[]) => void) {
     const unsubscribers: (() => void)[] = [];
-    const ordersMap = new Map<string, Order>();
+    const userIdOrders = new Map<string, Order>();
+    const emailOrders = new Map<string, Order>();
     let initialLoadComplete = { byUserId: false, byEmail: !email };
 
-    const updateCallback = () => {
+    const mergeAndCallback = () => {
       if (initialLoadComplete.byUserId && initialLoadComplete.byEmail) {
-        const allOrders = Array.from(ordersMap.values());
+        const mergedMap = new Map<string, Order>();
+        userIdOrders.forEach((order, id) => mergedMap.set(id, order));
+        emailOrders.forEach((order, id) => mergedMap.set(id, order));
+        
+        const allOrders = Array.from(mergedMap.values());
         allOrders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         callback(allOrders);
       }
@@ -412,8 +417,9 @@ export const orderService = {
       orderBy("createdAt", "desc")
     );
     unsubscribers.push(onSnapshot(userIdQuery, (snapshot) => {
+      userIdOrders.clear();
       snapshot.docs.forEach(doc => {
-        ordersMap.set(doc.id, {
+        userIdOrders.set(doc.id, {
           id: doc.id,
           ...doc.data(),
           createdAt: convertTimestamp(doc.data().createdAt),
@@ -421,11 +427,11 @@ export const orderService = {
         } as Order);
       });
       initialLoadComplete.byUserId = true;
-      updateCallback();
+      mergeAndCallback();
     }, (error) => {
       console.error("Error fetching user orders by userId:", error);
       initialLoadComplete.byUserId = true;
-      updateCallback();
+      mergeAndCallback();
     }));
 
     if (email) {
@@ -435,8 +441,9 @@ export const orderService = {
         orderBy("createdAt", "desc")
       );
       unsubscribers.push(onSnapshot(emailQuery, (snapshot) => {
+        emailOrders.clear();
         snapshot.docs.forEach(doc => {
-          ordersMap.set(doc.id, {
+          emailOrders.set(doc.id, {
             id: doc.id,
             ...doc.data(),
             createdAt: convertTimestamp(doc.data().createdAt),
@@ -444,11 +451,11 @@ export const orderService = {
           } as Order);
         });
         initialLoadComplete.byEmail = true;
-        updateCallback();
+        mergeAndCallback();
       }, (error) => {
         console.error("Error fetching user orders by email:", error);
         initialLoadComplete.byEmail = true;
-        updateCallback();
+        mergeAndCallback();
       }));
     }
 

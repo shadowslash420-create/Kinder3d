@@ -42,16 +42,22 @@ export default function MyOrdersPage() {
       }
     );
 
-    if (user.email) {
-      orderService.linkExistingOrdersToUser(user.uid, user.email).then((linkedCount) => {
-        if (linkedCount > 0) {
-          console.log(`Linked ${linkedCount} existing orders to user account`);
-        }
-      }).catch(console.error);
-    }
-
     return () => unsubscribe();
   }, [user]);
+
+  useEffect(() => {
+    if (!user?.email) return;
+    
+    const linkedKey = `orders_linked_${user.uid}`;
+    if (sessionStorage.getItem(linkedKey)) return;
+    
+    orderService.linkExistingOrdersToUser(user.uid, user.email).then((linkedCount) => {
+      sessionStorage.setItem(linkedKey, 'true');
+      if (linkedCount > 0) {
+        console.log(`Linked ${linkedCount} existing orders to user account`);
+      }
+    }).catch(console.error);
+  }, [user?.uid, user?.email]);
 
   useEffect(() => {
     if (!authLoading && !user) {
