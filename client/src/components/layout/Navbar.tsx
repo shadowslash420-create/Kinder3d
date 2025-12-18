@@ -59,8 +59,8 @@ export default function Navbar() {
         backgroundColor: '#4A3728',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
         padding: isScrolled 
-          ? 'clamp(12px, 2vw, 12px) 32px clamp(40px, 8vw, 80px)' 
-          : 'clamp(20px, 4vw, 32px) 32px clamp(80px, 15vw, 160px)',
+          ? '8px 24px' 
+          : '12px 24px',
         transition: 'padding 0.3s ease',
         boxShadow: '0 4px 20px rgba(74, 55, 40, 0.4)',
       }}
