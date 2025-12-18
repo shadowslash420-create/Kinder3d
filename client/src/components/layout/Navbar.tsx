@@ -58,7 +58,9 @@ export default function Navbar() {
         zIndex: 99999,
         backgroundColor: '#4A3728',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        padding: isScrolled ? '12px 32px 80px' : '32px 32px 160px',
+        padding: isScrolled 
+          ? 'clamp(12px, 2vw, 12px) 32px clamp(40px, 8vw, 80px)' 
+          : 'clamp(20px, 4vw, 32px) 32px clamp(80px, 15vw, 160px)',
         transition: 'padding 0.3s ease',
         boxShadow: '0 4px 20px rgba(74, 55, 40, 0.4)',
         clipPath: 'polygon(0 0, 200% -150%, 80% 100%, 0 30%)',
