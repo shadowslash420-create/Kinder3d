@@ -63,7 +63,7 @@ export default function Navbar() {
         boxShadow: '0 4px 20px rgba(74, 55, 40, 0.4)',
         clipPath: 'polygon(0 0, 200% -100%, 80% 100%, 15% 100%)',
       }}
-    >
+      className="pt-[25px] pb-[25px]">
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link href="/">
           <span 
@@ -288,7 +288,6 @@ export default function Navbar() {
           </button>
         </div>
       </div>
-
       {isMobileMenuOpen && (
         <div 
           style={{
