@@ -30,6 +30,16 @@ export default function MyOrdersPage() {
   const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
   const newOrderNumber = searchParams.get("new");
 
+  const handleBrowseMenu = () => {
+    setLocation("/");
+    setTimeout(() => {
+      const menuSection = document.getElementById('menu');
+      if (menuSection) {
+        menuSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
   useEffect(() => {
     if (!user) return;
 
@@ -118,7 +128,7 @@ export default function MyOrdersPage() {
               <h2 className="text-xl font-semibold text-slate-900 mb-2">No orders yet</h2>
               <p className="text-slate-600 mb-6">Your order history will appear here</p>
               <Button 
-                onClick={() => setLocation("/")}
+                onClick={handleBrowseMenu}
                 className="bg-red-600 hover:bg-red-700"
               >
                 Browse Menu

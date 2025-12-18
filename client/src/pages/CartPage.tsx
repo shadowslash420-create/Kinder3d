@@ -13,6 +13,16 @@ export default function CartPage() {
   const { user, loading: authLoading } = useAuth();
   const { cart, addToCart, removeFromCart, updateQuantity, totalItems, totalPrice, clearCart, isLoading: cartLoading } = useCart();
 
+  const handleBrowseMenu = () => {
+    setLocation("/");
+    setTimeout(() => {
+      const menuSection = document.getElementById('menu');
+      if (menuSection) {
+        menuSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
   useEffect(() => {
     if (!authLoading && !user) {
       setLocation("/customer-login");
@@ -77,7 +87,7 @@ export default function CartPage() {
               <h2 className="text-xl font-semibold text-slate-900 mb-2">Your cart is empty</h2>
               <p className="text-slate-600 mb-6">Add some delicious items from our menu!</p>
               <Button 
-                onClick={() => setLocation("/")}
+                onClick={handleBrowseMenu}
                 className="bg-red-600 hover:bg-red-700"
               >
                 Browse Menu
