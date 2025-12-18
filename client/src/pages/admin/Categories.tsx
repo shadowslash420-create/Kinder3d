@@ -64,6 +64,7 @@ function CategoriesContent() {
     };
 
     try {
+      console.log("Submitting category form:", { editingCategory: editingCategory?.id, payload });
       if (editingCategory) {
         await categoryService.update(editingCategory.id, payload);
       } else {
@@ -71,8 +72,9 @@ function CategoriesContent() {
       }
       toast({ title: "Success", description: `Category ${editingCategory ? "updated" : "created"}` });
       setDialogOpen(false);
-    } catch (error) {
-      toast({ title: "Error", description: "Failed to save category", variant: "destructive" });
+    } catch (error: any) {
+      console.error("Error submitting category:", error.code, error.message, error);
+      toast({ title: "Error", description: `Failed to save category: ${error.message || "Unknown error"}`, variant: "destructive" });
     }
   };
 

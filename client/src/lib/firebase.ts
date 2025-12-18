@@ -266,10 +266,21 @@ export const categoryService = {
   },
   
   async update(id: string, category: Partial<Category>): Promise<void> {
-    await updateDoc(doc(db, "categories", id), {
-      ...category,
-      updatedAt: serverTimestamp(),
-    });
+    try {
+      console.log("Updating category:", id, category);
+      const cleanedCategory: Record<string, any> = { updatedAt: serverTimestamp() };
+      for (const [key, value] of Object.entries(category)) {
+        if (value !== undefined && key !== "id" && key !== "createdAt" && key !== "updatedAt") {
+          cleanedCategory[key] = value;
+        }
+      }
+      console.log("Cleaned category data:", cleanedCategory);
+      await updateDoc(doc(db, "categories", id), cleanedCategory);
+      console.log("Category updated successfully");
+    } catch (error: any) {
+      console.error("Error updating category:", error.code, error.message, error);
+      throw error;
+    }
   },
   
   async delete(id: string): Promise<void> {
