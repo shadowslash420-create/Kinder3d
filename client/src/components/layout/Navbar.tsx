@@ -243,8 +243,46 @@ export default function Navbar() {
           )}
         </nav>
 
-        <div className="flex items-center gap-4 md:hidden">
+        <div className="flex items-center gap-2 md:hidden">
           <NavbarCart />
+          
+          {!loading && !user && (
+            <button
+              onClick={handleLogin}
+              style={{
+                padding: '6px 12px',
+                fontSize: '0.75rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                fontWeight: '600',
+                color: 'white',
+                backgroundColor: 'transparent',
+                border: '1px solid white',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'white';
+                e.currentTarget.style.color = '#4A3728';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = 'white';
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                <polyline points="10 17 15 12 10 7"/>
+                <line x1="15" y1="12" x2="3" y2="12"/>
+              </svg>
+              Sign In
+            </button>
+          )}
+          
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             style={{
