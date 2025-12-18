@@ -63,7 +63,6 @@ export default function Navbar() {
           : 'clamp(20px, 4vw, 32px) 32px clamp(80px, 15vw, 160px)',
         transition: 'padding 0.3s ease',
         boxShadow: '0 4px 20px rgba(74, 55, 40, 0.4)',
-        clipPath: 'polygon(0 0, 200% -150%, 80% 100%, 0 30%)',
       }}
     >
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
