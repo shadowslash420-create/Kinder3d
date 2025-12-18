@@ -216,63 +216,35 @@ export default function Menu() {
 
         {categories.length > 0 && (
           <div className="mb-8 relative overflow-hidden">
-            <div className="flex justify-center gap-2 sm:gap-3 pb-2 px-4 sm:px-6 relative">
-              <div className="flex gap-2 sm:gap-3 animate-infinite-scroll">
-                {/* First set of categories */}
+            <div className="flex gap-2 sm:gap-3 pb-2 overflow-x-auto scrollbar-hide scroll-smooth px-4 sm:px-6">
+              <button
+                onClick={() => setSelectedCategory(null)}
+                className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 flex-shrink-0 ${
+                  selectedCategory === null 
+                    ? 'bg-red-600 text-white shadow-lg' 
+                    : 'bg-white/80 text-[#290000] hover:bg-white'
+                }`}
+              >
+                All
+              </button>
+              {categories.map((category) => (
                 <button
-                  onClick={() => setSelectedCategory(null)}
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
                   className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 flex-shrink-0 ${
-                    selectedCategory === null 
+                    selectedCategory === category.id 
                       ? 'bg-red-600 text-white shadow-lg' 
                       : 'bg-white/80 text-[#290000] hover:bg-white'
                   }`}
                 >
-                  All
+                  {category.name}
                 </button>
-                {categories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => setSelectedCategory(category.id)}
-                    className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 flex-shrink-0 ${
-                      selectedCategory === category.id 
-                        ? 'bg-red-600 text-white shadow-lg' 
-                        : 'bg-white/80 text-[#290000] hover:bg-white'
-                    }`}
-                  >
-                    {category.name}
-                  </button>
-                ))}
-                
-                {/* Duplicate set for infinite loop */}
-                <button
-                  onClick={() => setSelectedCategory(null)}
-                  className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 flex-shrink-0 ${
-                    selectedCategory === null 
-                      ? 'bg-red-600 text-white shadow-lg' 
-                      : 'bg-white/80 text-[#290000] hover:bg-white'
-                  }`}
-                >
-                  All
-                </button>
-                {categories.map((category) => (
-                  <button
-                    key={`dup-${category.id}`}
-                    onClick={() => setSelectedCategory(category.id)}
-                    className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 flex-shrink-0 ${
-                      selectedCategory === category.id 
-                        ? 'bg-red-600 text-white shadow-lg' 
-                        : 'bg-white/80 text-[#290000] hover:bg-white'
-                    }`}
-                  >
-                    {category.name}
-                  </button>
-                ))}
-              </div>
+              ))}
             </div>
             
             {/* Gradient fade effects */}
-            <div className="absolute left-0 top-0 w-12 h-full bg-gradient-to-r from-[#FDFBF7] to-transparent pointer-events-none z-10" />
-            <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-[#FDFBF7] to-transparent pointer-events-none z-10" />
+            <div className="absolute left-0 top-0 w-8 h-full bg-gradient-to-r from-[#FDFBF7] to-transparent pointer-events-none z-10" />
+            <div className="absolute right-0 top-0 w-8 h-full bg-gradient-to-l from-[#FDFBF7] to-transparent pointer-events-none z-10" />
           </div>
         )}
 

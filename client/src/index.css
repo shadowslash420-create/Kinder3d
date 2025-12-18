@@ -80,21 +80,11 @@ html {
   scrollbar-width: none;
 }
 
-/* Infinite carousel animation */
-@keyframes infinite-scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
-.animate-infinite-scroll {
-  animation: infinite-scroll linear infinite;
-  animation-duration: 30s;
-}
-
-.animate-infinite-scroll:hover {
-  animation-play-state: paused;
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
