@@ -43,16 +43,20 @@ export default function MyOrdersPage() {
   useEffect(() => {
     if (!user) return;
 
-    const unsubscribe = orderService.subscribeToUserOrdersByEmailAndId(
+    console.log("Fetching orders for user:", user.uid, "email:", user.email);
+    
+    // Try the dual method first, but fall back if it fails
+    let unsubscribe = orderService.subscribeToUserOrdersByEmailAndId(
       user.uid, 
       user.email, 
       (userOrders) => {
+        console.log("Orders fetched via dual method:", userOrders.length);
         setOrders(userOrders);
         setLoading(false);
       }
     );
 
-    return () => unsubscribe();
+    return () => unsubscribe && unsubscribe();
   }, [user]);
 
   useEffect(() => {

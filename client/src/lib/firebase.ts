@@ -397,7 +397,8 @@ export const orderService = {
     const unsubscribers: (() => void)[] = [];
     const userIdOrders = new Map<string, Order>();
     const emailOrders = new Map<string, Order>();
-    let initialLoadComplete = { byUserId: false, byEmail: !email };
+    let initialLoadComplete = { byUserId: false, byEmail: !email, fallback: false };
+    let useFallback = false;
 
     const mergeAndCallback = () => {
       if (initialLoadComplete.byUserId && initialLoadComplete.byEmail) {
@@ -407,56 +408,71 @@ export const orderService = {
         
         const allOrders = Array.from(mergedMap.values());
         allOrders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        console.log("Merged orders count:", allOrders.length, "useFallback:", useFallback);
         callback(allOrders);
       }
     };
 
-    const userIdQuery = query(
-      collection(db, "orders"),
-      where("userId", "==", userId),
-      orderBy("createdAt", "desc")
-    );
-    unsubscribers.push(onSnapshot(userIdQuery, (snapshot) => {
-      userIdOrders.clear();
-      snapshot.docs.forEach(doc => {
-        userIdOrders.set(doc.id, {
-          id: doc.id,
-          ...doc.data(),
-          createdAt: convertTimestamp(doc.data().createdAt),
-          updatedAt: convertTimestamp(doc.data().updatedAt),
-        } as Order);
-      });
-      initialLoadComplete.byUserId = true;
-      mergeAndCallback();
-    }, (error) => {
-      console.error("Error fetching user orders by userId:", error);
-      initialLoadComplete.byUserId = true;
-      mergeAndCallback();
-    }));
-
-    if (email) {
-      const emailQuery = query(
+    // Try userId query without orderBy first (doesn't require composite index)
+    try {
+      const userIdQuery = query(
         collection(db, "orders"),
-        where("email", "==", email),
-        orderBy("createdAt", "desc")
+        where("userId", "==", userId)
       );
-      unsubscribers.push(onSnapshot(emailQuery, (snapshot) => {
-        emailOrders.clear();
+      unsubscribers.push(onSnapshot(userIdQuery, (snapshot) => {
+        console.log("UserId query snapshot received:", snapshot.docs.length, "docs");
+        userIdOrders.clear();
         snapshot.docs.forEach(doc => {
-          emailOrders.set(doc.id, {
+          userIdOrders.set(doc.id, {
             id: doc.id,
             ...doc.data(),
             createdAt: convertTimestamp(doc.data().createdAt),
             updatedAt: convertTimestamp(doc.data().updatedAt),
           } as Order);
         });
-        initialLoadComplete.byEmail = true;
+        initialLoadComplete.byUserId = true;
         mergeAndCallback();
       }, (error) => {
-        console.error("Error fetching user orders by email:", error);
-        initialLoadComplete.byEmail = true;
+        console.error("Error fetching user orders by userId:", error);
+        initialLoadComplete.byUserId = true;
         mergeAndCallback();
       }));
+    } catch (e) {
+      console.error("Exception in userId query:", e);
+      initialLoadComplete.byUserId = true;
+      mergeAndCallback();
+    }
+
+    // Try email query if provided
+    if (email) {
+      try {
+        const emailQuery = query(
+          collection(db, "orders"),
+          where("email", "==", email)
+        );
+        unsubscribers.push(onSnapshot(emailQuery, (snapshot) => {
+          console.log("Email query snapshot received:", snapshot.docs.length, "docs");
+          emailOrders.clear();
+          snapshot.docs.forEach(doc => {
+            emailOrders.set(doc.id, {
+              id: doc.id,
+              ...doc.data(),
+              createdAt: convertTimestamp(doc.data().createdAt),
+              updatedAt: convertTimestamp(doc.data().updatedAt),
+            } as Order);
+          });
+          initialLoadComplete.byEmail = true;
+          mergeAndCallback();
+        }, (error) => {
+          console.error("Error fetching user orders by email:", error);
+          initialLoadComplete.byEmail = true;
+          mergeAndCallback();
+        }));
+      } catch (e) {
+        console.error("Exception in email query:", e);
+        initialLoadComplete.byEmail = true;
+        mergeAndCallback();
+      }
     }
 
     return () => {
