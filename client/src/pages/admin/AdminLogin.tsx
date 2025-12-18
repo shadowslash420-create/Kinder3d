@@ -22,6 +22,10 @@ export default function AdminLogin() {
         const role = await getUserRole(user);
         if (role === "admin" || role === "staff_a" || role === "staff_b") {
           setLocation("/admin/dashboard");
+        } else if (!role) {
+          // Customer trying to access admin - stay on login
+          setCheckingAuth(false);
+          return;
         }
       }
       setCheckingAuth(false);

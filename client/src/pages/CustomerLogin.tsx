@@ -14,7 +14,7 @@ import Waves from "@/components/ui/Waves";
 export default function CustomerLogin() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, role } = useAuth();
   
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -25,9 +25,15 @@ export default function CustomerLogin() {
 
   useEffect(() => {
     if (user && !authLoading) {
-      setLocation("/");
+      // Redirect based on user role
+      if (role === "admin" || role === "staff_a" || role === "staff_b") {
+        setLocation("/admin/dashboard");
+      } else {
+        // Regular customer
+        setLocation("/");
+      }
     }
-  }, [user, authLoading, setLocation]);
+  }, [user, authLoading, role, setLocation]);
 
   if (authLoading) {
     return (
