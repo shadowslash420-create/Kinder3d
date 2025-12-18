@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { signInWithGoogle, signInWithEmail, signUpWithEmail } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { ArrowLeft, Mail, Lock, User } from "lucide-react";
-import WaveBackground from "@/components/ui/WaveBackground";
+import Waves from "@/components/ui/Waves";
 
 export default function CustomerLogin() {
   const [, setLocation] = useLocation();
@@ -112,8 +112,20 @@ export default function CustomerLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FDFBF7] to-[#F5EFE6] flex flex-col items-center justify-center p-4">
-      <WaveBackground />
+    <div className="min-h-screen bg-gradient-to-b from-[#FDFBF7] to-[#F5EFE6] flex flex-col items-center justify-center p-4 relative">
+      <Waves
+        lineColor="#C84C3C"
+        backgroundColor="transparent"
+        waveSpeedX={0.02}
+        waveSpeedY={0.01}
+        waveAmpX={40}
+        waveAmpY={20}
+        friction={0.9}
+        tension={0.01}
+        maxCursorMove={120}
+        xGap={12}
+        yGap={36}
+      />
       <Button 
         variant="ghost" 
         className="absolute top-4 left-4 text-slate-600 hover:text-slate-900 z-50"
