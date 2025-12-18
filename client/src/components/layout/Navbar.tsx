@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import NavbarCart from "@/components/ui/NavbarCart";
 import { useAuth } from "@/context/AuthContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, loading, logout } = useAuth();
   const [, setLocation] = useLocation();
+  const isMobile = useIsMobile();
 
   const handleLogin = () => {
     setLocation("/customer-login");
@@ -81,7 +83,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(20px, 3vw, 40px)' }} className="hidden md:flex">
+        <nav style={{ display: isMobile ? 'none' : 'flex', alignItems: 'center', gap: 'clamp(20px, 3vw, 40px)' }}>
           {navLinks.map((link) => (
             <a
               key={link.name}
@@ -243,7 +245,7 @@ export default function Navbar() {
           )}
         </nav>
 
-        <div className="flex items-center gap-2 md:hidden">
+        <div style={{ display: isMobile ? 'flex' : 'none' }} className="items-center gap-2">
           <NavbarCart />
           
           {!loading && !user && (
