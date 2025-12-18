@@ -22,6 +22,7 @@ const Messages = lazy(() => import("@/pages/admin/Messages"));
 const Staff = lazy(() => import("@/pages/admin/Staff"));
 
 const CustomerLogin = lazy(() => import("@/pages/CustomerLogin"));
+const MenuPage = lazy(() => import("@/pages/MenuPage"));
 const CartPage = lazy(() => import("@/pages/CartPage"));
 const CheckoutPage = lazy(() => import("@/pages/CheckoutPage"));
 const MyOrdersPage = lazy(() => import("@/pages/MyOrdersPage"));
@@ -39,6 +40,7 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/login" component={Login} />
         <Route path="/customer-login" component={CustomerLogin} />
+        <Route path="/menu" component={MenuPage} />
         <Route path="/cart" component={CartPage} />
         <Route path="/checkout" component={CheckoutPage} />
         <Route path="/my-orders" component={MyOrdersPage} />
@@ -62,7 +64,7 @@ function App() {
   const isLoginRoute = location === "/login";
   
   const pathWithoutQuery = location.split("?")[0];
-  const isCustomerRoute = ["/customer-login", "/cart", "/checkout", "/my-orders"].includes(pathWithoutQuery) || pathWithoutQuery.startsWith("/my-orders");
+  const isCustomerRoute = ["/customer-login", "/menu", "/cart", "/checkout", "/my-orders"].includes(pathWithoutQuery) || pathWithoutQuery.startsWith("/my-orders");
 
   const [hasEntered, setHasEntered] = useState(() => {
     if (typeof window !== "undefined") {
