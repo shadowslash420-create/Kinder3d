@@ -10,7 +10,6 @@ import { AnimatePresence } from "framer-motion";
 
 const Home = lazy(() => import("@/pages/Home"));
 const NotFound = lazy(() => import("@/pages/not-found"));
-const Login = lazy(() => import("@/pages/Login"));
 const Intro = lazy(() => import("@/components/sections/Intro"));
 const AdminLogin = lazy(() => import("@/pages/admin/AdminLogin"));
 const Dashboard = lazy(() => import("@/pages/admin/Dashboard"));
@@ -37,7 +36,6 @@ function Router() {
     <Suspense fallback={<PageLoader />}>
       <Switch>
         <Route path="/" component={Home} />
-        <Route path="/login" component={Login} />
         <Route path="/customer-login" component={CustomerLogin} />
         <Route path="/cart" component={CartPage} />
         <Route path="/checkout" component={CheckoutPage} />
@@ -59,7 +57,6 @@ function Router() {
 function App() {
   const [location] = useLocation();
   const isAdminRoute = location.startsWith("/admin");
-  const isLoginRoute = location === "/login";
   
   const pathWithoutQuery = location.split("?")[0];
   const isCustomerRoute = ["/customer-login", "/cart", "/checkout", "/my-orders"].includes(pathWithoutQuery) || pathWithoutQuery.startsWith("/my-orders");
@@ -87,7 +84,7 @@ function App() {
     setHasEntered(true);
   };
 
-  if (isAdminRoute || isLoginRoute) {
+  if (isAdminRoute) {
     return (
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
