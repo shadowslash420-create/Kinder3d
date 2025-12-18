@@ -49,7 +49,7 @@ function CategoriesContent() {
     setFormData({
       name: cat.name,
       description: cat.description || "",
-      displayOrder: cat.displayOrder.toString(),
+      displayOrder: (cat.displayOrder || 0).toString(),
       isActive: cat.isActive,
     });
     setDialogOpen(true);
