@@ -391,6 +391,84 @@ export const orderService = {
       console.error("Error fetching user orders:", error);
       callback([]);
     });
+  },
+
+  subscribeToUserOrdersByEmailAndId(userId: string, email: string | null, callback: (orders: Order[]) => void) {
+    const unsubscribers: (() => void)[] = [];
+    const ordersMap = new Map<string, Order>();
+    let initialLoadComplete = { byUserId: false, byEmail: !email };
+
+    const updateCallback = () => {
+      if (initialLoadComplete.byUserId && initialLoadComplete.byEmail) {
+        const allOrders = Array.from(ordersMap.values());
+        allOrders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        callback(allOrders);
+      }
+    };
+
+    const userIdQuery = query(
+      collection(db, "orders"),
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc")
+    );
+    unsubscribers.push(onSnapshot(userIdQuery, (snapshot) => {
+      snapshot.docs.forEach(doc => {
+        ordersMap.set(doc.id, {
+          id: doc.id,
+          ...doc.data(),
+          createdAt: convertTimestamp(doc.data().createdAt),
+          updatedAt: convertTimestamp(doc.data().updatedAt),
+        } as Order);
+      });
+      initialLoadComplete.byUserId = true;
+      updateCallback();
+    }, (error) => {
+      console.error("Error fetching user orders by userId:", error);
+      initialLoadComplete.byUserId = true;
+      updateCallback();
+    }));
+
+    if (email) {
+      const emailQuery = query(
+        collection(db, "orders"),
+        where("email", "==", email),
+        orderBy("createdAt", "desc")
+      );
+      unsubscribers.push(onSnapshot(emailQuery, (snapshot) => {
+        snapshot.docs.forEach(doc => {
+          ordersMap.set(doc.id, {
+            id: doc.id,
+            ...doc.data(),
+            createdAt: convertTimestamp(doc.data().createdAt),
+            updatedAt: convertTimestamp(doc.data().updatedAt),
+          } as Order);
+        });
+        initialLoadComplete.byEmail = true;
+        updateCallback();
+      }, (error) => {
+        console.error("Error fetching user orders by email:", error);
+        initialLoadComplete.byEmail = true;
+        updateCallback();
+      }));
+    }
+
+    return () => {
+      unsubscribers.forEach(unsub => unsub());
+    };
+  },
+
+  async linkExistingOrdersToUser(userId: string, email: string): Promise<number> {
+    const emailOrders = await this.getByEmail(email);
+    let linkedCount = 0;
+    
+    for (const order of emailOrders) {
+      if (!order.userId || order.userId !== userId) {
+        await this.update(order.id, { userId });
+        linkedCount++;
+      }
+    }
+    
+    return linkedCount;
   }
 };
 

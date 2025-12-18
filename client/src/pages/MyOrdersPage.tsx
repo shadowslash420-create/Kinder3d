@@ -33,10 +33,22 @@ export default function MyOrdersPage() {
   useEffect(() => {
     if (!user) return;
 
-    const unsubscribe = orderService.subscribeToUserOrders(user.uid, (userOrders) => {
-      setOrders(userOrders);
-      setLoading(false);
-    });
+    const unsubscribe = orderService.subscribeToUserOrdersByEmailAndId(
+      user.uid, 
+      user.email, 
+      (userOrders) => {
+        setOrders(userOrders);
+        setLoading(false);
+      }
+    );
+
+    if (user.email) {
+      orderService.linkExistingOrdersToUser(user.uid, user.email).then((linkedCount) => {
+        if (linkedCount > 0) {
+          console.log(`Linked ${linkedCount} existing orders to user account`);
+        }
+      }).catch(console.error);
+    }
 
     return () => unsubscribe();
   }, [user]);
