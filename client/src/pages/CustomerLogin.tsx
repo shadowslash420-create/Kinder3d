@@ -23,9 +23,7 @@ export default function CustomerLogin() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && user) {
-      setLocation("/menu");
-    }
+    // Don't redirect users after login
   }, [user, authLoading, setLocation]);
 
   if (authLoading) {
@@ -51,7 +49,6 @@ export default function CustomerLogin() {
     try {
       await signInWithEmail(loginEmail, loginPassword);
       toast({ title: "Welcome back!", description: "You have been logged in successfully." });
-      setLocation("/menu");
     } catch (error: any) {
       let message = error.message;
       if (error.code === "auth/invalid-credential") {
@@ -86,7 +83,6 @@ export default function CustomerLogin() {
     try {
       await signUpWithEmail(signupEmail, signupPassword);
       toast({ title: "Account created!", description: "Welcome to Creperie Kinder 5!" });
-      setLocation("/menu");
     } catch (error: any) {
       let message = error.message;
       if (error.code === "auth/email-already-in-use") {
@@ -107,7 +103,6 @@ export default function CustomerLogin() {
     try {
       await signInWithGoogle();
       toast({ title: "Welcome!", description: "You have been logged in successfully." });
-      setLocation("/menu");
     } catch (error: any) {
       toast({ title: "Login Failed", description: error.message, variant: "destructive" });
     } finally {
