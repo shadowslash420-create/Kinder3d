@@ -16,6 +16,7 @@ export default function Reviews() {
 
   useEffect(() => {
     const unsubscribe = reviewService.subscribeToApproved((data) => {
+      console.log("Approved reviews loaded:", data);
       setReviews(data);
       setLoading(false);
     });
@@ -26,7 +27,7 @@ export default function Reviews() {
   const displayReviews = reviews.length > 0 ? reviews.map((review) => ({
     id: review.id,
     text: review.comment,
-    author: review.userName,
+    author: review.userName || (review as any).customerName || "Anonymous",
     emoji: ratingEmojis[review.rating] || "⭐"
   })) : [
     { id: 1, text: "Best crepes in Batna!", author: "Ahmed K.", emoji: "🔥" },

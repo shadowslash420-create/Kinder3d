@@ -597,18 +597,21 @@ export const reviewService = {
   },
   
   subscribeToApproved(callback: (reviews: Review[]) => void) {
-    const q = query(
-      collection(db, "reviews"),
-      where("isApproved", "==", true),
-      orderBy("createdAt", "desc")
-    );
+    // Subscribe to all reviews and filter approved ones client-side to avoid needing composite index
+    const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"));
     return onSnapshot(q, (snapshot) => {
-      const reviews = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: convertTimestamp(doc.data().createdAt),
-      })) as Review[];
-      callback(reviews);
+      const reviews = snapshot.docs
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: convertTimestamp(doc.data().createdAt),
+        })) as Review[];
+      // Filter approved reviews client-side
+      const approvedReviews = reviews.filter(r => r.isApproved);
+      callback(approvedReviews);
+    }, (error) => {
+      console.error("Error fetching approved reviews:", error);
+      callback([]);
     });
   }
 };
