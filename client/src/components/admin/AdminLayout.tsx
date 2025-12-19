@@ -7,6 +7,15 @@ import {
   LayoutDashboard, ShoppingCart, UtensilsCrossed, FolderOpen,
   LogOut, Menu, X, ChevronRight, MessageSquare, Star, Users
 } from "lucide-react";
+import {
+  AnimatedSidebar,
+  AnimatedSidebarBody,
+  DesktopSidebar,
+  MobileSidebar,
+  SidebarLink,
+  SidebarHeader,
+  SidebarFooter,
+} from "@/components/ui/animated-sidebar";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -73,73 +82,105 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
-      <aside
-        className={`${
-          sidebarOpen ? "w-64" : "w-16"
-        } bg-slate-900 text-white transition-all duration-300 flex flex-col fixed h-full z-40`}
-      >
-        <div className="p-4 flex items-center justify-between border-b border-slate-700">
-          {sidebarOpen && <span className="font-bold text-lg">Creperie Admin</span>}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-white hover:bg-slate-800"
-          >
-            {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
-        </div>
+    <AnimatedSidebar open={sidebarOpen} setOpen={setSidebarOpen}>
+      <div className="min-h-screen bg-slate-50 flex">
+        <DesktopSidebar>
+          <AnimatedSidebarBody>
+            <SidebarHeader>
+              <span className="font-bold text-lg">Creperie Admin</span>
+            </SidebarHeader>
 
-        <nav className="flex-1 p-2 space-y-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location === item.path;
-            return (
-              <Link key={item.path} href={item.path}>
-                <div
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-                    isActive
-                      ? "bg-red-500 text-white"
-                      : "text-slate-300 hover:bg-slate-800"
-                  }`}
-                >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
-                  {sidebarOpen && <span>{item.label}</span>}
-                  {sidebarOpen && isActive && (
-                    <ChevronRight className="h-4 w-4 ml-auto" />
-                  )}
+            <nav className="flex-1 space-y-2">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location === item.path;
+                return (
+                  <SidebarLink
+                    key={item.path}
+                    icon={<Icon className="h-5 w-5 flex-shrink-0" />}
+                    label={item.label}
+                    isActive={isActive}
+                    onClick={() => setLocation(item.path)}
+                  />
+                );
+              })}
+            </nav>
+
+            <SidebarFooter>
+              {user && (
+                <div className="mb-3">
+                  <p className="font-medium text-sm">{user.name}</p>
+                  <p className="text-xs text-slate-400">{user.email}</p>
+                  <p className="text-xs text-red-400 capitalize mt-1">
+                    {role?.replace("_", " ")}
+                  </p>
                 </div>
-              </Link>
-            );
-          })}
-        </nav>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="w-full text-slate-300 hover:text-white hover:bg-slate-800 justify-start"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                <span>Logout</span>
+              </Button>
+            </SidebarFooter>
+          </AnimatedSidebarBody>
+        </DesktopSidebar>
 
-        <div className="p-4 border-t border-slate-700">
-          {sidebarOpen && user && (
-            <div className="mb-3">
-              <p className="font-medium text-sm">{user.name}</p>
-              <p className="text-xs text-slate-400">{user.email}</p>
-              <p className="text-xs text-red-400 capitalize mt-1">
-                {role?.replace("_", " ")}
-              </p>
+        <MobileSidebar>
+          <div className="flex flex-col flex-1">
+            <SidebarHeader>
+              <span className="font-bold text-lg">Creperie Admin</span>
+            </SidebarHeader>
+
+            <nav className="flex-1 space-y-2">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location === item.path;
+                return (
+                  <SidebarLink
+                    key={item.path}
+                    icon={<Icon className="h-5 w-5 flex-shrink-0" />}
+                    label={item.label}
+                    isActive={isActive}
+                    onClick={() => {
+                      setLocation(item.path);
+                      setSidebarOpen(false);
+                    }}
+                  />
+                );
+              })}
+            </nav>
+
+            <div className="border-t border-slate-700 pt-4">
+              {user && (
+                <div className="mb-3">
+                  <p className="font-medium text-sm">{user.name}</p>
+                  <p className="text-xs text-slate-400">{user.email}</p>
+                  <p className="text-xs text-red-400 capitalize mt-1">
+                    {role?.replace("_", " ")}
+                  </p>
+                </div>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="w-full text-slate-300 hover:text-white hover:bg-slate-800 justify-start"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                <span>Logout</span>
+              </Button>
             </div>
-          )}
-          <Button
-            variant="ghost"
-            size={sidebarOpen ? "default" : "icon"}
-            onClick={handleLogout}
-            className="w-full text-slate-300 hover:text-white hover:bg-slate-800"
-          >
-            <LogOut className="h-4 w-4" />
-            {sidebarOpen && <span className="ml-2">Logout</span>}
-          </Button>
-        </div>
-      </aside>
+          </div>
+        </MobileSidebar>
 
-      <main className={`flex-1 ${sidebarOpen ? "ml-64" : "ml-16"} transition-all duration-300`}>
-        <div className="p-6">{children}</div>
-      </main>
-    </div>
+        <main className="flex-1 md:ml-[300px] transition-all duration-300">
+          <div className="p-6">{children}</div>
+        </main>
+      </div>
+    </AnimatedSidebar>
   );
 }
