@@ -1,6 +1,9 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { reviewService, type Review } from "@/lib/firebase";
+import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { Star } from "lucide-react";
 
 const ratingEmojis: Record<number, string> = {
   1: "😞",
@@ -13,6 +16,16 @@ const ratingEmojis: Record<number, string> = {
 export default function Reviews() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  
+  const [formData, setFormData] = useState({
+    userName: "",
+    email: "",
+    rating: 5,
+    comment: ""
+  });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const unsubscribe = reviewService.subscribeToApproved((data) => {
@@ -22,6 +35,52 @@ export default function Reviews() {
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        userName: user.displayName || "",
+        email: user.email || ""
+      }));
+    }
+  }, [user]);
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.userName.trim() || !formData.email.trim() || !formData.comment.trim()) {
+      toast({ title: "Error", description: "Please fill in all fields", variant: "destructive" });
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await reviewService.create({
+        userId: user?.uid || "",
+        userName: formData.userName,
+        email: formData.email,
+        rating: formData.rating,
+        comment: formData.comment,
+        isApproved: false
+      });
+      
+      toast({ title: "Thank you!", description: "Your review has been submitted for approval." });
+      setFormData({ userName: "", email: "", rating: 5, comment: "" });
+      
+      if (user) {
+        setFormData(prev => ({
+          ...prev,
+          userName: user.displayName || "",
+          email: user.email || ""
+        }));
+      }
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   // Use static fallback reviews if no real reviews exist yet
   const displayReviews = reviews.length > 0 ? reviews.map((review) => ({
@@ -75,6 +134,86 @@ export default function Reviews() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Review Form Section */}
+      <div className="container mx-auto px-6 mt-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-8"
+        >
+          <h3 className="text-2xl font-serif font-bold text-slate-900 mb-2 text-center">Share Your Experience</h3>
+          <p className="text-sm text-slate-600 text-center mb-6">Help others discover our delicious treats</p>
+          
+          <form onSubmit={handleSubmitReview} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Your Name</label>
+              <input
+                type="text"
+                value={formData.userName}
+                onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
+                placeholder="Enter your name"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                disabled={submitting}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="your@email.com"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                disabled={submitting}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Rating</label>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, rating: star })}
+                    className="transition-transform hover:scale-110"
+                    disabled={submitting}
+                  >
+                    <Star
+                      size={28}
+                      className={star <= formData.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Your Review</label>
+              <textarea
+                value={formData.comment}
+                onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
+                placeholder="Tell us what you think..."
+                rows={4}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                disabled={submitting}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+            >
+              {submitting ? "Submitting..." : "Submit Review"}
+            </button>
+          </form>
+        </motion.div>
       </div>
       <style>{`
         .marquee {
