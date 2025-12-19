@@ -3,6 +3,21 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@layer utilities {
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee var(--duration) linear infinite;
+  }
+}
+
 @theme inline {
   --font-sans: 'DM Sans', sans-serif;
   --font-serif: 'Playfair Display', serif;
