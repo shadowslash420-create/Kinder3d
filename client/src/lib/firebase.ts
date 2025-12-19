@@ -147,6 +147,10 @@ export async function getUserRole(user: User): Promise<UserRole> {
 }
 
 export function signInWithGoogle() {
+  // Force account selection screen instead of auto-selecting last account
+  googleProvider.setCustomParameters({
+    prompt: 'select_account'
+  });
   return signInWithPopup(auth, googleProvider);
 }
 
