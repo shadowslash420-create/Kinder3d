@@ -195,8 +195,9 @@ export default function MenuPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.2 }}
+                    whileHover={{ scale: 1.05, y: -4 }}
                   >
-                    <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
+                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 h-full cursor-pointer">
                       <div className="aspect-square relative overflow-hidden bg-slate-100">
                         {item.imageUrl ? (
                           <img

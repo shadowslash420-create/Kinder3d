@@ -315,9 +315,9 @@ export default function Menu() {
                         setActiveIndex(index);
                       }
                     }}
-                    whileHover={isCenter ? { scale: 1.02 } : {}}
+                    whileHover={isCenter ? { scale: 1.08, y: -8 } : {}}
                   >
-                    <div className="bg-white rounded-2xl overflow-hidden shadow-2xl relative">
+                    <div className="bg-white rounded-2xl overflow-hidden shadow-2xl relative transition-all duration-500 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.3)]">
                       {getItemQuantity(menuItem.id) > 0 && (
                         <div className="absolute top-3 right-3 z-20 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">
                           {getItemQuantity(menuItem.id)}
