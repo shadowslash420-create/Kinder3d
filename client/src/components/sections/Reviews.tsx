@@ -1,17 +1,44 @@
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { reviewService, type Review } from "@/lib/firebase";
 
-const reviews = [
-  { id: 1, text: "Best crepes in Batna!", author: "Ahmed K.", emoji: "🔥" },
-  { id: 2, text: "Amazing desserts, highly recommend!", author: "Sara M.", emoji: "✨" },
-  { id: 3, text: "The Kinder Classic is incredible!", author: "Youcef B.", emoji: "🚀" },
-  { id: 4, text: "Perfect place for family outings", author: "Fatima L.", emoji: "🌟" },
-  { id: 5, text: "Fresh ingredients, delicious taste!", author: "Mohamed D.", emoji: "🎉" },
-  { id: 6, text: "My kids love it here!", author: "Nadia H.", emoji: "❤️" },
-  { id: 7, text: "Great service and atmosphere", author: "Karim A.", emoji: "👏" },
-  { id: 8, text: "The waffles are to die for!", author: "Lina Z.", emoji: "🧇" },
-];
+const ratingEmojis: Record<number, string> = {
+  1: "😞",
+  2: "😕",
+  3: "😐",
+  4: "😊",
+  5: "🤩"
+};
 
 export default function Reviews() {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = reviewService.subscribeToApproved((data) => {
+      setReviews(data);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Use static fallback reviews if no real reviews exist yet
+  const displayReviews = reviews.length > 0 ? reviews.map((review) => ({
+    id: review.id,
+    text: review.comment,
+    author: review.userName,
+    emoji: ratingEmojis[review.rating] || "⭐"
+  })) : [
+    { id: 1, text: "Best crepes in Batna!", author: "Ahmed K.", emoji: "🔥" },
+    { id: 2, text: "Amazing desserts, highly recommend!", author: "Sara M.", emoji: "✨" },
+    { id: 3, text: "The Kinder Classic is incredible!", author: "Youcef B.", emoji: "🚀" },
+    { id: 4, text: "Perfect place for family outings", author: "Fatima L.", emoji: "🌟" },
+    { id: 5, text: "Fresh ingredients, delicious taste!", author: "Mohamed D.", emoji: "🎉" },
+    { id: 6, text: "My kids love it here!", author: "Nadia H.", emoji: "❤️" },
+    { id: 7, text: "Great service and atmosphere", author: "Karim A.", emoji: "👏" },
+    { id: 8, text: "The waffles are to die for!", author: "Lina Z.", emoji: "🧇" },
+  ];
+
   return (
     <section className="py-16 overflow-hidden">
       <div className="container mx-auto px-6 mb-8">
@@ -33,14 +60,14 @@ export default function Reviews() {
       <div className="marquee">
         <div className="marquee__inner">
           <div className="marquee__group">
-            {reviews.map((review) => (
+            {displayReviews.map((review) => (
               <span key={review.id} className="marquee__item">
                 {review.emoji} "{review.text}" — {review.author}
               </span>
             ))}
           </div>
           <div className="marquee__group">
-            {reviews.map((review) => (
+            {displayReviews.map((review) => (
               <span key={`dup-${review.id}`} className="marquee__item">
                 {review.emoji} "{review.text}" — {review.author}
               </span>

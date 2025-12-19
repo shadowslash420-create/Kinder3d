@@ -594,6 +594,22 @@ export const reviewService = {
       })) as Review[];
       callback(reviews);
     });
+  },
+  
+  subscribeToApproved(callback: (reviews: Review[]) => void) {
+    const q = query(
+      collection(db, "reviews"),
+      where("isApproved", "==", true),
+      orderBy("createdAt", "desc")
+    );
+    return onSnapshot(q, (snapshot) => {
+      const reviews = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: convertTimestamp(doc.data().createdAt),
+      })) as Review[];
+      callback(reviews);
+    });
   }
 };
 
