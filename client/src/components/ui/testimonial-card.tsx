@@ -40,7 +40,7 @@ export function TestimonialCard({
         <Avatar className="h-12 w-12">
           <AvatarImage src={author.avatar} alt={author.name} />
           <AvatarFallback className="bg-red-500 text-white">
-            {author.name.charAt(0).toUpperCase()}
+            {author.name ? author.name.charAt(0).toUpperCase() : "?"}
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col items-start">

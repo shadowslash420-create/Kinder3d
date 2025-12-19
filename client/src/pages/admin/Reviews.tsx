@@ -57,14 +57,17 @@ function ReviewsContent() {
 
   const approvedReviews = reviews.filter((r) => r.isApproved);
   
-  const testimonials = approvedReviews.map((review) => ({
-    author: {
-      name: review.userName,
-      handle: review.email,
-      avatar: undefined,
-    } as TestimonialAuthor,
-    text: review.comment,
-  }));
+  const testimonials = approvedReviews.map((review) => {
+    const name = review.userName || (review as any).customerName || "Anonymous";
+    return {
+      author: {
+        name,
+        handle: review.email || "customer",
+        avatar: undefined,
+      } as TestimonialAuthor,
+      text: review.comment,
+    };
+  });
 
   return (
     <AdminLayout>
