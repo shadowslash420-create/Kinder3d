@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { auth, onAuthStateChanged, getUserRole, logOut, type UserRole } from "@/lib/firebase";
 import {
   LayoutDashboard, ShoppingCart, UtensilsCrossed, FolderOpen,
-  LogOut, Menu, X, ChevronRight, MessageSquare, Star, Users
+  LogOut, Menu, X, ChevronRight, MessageSquare, Star, Users, Globe
 } from "lucide-react";
 import {
   AnimatedSidebar,
@@ -120,6 +120,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <Button
                 variant="ghost"
                 size="sm"
+                onClick={() => setLocation("/")}
+                className="w-full text-slate-300 hover:text-white hover:bg-slate-800 justify-start mb-2"
+              >
+                <Globe className="h-4 w-4 mr-2" />
+                <span>View Website</span>
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleLogout}
                 className="w-full text-slate-300 hover:text-white hover:bg-slate-800 justify-start"
               >
@@ -165,6 +174,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   </p>
                 </div>
               )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setLocation("/")}
+                className="w-full text-slate-300 hover:text-white hover:bg-slate-800 justify-start mb-2"
+              >
+                <Globe className="h-4 w-4 mr-2" />
+                <span>View Website</span>
+              </Button>
               <Button
                 variant="ghost"
                 size="sm"
