@@ -50,7 +50,15 @@ export default function AdminLogin() {
       }
 
       toast({ title: "Welcome back!", description: "You have been logged in successfully." });
-      setLocation("/admin/dashboard");
+      
+      // Redirect based on role
+      if (role === "admin") {
+        setLocation("/admin/dashboard");
+      } else if (role === "staff_a") {
+        setLocation("/staff-a");
+      } else if (role === "staff_b") {
+        setLocation("/staff-b");
+      }
     } catch (error: any) {
       let message = error.message;
       if (error.code === "auth/invalid-credential") {
@@ -75,7 +83,15 @@ export default function AdminLogin() {
       }
 
       toast({ title: "Welcome back!", description: "You have been logged in successfully." });
-      setLocation("/admin/dashboard");
+      
+      // Redirect based on role
+      if (role === "admin") {
+        setLocation("/admin/dashboard");
+      } else if (role === "staff_a") {
+        setLocation("/staff-a");
+      } else if (role === "staff_b") {
+        setLocation("/staff-b");
+      }
     } catch (error: any) {
       toast({ title: "Login Failed", description: error.message, variant: "destructive" });
     } finally {
