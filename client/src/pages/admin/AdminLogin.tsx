@@ -45,8 +45,11 @@ export default function AdminLogin() {
       const result = await signInWithEmail(email, password);
       const role = await getUserRole(result.user);
       
+      console.log(`Login attempt for ${result.user.email} - Role: ${role}`);
+      
       if (role !== "admin" && role !== "staff_a" && role !== "staff_b") {
-        throw new Error("You don't have admin access");
+        console.error(`User ${result.user.email} has role '${role}' but is not admin or staff`);
+        throw new Error("You don't have admin access. Please contact the administrator.");
       }
 
       toast({ title: "Welcome back!", description: "You have been logged in successfully." });
@@ -66,6 +69,7 @@ export default function AdminLogin() {
       } else if (error.code === "auth/user-not-found") {
         message = "No account found with this email";
       }
+      console.error("Login error:", error);
       toast({ title: "Login Failed", description: message, variant: "destructive" });
     } finally {
       setLoading(false);
@@ -78,8 +82,11 @@ export default function AdminLogin() {
       const result = await signInWithGoogle();
       const role = await getUserRole(result.user);
       
+      console.log(`Google login for ${result.user.email} - Role: ${role}`);
+      
       if (role !== "admin" && role !== "staff_a" && role !== "staff_b") {
-        throw new Error("You don't have admin access. Contact the administrator.");
+        console.error(`User ${result.user.email} has role '${role}' but is not admin or staff`);
+        throw new Error("You don't have admin access. Please contact the administrator.");
       }
 
       toast({ title: "Welcome back!", description: "You have been logged in successfully." });
@@ -93,6 +100,7 @@ export default function AdminLogin() {
         setLocation("/staff-b");
       }
     } catch (error: any) {
+      console.error("Google login error:", error);
       toast({ title: "Login Failed", description: error.message, variant: "destructive" });
     } finally {
       setLoading(false);
