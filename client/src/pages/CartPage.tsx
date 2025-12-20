@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { ArrowLeft, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
+import { supplementService } from "@/lib/firebase";
 
 interface Supplement {
   id: string;
@@ -39,9 +40,11 @@ export default function CartPage() {
   };
 
   useEffect(() => {
-    // Supplements are fetched from Firebase in real-time when admin manages them
-    // For now, just load the empty array - they'll update when admin adds them
-    setSupplements([]);
+    // Fetch supplements from Firebase in real-time
+    const unsubscribe = supplementService.subscribe((data) => {
+      setSupplements(data);
+    });
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
