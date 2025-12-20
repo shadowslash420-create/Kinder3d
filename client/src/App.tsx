@@ -16,6 +16,7 @@ const Dashboard = lazy(() => import("@/pages/admin/Dashboard"));
 const Orders = lazy(() => import("@/pages/admin/Orders"));
 const MenuItems = lazy(() => import("@/pages/admin/MenuItems"));
 const Categories = lazy(() => import("@/pages/admin/Categories"));
+const Supplements = lazy(() => import("@/pages/admin/Supplements"));
 const Reviews = lazy(() => import("@/pages/admin/Reviews"));
 const Messages = lazy(() => import("@/pages/admin/Messages"));
 const Staff = lazy(() => import("@/pages/admin/Staff"));
@@ -49,6 +50,7 @@ function Router() {
         <Route path="/admin/orders" component={Orders} />
         <Route path="/admin/menu" component={MenuItems} />
         <Route path="/admin/categories" component={Categories} />
+        <Route path="/admin/supplements" component={Supplements} />
         <Route path="/admin/reviews" component={Reviews} />
         <Route path="/admin/messages" component={Messages} />
         <Route path="/admin/staff" component={Staff} />

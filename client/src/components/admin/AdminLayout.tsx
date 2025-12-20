@@ -68,6 +68,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { path: "/admin/orders", label: "Orders", icon: ShoppingCart, visible: isAdmin || isStaffA },
     { path: "/admin/menu", label: "Menu Items", icon: UtensilsCrossed, visible: isAdmin },
     { path: "/admin/categories", label: "Categories", icon: FolderOpen, visible: isAdmin },
+    { path: "/admin/supplements", label: "Supplements", icon: UtensilsCrossed, visible: isAdmin },
     { path: "/admin/reviews", label: "Reviews", icon: Star, visible: isAdmin || isStaffB },
     { path: "/admin/messages", label: "Messages", icon: MessageSquare, visible: isAdmin || isStaffB },
     { path: "/admin/staff", label: "Staff", icon: Users, visible: isAdmin },

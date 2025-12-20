@@ -9,6 +9,7 @@ interface CartItem {
   price: number;
   quantity: number;
   imageUrl?: string;
+  supplements?: { id: string; name: string; price: number }[];
 }
 
 interface CartContextType {
@@ -17,6 +18,7 @@ interface CartContextType {
   removeFromCart: (itemId: string) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
   getItemQuantity: (itemId: string) => number;
+  updateSupplements: (itemId: string, supplements: { id: string; name: string; price: number }[]) => void;
   totalItems: number;
   totalPrice: number;
   clearCart: () => void;
@@ -119,8 +121,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return cartItem?.quantity || 0;
   }, [cart]);
 
+  const updateSupplements = useCallback((itemId: string, supplements: { id: string; name: string; price: number }[]) => {
+    if (!user) return;
+    
+    setCart(prev => {
+      const newCart = prev.map(i => 
+        i.id === itemId ? { ...i, supplements } : i
+      );
+      saveCartToFirebase(newCart);
+      return newCart;
+    });
+  }, [user, saveCartToFirebase]);
+
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const totalPrice = cart.reduce((sum, item) => {
+    const itemPrice = item.price * item.quantity;
+    const supplementsPrice = item.supplements?.reduce((sum, s) => sum + (s.price * item.quantity), 0) || 0;
+    return sum + itemPrice + supplementsPrice;
+  }, 0);
 
   const clearCart = useCallback(async () => {
     setCart([]);
@@ -135,7 +153,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       addToCart, 
       removeFromCart, 
       updateQuantity,
-      getItemQuantity, 
+      getItemQuantity,
+      updateSupplements,
       totalItems, 
       totalPrice,
       clearCart,

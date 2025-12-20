@@ -1,17 +1,25 @@
 import { useLocation } from "wouter";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
+import { supplementService, type Supplement } from "@/lib/firebase";
 import { ArrowLeft, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 
 export default function CartPage() {
   const [, setLocation] = useLocation();
   const { user, loading: authLoading } = useAuth();
-  const { cart, addToCart, removeFromCart, updateQuantity, totalItems, totalPrice, clearCart, isLoading: cartLoading } = useCart();
+  const { cart, addToCart, removeFromCart, updateQuantity, updateSupplements, totalItems, totalPrice, clearCart, isLoading: cartLoading } = useCart();
+  const [supplements, setSupplements] = useState<Supplement[]>([]);
+  const [supplementsDialogOpen, setSupplementsDialogOpen] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [selectedSupplements, setSelectedSupplements] = useState<{ id: string; name: string; price: number }[]>([]);
 
   const handleBrowseMenu = () => {
     setLocation("/");
@@ -24,10 +32,40 @@ export default function CartPage() {
   };
 
   useEffect(() => {
+    const unsubscribe = supplementService.subscribe(setSupplements);
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
     if (!authLoading && !user) {
       setLocation("/customer-login");
     }
   }, [user, authLoading, setLocation]);
+
+  const openSupplementsDialog = (itemId: string) => {
+    const item = cart.find(i => i.id === itemId);
+    setSelectedItemId(itemId);
+    setSelectedSupplements(item?.supplements || []);
+    setSupplementsDialogOpen(true);
+  };
+
+  const handleSupplementToggle = (supplement: Supplement) => {
+    setSelectedSupplements(prev => {
+      const exists = prev.find(s => s.id === supplement.id);
+      if (exists) {
+        return prev.filter(s => s.id !== supplement.id);
+      } else {
+        return [...prev, { id: supplement.id, name: supplement.name, price: supplement.price }];
+      }
+    });
+  };
+
+  const handleSaveSupplements = () => {
+    if (selectedItemId) {
+      updateSupplements(selectedItemId, selectedSupplements);
+      setSupplementsDialogOpen(false);
+    }
+  };
 
   if (authLoading || cartLoading) {
     return (
@@ -149,19 +187,48 @@ export default function CartPage() {
                                 </Button>
                               </div>
                               
-                              <div className="flex items-center gap-4">
-                                <span className="font-semibold text-slate-900">
-                                  {item.price * item.quantity} DA
-                                </span>
+                              <div className="flex items-center gap-2">
                                 <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
-                                  onClick={() => handleRemoveItem(item.id)}
+                                  variant="outline"
+                                  size="sm"
+                                  className="text-xs"
+                                  onClick={() => openSupplementsDialog(item.id)}
                                 >
-                                  <Trash2 className="w-4 h-4" />
+                                  Supplements
+                                  {item.supplements && item.supplements.length > 0 && (
+                                    <span className="ml-1 text-red-600">({item.supplements.length})</span>
+                                  )}
                                 </Button>
                               </div>
+                            </div>
+
+                            {item.supplements && item.supplements.length > 0 && (
+                              <div className="mt-2 text-xs text-slate-600">
+                                <p className="font-medium">Supplements:</p>
+                                <ul className="list-disc list-inside">
+                                  {item.supplements.map(s => (
+                                    <li key={s.id}>{s.name} (+{s.price} DA)</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            <div className="flex items-center justify-between mt-3">
+                              <span className="font-semibold text-slate-900">
+                                {(() => {
+                                  const itemPrice = item.price * item.quantity;
+                                  const supplementsPrice = item.supplements?.reduce((sum, s) => sum + (s.price * item.quantity), 0) || 0;
+                                  return `${itemPrice + supplementsPrice} DA`;
+                                })()}
+                              </span>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                onClick={() => handleRemoveItem(item.id)}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
                             </div>
                           </div>
                         </div>
@@ -210,6 +277,48 @@ export default function CartPage() {
           </>
         )}
       </div>
+
+      <Dialog open={supplementsDialogOpen} onOpenChange={setSupplementsDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add Supplements</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-3 max-h-96 overflow-y-auto">
+            {supplements.filter(s => s.isAvailable).length === 0 ? (
+              <p className="text-sm text-slate-500">No supplements available</p>
+            ) : (
+              supplements
+                .filter(s => s.isAvailable)
+                .map((supplement) => (
+                  <div key={supplement.id} className="flex items-center gap-3 p-2 border rounded-lg hover:bg-slate-50">
+                    <Checkbox
+                      id={supplement.id}
+                      checked={selectedSupplements.some(s => s.id === supplement.id)}
+                      onCheckedChange={() => handleSupplementToggle(supplement)}
+                    />
+                    <Label htmlFor={supplement.id} className="flex-1 cursor-pointer">
+                      <div className="font-medium text-slate-900">{supplement.name}</div>
+                      {supplement.description && (
+                        <div className="text-xs text-slate-600">{supplement.description}</div>
+                      )}
+                    </Label>
+                    <span className="text-sm font-semibold text-red-600">+{supplement.price} DA</span>
+                  </div>
+                ))
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSupplementsDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveSupplements} className="bg-red-600 hover:bg-red-700">
+              Save Supplements
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

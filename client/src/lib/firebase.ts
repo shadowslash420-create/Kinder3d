@@ -114,6 +114,16 @@ export interface Settings {
   value: any;
 }
 
+export interface Supplement {
+  id: string;
+  name: string;
+  price: number;
+  description?: string;
+  isAvailable: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface CartItem {
   id: string;
   menuItemId: string;
@@ -121,6 +131,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   imageUrl?: string;
+  supplements?: { id: string; name: string; price: number }[];
 }
 
 export interface Cart {
@@ -717,6 +728,50 @@ export const settingsService = {
   async set(key: string, value: any): Promise<void> {
     await updateDoc(doc(db, "settings", key), { value }).catch(() => {
       return addDoc(collection(db, "settings"), { key, value });
+    });
+  }
+};
+
+export const supplementService = {
+  async getAll(): Promise<Supplement[]> {
+    const snapshot = await getDocs(collection(db, "supplements"));
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: convertTimestamp(doc.data().createdAt),
+      updatedAt: convertTimestamp(doc.data().updatedAt),
+    })) as Supplement[];
+  },
+  
+  async create(supplement: Omit<Supplement, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
+    const docRef = await addDoc(collection(db, "supplements"), {
+      ...supplement,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return docRef.id;
+  },
+  
+  async update(id: string, data: Partial<Omit<Supplement, 'id' | 'createdAt' | 'updatedAt'>>): Promise<void> {
+    await updateDoc(doc(db, "supplements", id), {
+      ...data,
+      updatedAt: serverTimestamp(),
+    });
+  },
+  
+  async delete(id: string): Promise<void> {
+    await deleteDoc(doc(db, "supplements", id));
+  },
+  
+  subscribe(callback: (supplements: Supplement[]) => void) {
+    return onSnapshot(collection(db, "supplements"), (snapshot) => {
+      const supplements = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: convertTimestamp(doc.data().createdAt),
+        updatedAt: convertTimestamp(doc.data().updatedAt),
+      })) as Supplement[];
+      callback(supplements);
     });
   }
 };
