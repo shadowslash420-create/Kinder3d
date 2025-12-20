@@ -1,15 +1,5 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/public",
-  "framework": "express",
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/index.cjs"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.cjs"
-    }
-  ]
+  "outputDirectory": "dist",
+  "framework": "express"
 }
