@@ -83,30 +83,31 @@ function OrdersContent() {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="space-y-4 md:space-y-6">
+        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Orders</h1>
-            <p className="text-slate-600">Manage and track all orders</p>
+            <h1 className="text-xl md:text-2xl font-bold text-slate-900">Orders</h1>
+            <p className="text-sm md:text-base text-slate-600">Manage and track all orders</p>
           </div>
         </div>
 
         <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-wrap gap-4">
-              <div className="flex-1 min-w-[200px] flex gap-2">
+          <CardContent className="p-3 md:p-4">
+            <div className="flex flex-col gap-3 md:flex-row md:gap-4">
+              <div className="flex-1 flex gap-2">
                 <Input
-                  placeholder="Search by name or order #..."
+                  placeholder="Search..."
+                  className="text-sm"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-                <Button variant="secondary">
+                <Button variant="secondary" size="sm" className="md:size-auto">
                   <Search className="h-4 w-4" />
                 </Button>
               </div>
               <Select value={statusFilter || "all"} onValueChange={(val) => setStatusFilter(val === "all" ? "" : val)}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="All statuses" />
+                <SelectTrigger className="w-full md:w-[180px]">
+                  <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All statuses</SelectItem>
@@ -119,19 +120,20 @@ function OrdersContent() {
           </CardContent>
         </Card>
 
-        <Card>
+        {/* Desktop Table View */}
+        <Card className="hidden md:block">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-slate-50 border-b">
                   <tr>
-                    <th className="text-left p-4 font-medium text-slate-600">Order #</th>
-                    <th className="text-left p-4 font-medium text-slate-600">Customer</th>
-                    <th className="text-left p-4 font-medium text-slate-600">Items</th>
-                    <th className="text-left p-4 font-medium text-slate-600">Total</th>
-                    <th className="text-left p-4 font-medium text-slate-600">Status</th>
-                    <th className="text-left p-4 font-medium text-slate-600">Date</th>
-                    <th className="text-left p-4 font-medium text-slate-600">Actions</th>
+                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Order #</th>
+                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Customer</th>
+                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Items</th>
+                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Total</th>
+                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Status</th>
+                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Date</th>
+                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -152,11 +154,11 @@ function OrdersContent() {
                       <tr key={order.id} className="border-b hover:bg-slate-50">
                         <td className="p-4 font-mono text-sm">{order.orderNumber}</td>
                         <td className="p-4">
-                          <div>{order.customerName}</div>
-                          <div className="text-sm text-slate-500">{order.customerPhone}</div>
+                          <div className="text-sm">{order.customerName}</div>
+                          <div className="text-xs text-slate-500">{order.customerPhone}</div>
                         </td>
                         <td className="p-4 text-sm">{order.items.length} items</td>
-                        <td className="p-4 font-medium">DA {order.total.toFixed(2)}</td>
+                        <td className="p-4 font-medium text-sm">DA {order.total.toFixed(2)}</td>
                         <td className="p-4">
                           <Badge className={statusColors[order.status]}>{order.status.replace("_", " ")}</Badge>
                         </td>
@@ -183,48 +185,100 @@ function OrdersContent() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Mobile Card View */}
+        <div className="md:hidden space-y-3">
+          {loading ? (
+            <div className="text-center text-slate-500 py-8">Loading...</div>
+          ) : filteredOrders.length === 0 ? (
+            <div className="text-center text-slate-500 py-8">No orders found</div>
+          ) : (
+            filteredOrders.map((order) => (
+              <Card key={order.id} className="p-4">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-start gap-2">
+                    <div>
+                      <p className="font-mono text-sm font-bold text-slate-900">{order.orderNumber}</p>
+                      <p className="text-xs text-slate-500">{order.createdAt.toLocaleDateString()}</p>
+                    </div>
+                    <Badge className={statusColors[order.status]}>{order.status.replace("_", " ")}</Badge>
+                  </div>
+                  
+                  <div className="border-t pt-3">
+                    <p className="text-sm font-medium text-slate-900">{order.customerName}</p>
+                    <p className="text-xs text-slate-500">{order.customerPhone}</p>
+                    {order.email && <p className="text-xs text-slate-500">{order.email}</p>}
+                  </div>
+
+                  <div className="border-t pt-3 flex justify-between items-center">
+                    <div>
+                      <p className="text-xs text-slate-500">Items</p>
+                      <p className="text-sm font-medium">{order.items.length} items</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-slate-500">Total</p>
+                      <p className="text-sm font-bold text-slate-900">DA {order.total.toFixed(2)}</p>
+                    </div>
+                  </div>
+
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="w-full mt-2"
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setNotes(order.notes || "");
+                    }}
+                  >
+                    View Details
+                  </Button>
+                </div>
+              </Card>
+            ))
+          )}
+        </div>
       </div>
 
       <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Order {selectedOrder?.orderNumber}</DialogTitle>
+            <DialogTitle className="text-lg md:text-xl">Order {selectedOrder?.orderNumber}</DialogTitle>
           </DialogHeader>
           {selectedOrder && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 <div>
-                  <p className="text-sm text-slate-500">Customer</p>
-                  <p className="font-medium">{selectedOrder.customerName}</p>
+                  <p className="text-xs md:text-sm text-slate-500">Customer</p>
+                  <p className="font-medium text-sm md:text-base">{selectedOrder.customerName}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-slate-500">Phone</p>
-                  <p className="font-medium">{selectedOrder.customerPhone || "-"}</p>
+                  <p className="text-xs md:text-sm text-slate-500">Phone</p>
+                  <p className="font-medium text-sm md:text-base">{selectedOrder.customerPhone || "-"}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-slate-500">Email</p>
-                  <p className="font-medium">{selectedOrder.email || "-"}</p>
+                  <p className="text-xs md:text-sm text-slate-500">Email</p>
+                  <p className="font-medium text-sm md:text-base break-all">{selectedOrder.email || "-"}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-slate-500">Date</p>
-                  <p className="font-medium">
+                  <p className="text-xs md:text-sm text-slate-500">Date</p>
+                  <p className="font-medium text-sm md:text-base">
                     {selectedOrder.createdAt.toLocaleString()}
                   </p>
                 </div>
               </div>
 
               <div>
-                <p className="text-sm text-slate-500 mb-2">Items</p>
-                <div className="bg-slate-50 rounded-lg p-3 space-y-2">
+                <p className="text-xs md:text-sm text-slate-500 mb-2">Items</p>
+                <div className="bg-slate-50 rounded-lg p-3 space-y-2 max-h-[200px] overflow-y-auto">
                   {selectedOrder.items.map((item, i) => (
-                    <div key={i} className="flex justify-between">
-                      <span>
+                    <div key={i} className="flex justify-between text-sm">
+                      <span className="break-words flex-1 pr-2">
                         {item.name} x{item.quantity}
                       </span>
-                      <span>DA {(item.price * item.quantity).toFixed(2)}</span>
+                      <span className="font-medium whitespace-nowrap">DA {(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
-                  <div className="border-t pt-2 mt-2 flex justify-between font-bold">
+                  <div className="border-t pt-2 mt-2 flex justify-between font-bold text-sm">
                     <span>Total</span>
                     <span>DA {selectedOrder.total.toFixed(2)}</span>
                   </div>
@@ -232,12 +286,12 @@ function OrdersContent() {
               </div>
 
               <div>
-                <p className="text-sm text-slate-500 mb-2">Update Status</p>
+                <p className="text-xs md:text-sm text-slate-500 mb-2">Update Status</p>
                 <Select
                   value={selectedOrder.status}
                   onValueChange={(val) => updateStatus(selectedOrder.id, val)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -249,13 +303,14 @@ function OrdersContent() {
               </div>
 
               <div>
-                <Label>Notes</Label>
+                <Label className="text-xs md:text-sm">Notes</Label>
                 <Textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Add notes for this order..."
+                  className="text-sm min-h-[80px]"
                 />
-                <Button onClick={updateNotes} size="sm" className="mt-2">
+                <Button onClick={updateNotes} size="sm" className="mt-2 w-full md:w-auto">
                   Save Notes
                 </Button>
               </div>
