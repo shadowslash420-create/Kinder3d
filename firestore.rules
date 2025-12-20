@@ -1,0 +1,94 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      let adminEmail = "oussamaanis2005@gmail.com";
+      return isAuthenticated() && (
+        request.auth.token.email == adminEmail ||
+        exists(/databases/{database}/documents/staff/{request.auth.token.email})
+      );
+    }
+    
+    function isStaffA() {
+      return isAuthenticated() && 
+        exists(/databases/{database}/documents/staff/{request.auth.token.email}) &&
+        get(/databases/{database}/documents/staff/{request.auth.token.email}).data.role == "Staff A";
+    }
+    
+    function isStaffB() {
+      return isAuthenticated() && 
+        exists(/databases/{database}/documents/staff/{request.auth.token.email}) &&
+        get(/databases/{database}/documents/staff/{request.auth.token.email}).data.role == "Staff B";
+    }
+    
+    // Supplements Collection - Admin only can create, update, delete; Everyone can read
+    match /supplements/{document=**} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Menu Items Collection
+    match /menuItems/{document=**} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Categories Collection
+    match /categories/{document=**} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Orders Collection - View own or admin/staff
+    match /orders/{document=**} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || 
+        isStaffA() || 
+        resource.data.userId == request.auth.uid
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAdmin() || isStaffA();
+    }
+    
+    // Reviews Collection
+    match /reviews/{document=**} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin() || isStaffB();
+    }
+    
+    // Messages Collection
+    match /messages/{document=**} {
+      allow read: if isAdmin() || isStaffB();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin() || isStaffB();
+    }
+    
+    // Staff Collection - Admin only
+    match /staff/{document=**} {
+      allow read, create, update, delete: if isAdmin();
+    }
+    
+    // User Data
+    match /users/{userId} {
+      allow read, write: if request.auth.uid == userId;
+      allow read: if isAdmin();
+    }
+    
+    // Settings - Admin only
+    match /settings/{document=**} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Cart - User only
+    match /carts/{userId} {
+      allow read, write: if request.auth.uid == userId;
+    }
+  }
+}
