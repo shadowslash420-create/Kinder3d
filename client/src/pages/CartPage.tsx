@@ -9,8 +9,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
-import { supplementService, type Supplement } from "@/lib/firebase";
 import { ArrowLeft, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
+
+interface Supplement {
+  id: string;
+  name: string;
+  price: number;
+  description?: string;
+  isAvailable: boolean;
+}
 
 export default function CartPage() {
   const [, setLocation] = useLocation();
@@ -32,8 +39,9 @@ export default function CartPage() {
   };
 
   useEffect(() => {
-    const unsubscribe = supplementService.subscribe(setSupplements);
-    return () => unsubscribe();
+    // Supplements are fetched from Firebase in real-time when admin manages them
+    // For now, just load the empty array - they'll update when admin adds them
+    setSupplements([]);
   }, []);
 
   useEffect(() => {
