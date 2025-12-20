@@ -301,16 +301,49 @@ export default function FloatingLines({
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const scene = new Scene();
+    let scene: Scene;
+    let camera: OrthographicCamera;
+    let renderer: WebGLRenderer;
+    let contextLostFlag = false;
 
-    const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    camera.position.z = 1;
+    try {
+      scene = new Scene();
+      camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
+      camera.position.z = 1;
 
-    const renderer = new WebGLRenderer({ antialias: true, alpha: false });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.domElement.style.width = '100%';
-    renderer.domElement.style.height = '100%';
-    containerRef.current.appendChild(renderer.domElement);
+      renderer = new WebGLRenderer({ 
+        antialias: true, 
+        alpha: false,
+        failIfMajorPerformanceCaveat: false,
+        powerPreference: 'low-power'
+      });
+      
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1));
+      renderer.domElement.style.width = '100%';
+      renderer.domElement.style.height = '100%';
+      
+      const canvas = renderer.domElement as HTMLCanvasElement;
+      if (canvas) {
+        canvas.addEventListener('webglcontextlost', (e: Event) => {
+          e.preventDefault();
+          contextLostFlag = true;
+          console.warn('WebGL context lost');
+        });
+        
+        canvas.addEventListener('webglcontextrestored', () => {
+          contextLostFlag = false;
+          console.warn('WebGL context restored');
+        });
+      }
+      
+      containerRef.current.appendChild(renderer.domElement);
+    } catch (error) {
+      console.warn('WebGL initialization failed, using fallback', error);
+      if (containerRef.current) {
+        containerRef.current.style.display = 'none';
+      }
+      return;
+    }
 
     const uniforms = {
       iTime: { value: 0 },
@@ -436,22 +469,31 @@ export default function FloatingLines({
 
     let raf = 0;
     const renderLoop = () => {
-      uniforms.iTime.value = clock.getElapsedTime();
-
-      if (interactive) {
-        currentMouseRef.current.lerp(targetMouseRef.current, mouseDamping);
-        uniforms.iMouse.value.copy(currentMouseRef.current);
-
-        currentInfluenceRef.current += (targetInfluenceRef.current - currentInfluenceRef.current) * mouseDamping;
-        uniforms.bendInfluence.value = currentInfluenceRef.current;
+      if (contextLostFlag) {
+        raf = requestAnimationFrame(renderLoop);
+        return;
       }
 
-      if (parallax) {
-        currentParallaxRef.current.lerp(targetParallaxRef.current, mouseDamping);
-        uniforms.parallaxOffset.value.copy(currentParallaxRef.current);
-      }
+      try {
+        uniforms.iTime.value = clock.getElapsedTime();
 
-      renderer.render(scene, camera);
+        if (interactive) {
+          currentMouseRef.current.lerp(targetMouseRef.current, mouseDamping);
+          uniforms.iMouse.value.copy(currentMouseRef.current);
+
+          currentInfluenceRef.current += (targetInfluenceRef.current - currentInfluenceRef.current) * mouseDamping;
+          uniforms.bendInfluence.value = currentInfluenceRef.current;
+        }
+
+        if (parallax) {
+          currentParallaxRef.current.lerp(targetParallaxRef.current, mouseDamping);
+          uniforms.parallaxOffset.value.copy(currentParallaxRef.current);
+        }
+
+        renderer.render(scene, camera);
+      } catch (error) {
+        console.warn('Render error:', error);
+      }
       raf = requestAnimationFrame(renderLoop);
     };
     renderLoop();
