@@ -19,24 +19,35 @@ const SectionLoader = () => (
 export default function Home() {
   const lenisRef = useRef<Lenis | null>(null);
   const rafIdRef = useRef<number | null>(null);
+  const isInitializedRef = useRef(false);
   
   useEffect(() => {
     const initLenis = () => {
-      if (lenisRef.current) return;
+      if (isInitializedRef.current || lenisRef.current) return;
       
-      lenisRef.current = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        smoothWheel: true,
-      });
+      try {
+        lenisRef.current = new Lenis({
+          duration: 1.2,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          orientation: 'vertical',
+          smoothWheel: true,
+          syncTouch: true,
+          preventDefault: true,
+        });
 
-      function raf(time: number) {
-        lenisRef.current?.raf(time);
+        let isRafActive = true;
+        function raf(time: number) {
+          if (!isRafActive) return;
+          lenisRef.current?.raf(time);
+          rafIdRef.current = requestAnimationFrame(raf);
+        }
+
+        isInitializedRef.current = true;
         rafIdRef.current = requestAnimationFrame(raf);
+      } catch (error) {
+        console.warn('Lenis initialization failed, using native scroll:', error);
+        isInitializedRef.current = true;
       }
-
-      rafIdRef.current = requestAnimationFrame(raf);
     };
 
     if ('requestIdleCallback' in window) {
@@ -49,7 +60,11 @@ export default function Home() {
       if (rafIdRef.current) {
         cancelAnimationFrame(rafIdRef.current);
       }
-      lenisRef.current?.destroy();
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+        lenisRef.current = null;
+      }
+      isInitializedRef.current = false;
     };
   }, []);
 
