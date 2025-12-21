@@ -254,10 +254,6 @@ export default function Menu() {
                 </motion.button>
               ))}
             </div>
-            
-            {/* Gradient fade effects */}
-            <div className="absolute left-0 top-0 w-12 h-full bg-gradient-to-r from-slate-900 via-slate-900/50 to-transparent pointer-events-none z-10" />
-            <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-slate-900 via-slate-900/50 to-transparent pointer-events-none z-10" />
           </motion.div>
         )}
 
