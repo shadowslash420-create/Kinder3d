@@ -47,7 +47,7 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="py-16 sm:py-24 md:py-32 relative overflow-hidden min-h-screen bg-gradient-to-b from-[#241008] via-[#2d1810] to-[#3d2817]">
+    <section id="about" className="py-16 sm:py-24 md:py-32 relative overflow-hidden min-h-screen">
       <div className="absolute inset-0 z-0 opacity-30">
         <GridMotion items={gridItems} gradientColor="transparent" />
       </div>
