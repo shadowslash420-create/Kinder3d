@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { reviewService, type Review } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Star } from "lucide-react";
+
+const isReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const ratingEmojis: Record<number, string> = {
   1: "😞",
@@ -13,7 +15,7 @@ const ratingEmojis: Record<number, string> = {
   5: "🤩"
 };
 
-export default function Reviews() {
+const Reviews = memo(function Reviews() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
@@ -290,6 +292,13 @@ export default function Reviews() {
       </div>
 
       <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
+        }
         .marquee {
           overflow: hidden;
           width: 100%;
@@ -343,4 +352,6 @@ export default function Reviews() {
       `}</style>
     </section>
   );
-}
+});
+
+export default Reviews;

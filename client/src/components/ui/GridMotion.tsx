@@ -1,4 +1,4 @@
-import { useEffect, useRef, ReactNode } from 'react';
+import { useEffect, useRef, ReactNode, memo } from 'react';
 import { gsap } from 'gsap';
 
 interface GridMotionProps {
@@ -6,7 +6,9 @@ interface GridMotionProps {
   gradientColor?: string;
 }
 
-const GridMotion = ({ items = [], gradientColor = '#4A3728' }: GridMotionProps) => {
+const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768;
+
+const GridMotion = memo(({ items = [], gradientColor = '#4A3728' }: GridMotionProps) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
   const mouseXRef = useRef(typeof window !== 'undefined' ? window.innerWidth / 2 : 0);
@@ -16,6 +18,9 @@ const GridMotion = ({ items = [], gradientColor = '#4A3728' }: GridMotionProps) 
   const combinedItems = items.length > 0 ? items.slice(0, totalItems) : defaultItems;
 
   useEffect(() => {
+    // Disable animations on mobile for performance
+    if (isMobileDevice) return;
+    
     gsap.ticker.lagSmoothing(0);
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -116,6 +121,8 @@ const GridMotion = ({ items = [], gradientColor = '#4A3728' }: GridMotionProps) 
       </section>
     </div>
   );
-};
+});
+
+GridMotion.displayName = 'GridMotion';
 
 export default GridMotion;

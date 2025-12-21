@@ -1,10 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, memo } from "react";
 import ShoppingCart from "@/components/ui/ShoppingCart";
 import { useCart } from "@/context/CartContext";
 import FloatingLines from "@/components/ui/FloatingLines";
 import { menuService, categoryService, type MenuItem, type Category } from "@/lib/firebase";
+
+const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768;
 
 export default function Menu() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -169,22 +171,26 @@ export default function Menu() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const floatingLinesBackground = useMemo(() => (
-    <div className="absolute inset-0 z-0">
-      <FloatingLines 
-        linesGradient={['#8B4513', '#A0522D', '#CD853F', '#D2691E', '#B8860B']}
-        enabledWaves={['top', 'middle', 'bottom']}
-        lineCount={[12, 16, 20]}
-        lineDistance={[6, 5, 4]}
-        bendRadius={5.0}
-        bendStrength={-0.5}
-        interactive={true}
-        parallax={true}
-        animationSpeed={0.8}
-        mixBlendMode="normal"
-      />
-    </div>
-  ), []);
+  const floatingLinesBackground = useMemo(() => {
+    // Disable floating lines on mobile for performance
+    if (isMobileDevice) return null;
+    return (
+      <div className="absolute inset-0 z-0">
+        <FloatingLines 
+          linesGradient={['#8B4513', '#A0522D', '#CD853F', '#D2691E', '#B8860B']}
+          enabledWaves={['top', 'middle', 'bottom']}
+          lineCount={[12, 16, 20]}
+          lineDistance={[6, 5, 4]}
+          bendRadius={5.0}
+          bendStrength={-0.5}
+          interactive={false}
+          parallax={false}
+          animationSpeed={0.5}
+          mixBlendMode="normal"
+        />
+      </div>
+    );
+  }, []);
 
   return (
     <section id="menu" className="py-16 sm:py-24 md:py-32 relative overflow-hidden">
