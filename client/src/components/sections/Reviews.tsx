@@ -103,8 +103,8 @@ export default function Reviews() {
   ];
 
   return (
-    <section className="py-16 overflow-hidden">
-      <div className="container mx-auto px-6 mb-8">
+    <section className="py-20 overflow-hidden bg-gradient-to-b from-amber-50 to-white">
+      <div className="container mx-auto px-6 mb-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -112,12 +112,17 @@ export default function Reviews() {
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-4 block">
-            Testimonials
+          <span className="text-amber-700 font-bold tracking-[0.2em] text-xs uppercase mb-4 block">
+            Guest Testimonials
           </span>
-          <h2 className="text-4xl md:text-5xl font-serif font-medium text-[#bda89d]">
-            What Our Guests Say
+          <h2 className="text-5xl md:text-6xl font-serif font-light text-amber-900 mb-2">
+            Celebrated by Our Patrons
           </h2>
+          <div className="flex items-center justify-center gap-3 mt-4">
+            <div className="h-px w-8 bg-amber-700"></div>
+            <span className="text-amber-700 text-sm">Refined Dining Experiences</span>
+            <div className="h-px w-8 bg-amber-700"></div>
+          </div>
         </motion.div>
 
         {/* Top Rated Review Section */}
@@ -127,119 +132,146 @@ export default function Reviews() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-12 max-w-sm mx-auto"
+            className="mt-16 max-w-2xl mx-auto"
           >
-            <div className="bg-white rounded-3xl p-8 shadow-xl text-center">
-              <h3 className="text-2xl font-serif font-bold text-slate-900 mb-4">Top Rated</h3>
-              <div className="flex justify-center gap-1 mb-4">
-                {[...Array(topRatedReview.rating)].map((_, i) => (
-                  <Star key={i} size={24} className="fill-yellow-400 text-yellow-400" />
-                ))}
+            <div className="relative">
+              <div className="absolute -top-6 -left-4 text-6xl text-amber-200 opacity-30 font-serif">"</div>
+              <div className="bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-amber-700 rounded-2xl p-10 shadow-2xl text-center">
+                <h3 className="text-amber-900 font-serif text-xl tracking-wider mb-6">✦ Featured Review ✦</h3>
+                <div className="flex justify-center gap-2 mb-6">
+                  {[...Array(topRatedReview.rating)].map((_, i) => (
+                    <Star key={i} size={22} className="fill-amber-600 text-amber-600" />
+                  ))}
+                </div>
+                <p className="text-lg text-amber-950 italic font-light mb-6 leading-relaxed">"{topRatedReview.comment}"</p>
+                <div className="border-t border-amber-700 pt-4">
+                  <p className="text-sm font-serif text-amber-900">— {topRatedReview.userName}</p>
+                </div>
               </div>
-              <p className="text-base text-slate-700 italic mb-4">"{topRatedReview.comment}"</p>
-              <p className="text-sm font-semibold text-slate-600">— {topRatedReview.userName}</p>
             </div>
           </motion.div>
         )}
       </div>
-      <div className="marquee">
-        <div className="marquee__inner">
-          <div className="marquee__group">
-            {displayReviews.map((review) => (
-              <span key={review.id} className="marquee__item">
-                {review.emoji} "{review.text}" — {review.author}
-              </span>
-            ))}
-          </div>
-          <div className="marquee__group">
-            {displayReviews.map((review) => (
-              <span key={`dup-${review.id}`} className="marquee__item">
-                {review.emoji} "{review.text}" — {review.author}
-              </span>
-            ))}
+
+      {/* Elegant Marquee Section */}
+      <div className="bg-gradient-to-r from-amber-900 via-amber-800 to-amber-900 py-8 my-12 shadow-lg">
+        <div className="marquee">
+          <div className="marquee__inner">
+            <div className="marquee__group">
+              {displayReviews.map((review) => (
+                <span key={review.id} className="marquee__item">
+                  <span className="text-amber-300 mr-2">{review.emoji}</span>
+                  <span className="text-amber-50">"{review.text}"</span>
+                  <span className="text-amber-400 mx-2">—</span>
+                  <span className="text-amber-200 font-light">{review.author}</span>
+                </span>
+              ))}
+            </div>
+            <div className="marquee__group">
+              {displayReviews.map((review) => (
+                <span key={`dup-${review.id}`} className="marquee__item">
+                  <span className="text-amber-300 mr-2">{review.emoji}</span>
+                  <span className="text-amber-50">"{review.text}"</span>
+                  <span className="text-amber-400 mx-2">—</span>
+                  <span className="text-amber-200 font-light">{review.author}</span>
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Review Form Section */}
-      <div className="container mx-auto px-6 mt-16">
+      <div className="container mx-auto px-6 mt-12">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-8"
+          className="max-w-2xl mx-auto"
         >
-          <h3 className="text-2xl font-serif font-bold text-slate-900 mb-2 text-center">Share Your Experience</h3>
-          <p className="text-sm text-slate-600 text-center mb-6">Help others discover our delicious treats</p>
-          
-          <form onSubmit={handleSubmitReview} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Your Name</label>
-              <input
-                type="text"
-                value={formData.userName}
-                onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
-                placeholder="Enter your name"
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                disabled={submitting}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="your@email.com"
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                disabled={submitting}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Rating</label>
-              <div className="flex gap-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setFormData({ ...formData, rating: star })}
-                    className="transition-transform hover:scale-110"
-                    disabled={submitting}
-                  >
-                    <Star
-                      size={28}
-                      className={star <= formData.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
-                    />
-                  </button>
-                ))}
+          <div className="relative">
+            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+              <div className="flex gap-2 text-2xl text-amber-700">
+                <span>✦</span>
+                <span>✦</span>
+                <span>✦</span>
               </div>
             </div>
+            <div className="bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 border-2 border-amber-700 rounded-2xl shadow-2xl p-10">
+              <h3 className="text-3xl font-serif font-light text-amber-900 mb-2 text-center">Share Your Delight</h3>
+              <p className="text-sm text-amber-800 text-center mb-8 font-light">Let us know about your refined experience</p>
+              
+              <form onSubmit={handleSubmitReview} className="space-y-5">
+                <div>
+                  <label className="block text-sm font-serif text-amber-900 mb-2 tracking-wide">Your Name</label>
+                  <input
+                    type="text"
+                    value={formData.userName}
+                    onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
+                    placeholder="Enter your name"
+                    className="w-full px-4 py-3 border-2 border-amber-700 bg-white text-amber-950 placeholder-amber-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-700 focus:bg-amber-50 transition-colors"
+                    disabled={submitting}
+                  />
+                </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Your Review</label>
-              <textarea
-                value={formData.comment}
-                onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
-                placeholder="Tell us what you think..."
-                rows={4}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
-                disabled={submitting}
-              />
+                <div>
+                  <label className="block text-sm font-serif text-amber-900 mb-2 tracking-wide">Email</label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="your@email.com"
+                    className="w-full px-4 py-3 border-2 border-amber-700 bg-white text-amber-950 placeholder-amber-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-700 focus:bg-amber-50 transition-colors"
+                    disabled={submitting}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-serif text-amber-900 mb-3 tracking-wide">Your Rating</label>
+                  <div className="flex gap-3 justify-center">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, rating: star })}
+                        className="transition-all duration-200 hover:scale-125 active:scale-95"
+                        disabled={submitting}
+                      >
+                        <Star
+                          size={32}
+                          className={star <= formData.rating ? "fill-amber-600 text-amber-600" : "text-amber-300"}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-serif text-amber-900 mb-2 tracking-wide">Your Review</label>
+                  <textarea
+                    value={formData.comment}
+                    onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
+                    placeholder="Tell us about your experience..."
+                    rows={4}
+                    className="w-full px-4 py-3 border-2 border-amber-700 bg-white text-amber-950 placeholder-amber-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-700 focus:bg-amber-50 transition-colors resize-none"
+                    disabled={submitting}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full bg-gradient-to-r from-amber-700 to-amber-800 hover:from-amber-800 hover:to-amber-900 disabled:from-gray-400 disabled:to-gray-500 text-amber-50 font-serif font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl border border-amber-900"
+                >
+                  {submitting ? "Submitting..." : "Submit Your Review"}
+                </button>
+              </form>
             </div>
-
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
-            >
-              {submitting ? "Submitting..." : "Submit Review"}
-            </button>
-          </form>
+          </div>
         </motion.div>
       </div>
+
       <style>{`
         .marquee {
           overflow: hidden;
@@ -263,7 +295,7 @@ export default function Reviews() {
         .marquee__inner {
           display: flex;
           width: max-content;
-          animation: marquee 30s linear infinite;
+          animation: marquee 35s linear infinite;
         }
 
         .marquee__group {
@@ -271,15 +303,12 @@ export default function Reviews() {
         }
 
         .marquee__item {
-          margin: 0 1.5rem;
+          margin: 0 2rem;
           white-space: nowrap;
-          background: #1a1a1a;
-          color: white;
           padding: 12px 24px;
-          border-radius: 50px;
-          font-size: 1rem;
-          font-weight: 500;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          font-size: 0.95rem;
+          font-weight: 400;
+          letter-spacing: 0.03em;
         }
 
         @keyframes marquee {
