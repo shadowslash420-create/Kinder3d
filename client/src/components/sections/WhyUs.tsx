@@ -26,7 +26,7 @@ const features = [
 
 export default function WhyUs() {
   return (
-    <section className="py-16 sm:py-20 md:py-24">
+    <section className="py-16 sm:py-20 md:py-24 relative overflow-hidden bg-gradient-to-b from-[#1a1a1a]/90 via-[#2d1810]/85 to-[#1a1a1a]/90">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
           <div>

@@ -103,12 +103,11 @@ export default function Reviews() {
   ];
 
   return (
-    <section className="py-24 overflow-hidden relative">
+    <section className="py-24 overflow-hidden relative bg-gradient-to-b from-[#3d2817]/85 via-[#2d1810]/80 to-[#1a1a1a]/90">
       {/* Background with multiple layered gradients - Dark Chocolate */}
-      <div className="absolute inset-0 bg-gradient-to-br from-stone-100 via-amber-50 to-stone-200"></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent opacity-70"></div>
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-amber-200 to-transparent rounded-full blur-3xl opacity-40"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-stone-200 to-transparent rounded-full blur-3xl opacity-30"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-[#2d1810]/40 via-transparent to-[#1a1a1a]/30"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#eb2d2d]/10 to-transparent rounded-full blur-3xl opacity-30"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#6B4423]/20 to-transparent rounded-full blur-3xl opacity-20"></div>
       
       <div className="relative z-10 container mx-auto px-6 mb-16">
         <motion.div
@@ -118,16 +117,16 @@ export default function Reviews() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center"
         >
-          <span className="text-amber-900 font-bold tracking-[0.3em] text-xs uppercase mb-6 block opacity-90">
+          <span className="text-[#eb2d2d] font-bold tracking-[0.3em] text-xs uppercase mb-6 block opacity-90">
             ✧ Guest Testimonials ✧
           </span>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif font-light text-transparent bg-clip-text bg-gradient-to-br from-amber-950 via-amber-900 to-stone-700 mb-4">
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif font-light text-white mb-4">
             Celebrated by Our Patrons
           </h2>
           <div className="flex items-center justify-center gap-4 mt-6">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent to-amber-900"></div>
-            <span className="text-amber-900 text-sm font-light tracking-wider">Refined Dining Experiences</span>
-            <div className="h-px w-12 bg-gradient-to-l from-transparent to-amber-900"></div>
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#eb2d2d]"></div>
+            <span className="text-white/70 text-sm font-light tracking-wider">Refined Dining Experiences</span>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#eb2d2d]"></div>
           </div>
         </motion.div>
 
@@ -142,20 +141,20 @@ export default function Reviews() {
           >
             <div className="relative">
               <div className="absolute -top-8 -left-6 text-7xl text-stone-300 opacity-25 font-serif">"</div>
-              <div className="bg-gradient-to-br from-stone-100 via-amber-50 to-stone-150 border border-amber-800 rounded-3xl p-12 shadow-2xl text-center overflow-hidden relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-transparent opacity-40"></div>
+              <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-12 shadow-2xl text-center overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-40"></div>
                 <div className="relative z-10">
-                  <h3 className="text-amber-950 font-serif text-lg tracking-widest mb-8 font-light">✦ Featured Review ✦</h3>
+                  <h3 className="text-white font-serif text-lg tracking-widest mb-8 font-light">✦ Featured Review ✦</h3>
                   <div className="flex justify-center gap-3 mb-8">
                     {[...Array(topRatedReview.rating)].map((_, i) => (
                       <motion.div key={i} initial={{ scale: 0 }} whileInView={{ scale: 1 }} transition={{ delay: i * 0.1 }}>
-                        <Star size={24} className="fill-amber-900 text-amber-900" />
+                        <Star size={24} className="fill-[#ffb76e] text-[#ffb76e]" />
                       </motion.div>
                     ))}
                   </div>
-                  <p className="text-xl text-stone-900 italic font-light mb-8 leading-relaxed max-w-2xl mx-auto">"{topRatedReview.comment}"</p>
-                  <div className="border-t border-amber-800 pt-6 mt-6">
-                    <p className="text-sm font-serif text-amber-950 tracking-wide">— {topRatedReview.userName}</p>
+                  <p className="text-xl text-white/90 italic font-light mb-8 leading-relaxed max-w-2xl mx-auto">"{topRatedReview.comment}"</p>
+                  <div className="border-t border-white/20 pt-6 mt-6">
+                    <p className="text-sm font-serif text-white/70 tracking-wide">— {topRatedReview.userName}</p>
                   </div>
                 </div>
               </div>
