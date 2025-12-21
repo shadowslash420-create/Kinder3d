@@ -1,12 +1,5 @@
 {
   "buildCommand": "npm run build",
-  "functions": {
-    "api/index.js": {
-      "runtime": "nodejs@20.x",
-      "memory": 1024,
-      "maxDuration": 60
-    }
-  },
   "routes": [
     { "src": "/(.*)", "dest": "/api/index.js" }
   ]
