@@ -331,11 +331,15 @@ export async function registerRoutes(
   app.post("/api/upload/imgbb", upload.single("image"), async (req, res) => {
     try {
       if (!req.file) {
+        console.error("No file provided to upload endpoint");
         return res.status(400).json({ error: "No image file provided" });
       }
 
       const apiKey = process.env.IMGBB_API_KEY;
+      console.log("ImgBB upload attempt - API key present:", !!apiKey);
+      
       if (!apiKey) {
+        console.error("ImgBB API key is not configured");
         if (req.file?.path && fs.existsSync(req.file.path)) {
           fs.unlinkSync(req.file.path);
         }
