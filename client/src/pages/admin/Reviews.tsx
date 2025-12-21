@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Check, Trash2, Star } from "lucide-react";
+import { Check, Trash2, Star, Crown } from "lucide-react";
 import { reviewService, type Review } from "@/lib/firebase";
 
 function ReviewsContent() {
@@ -37,6 +37,18 @@ function ReviewsContent() {
       toast({ title: "Success", description: "Review deleted" });
     } catch (error) {
       toast({ title: "Error", description: "Failed to delete review", variant: "destructive" });
+    }
+  };
+
+  const handleSetTopRated = async (id: string, isCurrentlyTopRated: boolean) => {
+    try {
+      await reviewService.setTopRated(id, !isCurrentlyTopRated);
+      toast({ 
+        title: "Success", 
+        description: isCurrentlyTopRated ? "Removed from top rated" : "Set as top rated review" 
+      });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to update review", variant: "destructive" });
     }
   };
 
@@ -84,6 +96,11 @@ function ReviewsContent() {
                         <Badge className={review.isApproved ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}>
                           {review.isApproved ? "Approved" : "Pending"}
                         </Badge>
+                        {review.isTopRated && (
+                          <Badge className="bg-purple-100 text-purple-800 flex items-center gap-1">
+                            <Crown className="h-3 w-3" /> Top Rated
+                          </Badge>
+                        )}
                       </div>
                       <p className="text-sm text-slate-500 mb-2">{review.email}</p>
                       <p className="text-slate-700">{review.comment}</p>
@@ -98,8 +115,20 @@ function ReviewsContent() {
                           size="sm"
                           onClick={() => handleApprove(review.id)}
                           className="text-green-600 hover:text-green-700"
+                          title="Approve review"
                         >
                           <Check className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {review.isApproved && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleSetTopRated(review.id, review.isTopRated || false)}
+                          className={review.isTopRated ? "text-purple-600 hover:text-purple-700" : "text-gray-600 hover:text-gray-700"}
+                          title={review.isTopRated ? "Remove from top rated" : "Set as top rated"}
+                        >
+                          <Crown className="h-4 w-4" />
                         </Button>
                       )}
                       <Button
@@ -107,6 +136,7 @@ function ReviewsContent() {
                         size="sm"
                         onClick={() => handleDelete(review.id)}
                         className="text-red-600 hover:text-red-700"
+                        title="Delete review"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

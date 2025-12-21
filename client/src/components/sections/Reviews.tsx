@@ -82,6 +82,9 @@ export default function Reviews() {
     }
   };
 
+  // Get top rated review
+  const topRatedReview = reviews.find(r => r.isTopRated);
+
   // Use static fallback reviews if no real reviews exist yet
   const displayReviews = reviews.length > 0 ? reviews.map((review) => ({
     id: review.id,
@@ -116,6 +119,33 @@ export default function Reviews() {
             What Our Guests Say
           </h2>
         </motion.div>
+
+        {/* Top Rated Review Section */}
+        {topRatedReview && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-8 max-w-2xl mx-auto"
+          >
+            <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border-2 border-yellow-300 rounded-2xl p-8 shadow-lg">
+              <div className="flex items-start gap-3 mb-4">
+                <span className="text-2xl">👑</span>
+                <span className="text-xs font-bold uppercase tracking-widest text-yellow-700">Featured Review</span>
+              </div>
+              <p className="text-lg font-serif text-slate-800 mb-4 italic">"{topRatedReview.comment}"</p>
+              <div className="flex items-center gap-3">
+                <div className="flex gap-1">
+                  {[...Array(topRatedReview.rating)].map((_, i) => (
+                    <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <span className="font-semibold text-slate-700">— {topRatedReview.userName}</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </div>
       <div className="marquee">
         <div className="marquee__inner">

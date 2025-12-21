@@ -93,6 +93,7 @@ export interface Review {
   rating: number;
   comment: string;
   isApproved: boolean;
+  isTopRated?: boolean;
   createdAt: Date;
 }
 
@@ -589,6 +590,18 @@ export const reviewService = {
   
   async approve(id: string): Promise<void> {
     await updateDoc(doc(db, "reviews", id), { isApproved: true });
+  },
+  
+  async setTopRated(id: string, isTopRated: boolean): Promise<void> {
+    // Remove top rated from all reviews first
+    const allReviews = await this.getAll();
+    for (const review of allReviews) {
+      if (review.isTopRated) {
+        await updateDoc(doc(db, "reviews", review.id), { isTopRated: false });
+      }
+    }
+    // Set the new top rated review
+    await updateDoc(doc(db, "reviews", id), { isTopRated });
   },
   
   async delete(id: string): Promise<void> {
