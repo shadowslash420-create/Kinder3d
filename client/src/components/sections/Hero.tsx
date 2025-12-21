@@ -159,7 +159,9 @@ export default function Hero() {
               textShadow: "0 4px 30px rgba(0, 0, 0, 0.7), 0 2px 10px rgba(255, 215, 0, 0.4)"
             }}
           >
-            {"21st dev".split("").map((char, i) => (
+            <span className="text-primary drop-shadow-[0_4px_15px_rgba(239,68,68,0.6)]">Creperie</span>
+            <br />
+            {"Kinder 5".split("").map((char, i) => (
               <motion.span 
                 key={i} 
                 variants={letterAnimation} 
@@ -184,7 +186,7 @@ export default function Hero() {
               textShadow: "0 2px 15px rgba(0, 0, 0, 0.6)"
             }}
           >
-            Innovative digital solutions crafted with precision and passion. Your development partner for the next generation.
+            Finest crepes, waffles, and desserts in Batna. From our kitchen to your table, crafted with passion and precision.
           </motion.p>
           
           <motion.div 

@@ -37,26 +37,46 @@ export default function Intro({ onEnter }: IntroProps) {
 
     if (titleRef.current) {
       const titleElement = titleRef.current;
-      const devSpan = titleElement.querySelector('.kinder-text');
+      const creperieSpan = titleElement.querySelector('.creperie-text');
+      const kinderSpan = titleElement.querySelector('.kinder-text');
 
-      if (devSpan) {
-        const devText = devSpan.textContent || '';
-        devSpan.innerHTML = devText.split('').map((char) => 
+      if (creperieSpan) {
+        const creperieText = creperieSpan.textContent || '';
+        creperieSpan.innerHTML = creperieText.split('').map((char) => 
           `<span class="letter" style="display:inline-block;opacity:0;transform:translateY(80px)">${char === ' ' ? '&nbsp;' : char}</span>`
         ).join('');
       }
 
-      if (devSpan) {
-        const devLetters = devSpan.querySelectorAll('.letter');
-        tl.add(devLetters, {
+      if (kinderSpan) {
+        const kinderText = kinderSpan.textContent || '';
+        kinderSpan.innerHTML = kinderText.split('').map((char) => 
+          `<span class="letter" style="display:inline-block;opacity:0;transform:translateY(80px)">${char === ' ' ? '&nbsp;' : char}</span>`
+        ).join('');
+      }
+
+      if (creperieSpan) {
+        const creperieLetters = creperieSpan.querySelectorAll('.letter');
+        tl.add(creperieLetters, {
+          translateY: [{ from: 80, to: 0 }],
+          opacity: [{ from: 0, to: 1 }],
+          rotateX: [{ from: 90, to: 0 }],
+          ease: 'outExpo',
+          duration: 1200,
+          delay: stagger(60, { start: 300 })
+        });
+      }
+
+      if (kinderSpan) {
+        const kinderLetters = kinderSpan.querySelectorAll('.letter');
+        tl.add(kinderLetters, {
           translateY: [{ from: 80, to: 0 }],
           opacity: [{ from: 0, to: 1 }],
           rotateX: [{ from: 90, to: 0 }],
           scale: [{ from: 0.5, to: 1 }],
           ease: 'outExpo',
           duration: 1000,
-          delay: stagger(80, { start: 300 })
-        });
+          delay: stagger(80)
+        }, '-=600');
       }
     }
 
@@ -148,14 +168,15 @@ export default function Intro({ onEnter }: IntroProps) {
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold mb-2 sm:mb-4 text-foreground leading-tight overflow-hidden"
             style={{ perspective: '1000px' }}
           >
-            <span className="kinder-text text-primary block">21st dev</span>
+            <span className="creperie-text block">Creperie</span>
+            <span className="kinder-text text-primary block">Kinder 5</span>
           </h1>
           <p 
             ref={subtitleRef}
             className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground font-light max-w-xs sm:max-w-md md:max-w-xl lg:max-w-2xl mx-auto px-2"
             style={{ opacity: 0 }}
           >
-            Welcome to innovative digital solutions. Crafted with precision, delivered with excellence.
+            Welcome to Batna's finest crepes, waffles, and desserts. Crafted with passion, served with joy.
           </p>
         </div>
 
