@@ -1,9 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
-import { metaImagesPlugin } from "./vite-plugin-meta-images";
 
 export default defineConfig({
   define: {
@@ -16,9 +14,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    ...(process.env.NODE_ENV !== "production" ? [runtimeErrorOverlay()] : []),
-    ...(process.env.NODE_ENV !== "production" ? [tailwindcss()] : []),
-    ...(process.env.NODE_ENV !== "production" ? [metaImagesPlugin()] : []),
+    ...(process.env.NODE_ENV !== "production" && process.env.REPL_ID ? [runtimeErrorOverlay()] : []),
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [
