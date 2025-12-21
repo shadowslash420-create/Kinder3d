@@ -20,7 +20,7 @@ async function getApp() {
 module.exports = async (req, res) => {
   try {
     const app = await getApp();
-    app(req, res);
+    return app(req, res);
   } catch (error) {
     console.error('Error handling request:', error);
     res.status(500).json({ error: 'Internal Server Error' });
