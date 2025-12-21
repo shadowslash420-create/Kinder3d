@@ -103,7 +103,7 @@ export default function Reviews() {
   ];
 
   return (
-    <section className="py-24 overflow-hidden relative bg-gradient-to-b from-[#3d2817]/85 via-[#2d1810]/80 to-[#1a1a1a]/90">
+    <section className="py-24 overflow-hidden relative bg-gradient-to-b from-[#3d2817] via-[#2d1810] to-[#1a1a1a]">
       {/* Background with multiple layered gradients - Dark Chocolate */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#2d1810]/40 via-transparent to-[#1a1a1a]/30"></div>
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#eb2d2d]/10 to-transparent rounded-full blur-3xl opacity-30"></div>
