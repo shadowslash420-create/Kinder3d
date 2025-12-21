@@ -76,8 +76,7 @@ export default defineConfig({
     },
     middlewareMode: false,
     hmr: {
-      host: "localhost",
-      port: 5000,
+      clientPort: 443,
     },
   },
 });
