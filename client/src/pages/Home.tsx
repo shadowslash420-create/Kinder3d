@@ -3,7 +3,6 @@ import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
 import { lazy, Suspense, useEffect, useRef } from "react";
 import Lenis from "lenis";
-import WaveBackground from "@/components/ui/WaveBackground";
 
 const About = lazy(() => import("@/components/sections/About"));
 const Menu = lazy(() => import("@/components/sections/Menu"));
@@ -55,33 +54,46 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-full min-h-screen text-foreground overflow-x-hidden">
+    <div className="w-full min-h-screen text-foreground overflow-x-hidden relative">
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          background: `linear-gradient(
+            180deg,
+            #1a1a1a 0%,
+            #2d1810 8%,
+            #6B4423 18%,
+            #A67B5B 28%,
+            #F3E5AB 38%,
+            #FDFBF7 48%,
+            #F3E5AB 58%,
+            #A67B5B 68%,
+            #6B4423 78%,
+            #2d1810 88%,
+            #1a1a1a 100%
+          )`,
+          backgroundSize: '100% 600vh',
+          backgroundAttachment: 'fixed'
+        }}
+      />
       <Navbar />
-      <main className="relative">
+      <main className="relative z-10">
         <Hero />
-        
-        {/* 3D Wave Background */}
-        <div className="fixed inset-0 top-[100vh] w-full z-0 pointer-events-none" style={{ height: 'calc(100vh * 4)' }}>
-          <WaveBackground />
-        </div>
-        
-        <div className="relative z-10">
-          <Suspense fallback={<SectionLoader />}>
-            <About />
-          </Suspense>
-          <Suspense fallback={<SectionLoader />}>
-            <Menu />
-          </Suspense>
-          <Suspense fallback={<SectionLoader />}>
-            <Reviews />
-          </Suspense>
-          <Suspense fallback={<SectionLoader />}>
-            <WhyUs />
-          </Suspense>
-          <Suspense fallback={<SectionLoader />}>
-            <Contact />
-          </Suspense>
-        </div>
+        <Suspense fallback={<SectionLoader />}>
+          <About />
+        </Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <Menu />
+        </Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <Reviews />
+        </Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <WhyUs />
+        </Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <Contact />
+        </Suspense>
       </main>
       <Footer />
     </div>
