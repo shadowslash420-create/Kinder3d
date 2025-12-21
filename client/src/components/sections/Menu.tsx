@@ -227,10 +227,10 @@ export default function Menu() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSelectedCategory(null)}
-                className={`px-6 sm:px-8 py-3 rounded-lg text-sm sm:text-base font-semibold whitespace-nowrap transition-all duration-300 flex-shrink-0 backdrop-blur-sm border ${
+                className={`px-6 sm:px-8 py-3 rounded-lg text-sm sm:text-base font-semibold whitespace-nowrap transition-all duration-300 flex-shrink-0 backdrop-blur-sm ${
                   selectedCategory === null 
-                    ? 'bg-gradient-to-br from-[#eb2d2d] to-[#c41a1a] text-white border-[#eb2d2d] shadow-lg shadow-[#eb2d2d]/30' 
-                    : 'bg-slate-800/40 text-slate-200 border-slate-700/50 hover:bg-slate-700/50 hover:border-slate-600/70'
+                    ? 'bg-gradient-to-br from-[#eb2d2d] to-[#c41a1a] text-white shadow-lg shadow-[#eb2d2d]/30' 
+                    : 'bg-slate-800/40 text-slate-200 hover:bg-slate-700/50'
                 }`}
               >
                 All
@@ -244,10 +244,10 @@ export default function Menu() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`px-6 sm:px-8 py-3 rounded-lg text-sm sm:text-base font-semibold whitespace-nowrap transition-all duration-300 flex-shrink-0 backdrop-blur-sm border ${
+                  className={`px-6 sm:px-8 py-3 rounded-lg text-sm sm:text-base font-semibold whitespace-nowrap transition-all duration-300 flex-shrink-0 backdrop-blur-sm ${
                     selectedCategory === category.id 
-                      ? 'bg-gradient-to-br from-[#eb2d2d] to-[#c41a1a] text-white border-[#eb2d2d] shadow-lg shadow-[#eb2d2d]/30' 
-                      : 'bg-slate-800/40 text-slate-200 border-slate-700/50 hover:bg-slate-700/50 hover:border-slate-600/70'
+                      ? 'bg-gradient-to-br from-[#eb2d2d] to-[#c41a1a] text-white shadow-lg shadow-[#eb2d2d]/30' 
+                      : 'bg-slate-800/40 text-slate-200 hover:bg-slate-700/50'
                   }`}
                 >
                   {category.name}
@@ -256,8 +256,8 @@ export default function Menu() {
             </div>
             
             {/* Gradient fade effects */}
-            <div className="absolute left-0 top-0 w-12 h-full bg-gradient-to-r from-[#FDFBF7] via-[#FDFBF7]/50 to-transparent pointer-events-none z-10" />
-            <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-[#FDFBF7] via-[#FDFBF7]/50 to-transparent pointer-events-none z-10" />
+            <div className="absolute left-0 top-0 w-12 h-full bg-gradient-to-r from-slate-900 via-slate-900/50 to-transparent pointer-events-none z-10" />
+            <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-slate-900 via-slate-900/50 to-transparent pointer-events-none z-10" />
           </motion.div>
         )}
 
