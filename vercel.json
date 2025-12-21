@@ -8,8 +8,6 @@
     }
   },
   "routes": [
-    { "src": "/uploads/(.*)", "dest": "/api" },
-    { "src": "/api/(.*)", "dest": "/api" },
-    { "src": "/(.*)", "dest": "/api" }
+    { "src": "/(.*)", "dest": "/api/index.js" }
   ]
 }
