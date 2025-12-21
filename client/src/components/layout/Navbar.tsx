@@ -79,7 +79,7 @@ export default function Navbar() {
               cursor: 'pointer',
             }}
           >
-            Crêperie Kinder 5
+21st dev
           </span>
         </Link>
 

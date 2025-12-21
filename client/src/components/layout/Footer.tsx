@@ -69,10 +69,10 @@ export default function Footer() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-10 sm:mb-12 md:mb-16">
             <div className="col-span-1 sm:col-span-2">
               <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-4 sm:mb-6 text-white">
-                Creperie<span className="text-white/80"> Kinder 5</span>
+                21st<span className="text-white/80"> dev</span>
               </h2>
               <p className="text-white/80 max-w-sm mb-6 sm:mb-8 text-sm sm:text-base">
-                The finest crepes and desserts in Batna. Crafted with French tradition and Algerian heart. Open daily for your sweet moments.
+                Premium digital solutions for modern businesses. We craft elegant code and innovative technologies for your vision.
               </p>
               <div className="flex space-x-4">
                 <a 
@@ -124,7 +124,7 @@ export default function Footer() {
           </div>
           
           <div className="border-t border-white/20 pt-6 sm:pt-8 flex flex-col md:flex-row justify-between items-center text-xs sm:text-sm text-white/70 gap-4 md:gap-0">
-            <p className="text-center md:text-left">© 2025 Creperie Kinder 5, Batna. All rights reserved.</p>
+            <p className="text-center md:text-left">© 2025 21st dev. All rights reserved.</p>
             <div className="flex space-x-4 sm:space-x-6">
               <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
