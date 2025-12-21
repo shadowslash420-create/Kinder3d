@@ -14,9 +14,9 @@ export default function Contact() {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8 }}
-            className="flex flex-col justify-between h-full"
+            className="flex flex-col justify-between h-full will-change-opacity"
           >
             <div>
               <span className="text-primary font-bold tracking-[0.15em] sm:tracking-[0.2em] text-xs uppercase mb-4 sm:mb-6 block">Visit Us</span>
@@ -58,9 +58,9 @@ export default function Contact() {
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-white/5 backdrop-blur-sm p-6 sm:p-8 md:p-10 lg:p-12 rounded-sm border border-white/10"
+            className="bg-white/5 backdrop-blur-sm p-6 sm:p-8 md:p-10 lg:p-12 rounded-sm border border-white/10 will-change-opacity"
           >
             <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

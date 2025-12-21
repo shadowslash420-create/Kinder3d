@@ -113,6 +113,21 @@ html {
   scrollbar-width: none;
 }
 
+/* Performance optimizations */
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* Optimize scrolling performance */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Mobile optimizations */
 @media (max-width: 768px) {
   html {
@@ -120,5 +135,6 @@ html {
   }
   body {
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 }
