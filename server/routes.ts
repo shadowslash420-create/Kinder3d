@@ -336,6 +336,9 @@ export async function registerRoutes(
 
       const apiKey = process.env.IMGBB_API_KEY;
       if (!apiKey) {
+        if (req.file?.path && fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
+        }
         return res.status(500).json({ error: "ImgBB API key not configured" });
       }
 
@@ -353,10 +356,31 @@ export async function registerRoutes(
         body: formData,
       });
 
-      const result = await response.json();
+      // Check if response status is ok before parsing JSON
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("ImgBB API error:", response.status, errorText);
+        if (req.file?.path && fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
+        }
+        return res.status(response.status).json({ error: `ImgBB API error: ${response.status}` });
+      }
+
+      let result;
+      try {
+        result = await response.json();
+      } catch (parseError) {
+        console.error("Failed to parse ImgBB response:", parseError);
+        if (req.file?.path && fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
+        }
+        return res.status(500).json({ error: "Invalid response from ImgBB" });
+      }
 
       // Clean up the temporary file
-      fs.unlinkSync(req.file.path);
+      if (req.file?.path && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
 
       if (!result.success) {
         console.error("ImgBB upload failed:", result);
@@ -371,6 +395,13 @@ export async function registerRoutes(
       });
     } catch (error) {
       console.error("ImgBB upload error:", error);
+      if (req.file?.path && fs.existsSync(req.file.path)) {
+        try {
+          fs.unlinkSync(req.file.path);
+        } catch (unlinkError) {
+          console.error("Failed to clean up file:", unlinkError);
+        }
+      }
       res.status(500).json({ error: "Failed to upload image" });
     }
   });
