@@ -120,6 +120,27 @@ export default function Reviews() {
           </h2>
         </motion.div>
 
+        {/* Top Rated Review Section */}
+        {topRatedReview && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-12 max-w-sm mx-auto"
+          >
+            <div className="bg-white rounded-3xl p-8 shadow-xl text-center">
+              <h3 className="text-2xl font-serif font-bold text-slate-900 mb-4">Top Rated</h3>
+              <div className="flex justify-center gap-1 mb-4">
+                {[...Array(topRatedReview.rating)].map((_, i) => (
+                  <Star key={i} size={24} className="fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="text-base text-slate-700 italic mb-4">"{topRatedReview.comment}"</p>
+              <p className="text-sm font-semibold text-slate-600">— {topRatedReview.userName}</p>
+            </div>
+          </motion.div>
+        )}
       </div>
       <div className="marquee">
         <div className="marquee__inner">
