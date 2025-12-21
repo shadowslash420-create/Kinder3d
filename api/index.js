@@ -1,32 +1,26 @@
 const path = require('path');
-const Module = require('module');
-const originalRequire = Module.prototype.require;
 
-let app = null;
+// Initialize app once
+let appInstance = null;
 
-// Handle importing the compiled server
-function getApp() {
-  if (!app) {
+async function getApp() {
+  if (!appInstance) {
     try {
-      // Load the compiled server and make it work with Vercel
-      const serverModule = require('../dist/index.cjs');
-      app = serverModule;
+      const { createApp } = require('../dist/index.cjs');
+      const { app } = await createApp();
+      appInstance = app;
     } catch (error) {
-      console.error('Failed to load server:', error);
+      console.error('Failed to initialize app:', error);
       throw error;
     }
   }
-  return app;
+  return appInstance;
 }
 
 module.exports = async (req, res) => {
   try {
-    const server = getApp();
-    // If server is an Express app, handle the request
-    if (server && typeof server === 'function') {
-      return server(req, res);
-    }
-    res.status(500).json({ error: 'Server not initialized' });
+    const app = await getApp();
+    app(req, res);
   } catch (error) {
     console.error('Error handling request:', error);
     res.status(500).json({ error: 'Internal Server Error' });
