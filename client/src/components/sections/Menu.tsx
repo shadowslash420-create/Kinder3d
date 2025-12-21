@@ -215,37 +215,50 @@ export default function Menu() {
         </motion.div>
 
         {categories.length > 0 && (
-          <div className="mb-8 relative overflow-hidden">
-            <div className="flex gap-2 sm:gap-3 pb-2 overflow-x-auto scrollbar-hide scroll-smooth px-4 sm:px-6">
-              <button
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mb-12 relative overflow-hidden"
+          >
+            <div className="flex gap-3 sm:gap-4 pb-4 overflow-x-auto scrollbar-hide scroll-smooth px-4 sm:px-6">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setSelectedCategory(null)}
-                className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 flex-shrink-0 ${
+                className={`px-6 sm:px-8 py-3 rounded-lg text-sm sm:text-base font-semibold whitespace-nowrap transition-all duration-300 flex-shrink-0 backdrop-blur-sm border ${
                   selectedCategory === null 
-                    ? 'bg-red-600 text-white shadow-lg' 
-                    : 'bg-white/80 text-[#290000] hover:bg-white'
+                    ? 'bg-gradient-to-br from-[#eb2d2d] to-[#c41a1a] text-white border-[#eb2d2d] shadow-lg shadow-[#eb2d2d]/30' 
+                    : 'bg-slate-800/40 text-slate-200 border-slate-700/50 hover:bg-slate-700/50 hover:border-slate-600/70'
                 }`}
               >
                 All
-              </button>
-              {categories.map((category) => (
-                <button
+              </motion.button>
+              {categories.map((category, idx) => (
+                <motion.button
                   key={category.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.05 * idx }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 flex-shrink-0 ${
+                  className={`px-6 sm:px-8 py-3 rounded-lg text-sm sm:text-base font-semibold whitespace-nowrap transition-all duration-300 flex-shrink-0 backdrop-blur-sm border ${
                     selectedCategory === category.id 
-                      ? 'bg-red-600 text-white shadow-lg' 
-                      : 'bg-white/80 text-[#290000] hover:bg-white'
+                      ? 'bg-gradient-to-br from-[#eb2d2d] to-[#c41a1a] text-white border-[#eb2d2d] shadow-lg shadow-[#eb2d2d]/30' 
+                      : 'bg-slate-800/40 text-slate-200 border-slate-700/50 hover:bg-slate-700/50 hover:border-slate-600/70'
                   }`}
                 >
                   {category.name}
-                </button>
+                </motion.button>
               ))}
             </div>
             
             {/* Gradient fade effects */}
-            <div className="absolute left-0 top-0 w-8 h-full bg-gradient-to-r from-[#FDFBF7] to-transparent pointer-events-none z-10" />
-            <div className="absolute right-0 top-0 w-8 h-full bg-gradient-to-l from-[#FDFBF7] to-transparent pointer-events-none z-10" />
-          </div>
+            <div className="absolute left-0 top-0 w-12 h-full bg-gradient-to-r from-[#FDFBF7] via-[#FDFBF7]/50 to-transparent pointer-events-none z-10" />
+            <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-[#FDFBF7] via-[#FDFBF7]/50 to-transparent pointer-events-none z-10" />
+          </motion.div>
         )}
 
         {loading ? (
