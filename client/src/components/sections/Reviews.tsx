@@ -127,22 +127,17 @@ export default function Reviews() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-8 max-w-2xl mx-auto"
+            className="mt-12 max-w-sm mx-auto"
           >
-            <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border-2 border-yellow-300 rounded-2xl p-8 shadow-lg">
-              <div className="flex items-start gap-3 mb-4">
-                <span className="text-2xl">👑</span>
-                <span className="text-xs font-bold uppercase tracking-widest text-yellow-700">Featured Review</span>
+            <div className="bg-white rounded-3xl p-8 shadow-xl text-center">
+              <h3 className="text-2xl font-serif font-bold text-slate-900 mb-4">Top Rated</h3>
+              <div className="flex justify-center gap-1 mb-4">
+                {[...Array(topRatedReview.rating)].map((_, i) => (
+                  <Star key={i} size={24} className="fill-yellow-400 text-yellow-400" />
+                ))}
               </div>
-              <p className="text-lg font-serif text-slate-800 mb-4 italic">"{topRatedReview.comment}"</p>
-              <div className="flex items-center gap-3">
-                <div className="flex gap-1">
-                  {[...Array(topRatedReview.rating)].map((_, i) => (
-                    <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <span className="font-semibold text-slate-700">— {topRatedReview.userName}</span>
-              </div>
+              <p className="text-base text-slate-700 italic mb-4">"{topRatedReview.comment}"</p>
+              <p className="text-sm font-semibold text-slate-600">— {topRatedReview.userName}</p>
             </div>
           </motion.div>
         )}
