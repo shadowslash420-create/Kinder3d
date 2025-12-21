@@ -327,7 +327,7 @@ export async function registerRoutes(
     }
   });
 
-  // Image upload endpoint (with local storage fallback)
+  // Image upload endpoint (ImgBB only)
   app.post("/api/upload/imgbb", upload.single("image"), async (req, res) => {
     try {
       if (!req.file) {
@@ -337,54 +337,48 @@ export async function registerRoutes(
 
       const apiKey = process.env.IMGBB_API_KEY;
       
-      // Try ImgBB if API key is available
-      if (apiKey) {
-        try {
-          // Read the file and convert to base64
-          const imageBuffer = fs.readFileSync(req.file.path);
-          const base64Image = imageBuffer.toString("base64");
-
-          // Upload to ImgBB
-          const formData = new URLSearchParams();
-          formData.append("key", apiKey);
-          formData.append("image", base64Image);
-
-          const response = await fetch("https://api.imgbb.com/1/upload", {
-            method: "POST",
-            body: formData,
-          });
-
-          // Check if response status is ok before parsing JSON
-          if (response.ok) {
-            const result = await response.json();
-            if (result.success) {
-              // Clean up the temporary file
-              if (req.file?.path && fs.existsSync(req.file.path)) {
-                fs.unlinkSync(req.file.path);
-              }
-              
-              return res.json({ 
-                url: result.data.url,
-                displayUrl: result.data.display_url,
-                deleteUrl: result.data.delete_url,
-                thumbnail: result.data.thumb?.url
-              });
-            }
-          }
-        } catch (imgbbError) {
-          console.warn("ImgBB upload failed, falling back to local storage:", imgbbError);
-        }
+      if (!apiKey) {
+        console.error("IMGBB_API_KEY not set");
+        return res.status(500).json({ error: "Image upload service not configured" });
       }
 
-      // Fallback: Use local storage
-      const localUrl = `/uploads/${req.file.filename}`;
-      console.log("Using local storage for image upload:", localUrl);
-      
+      // Read the file and convert to base64
+      const imageBuffer = fs.readFileSync(req.file.path);
+      const base64Image = imageBuffer.toString("base64");
+
+      // Upload to ImgBB
+      const formData = new URLSearchParams();
+      formData.append("key", apiKey);
+      formData.append("image", base64Image);
+
+      const response = await fetch("https://api.imgbb.com/1/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      // Clean up the temporary file
+      if (req.file?.path && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+
+      // Check if response status is ok before parsing JSON
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("ImgBB API error:", response.status, errorText);
+        return res.status(response.status).json({ error: "Failed to upload to ImgBB" });
+      }
+
+      const result = await response.json();
+      if (!result.success) {
+        console.error("ImgBB upload failed:", result);
+        return res.status(400).json({ error: "ImgBB upload failed: " + (result.error?.message || "Unknown error") });
+      }
+
       res.json({ 
-        url: localUrl,
-        displayUrl: localUrl,
-        deleteUrl: null,
-        thumbnail: localUrl
+        url: result.data.url,
+        displayUrl: result.data.display_url,
+        deleteUrl: result.data.delete_url,
+        thumbnail: result.data.thumb?.url
       });
     } catch (error) {
       console.error("Image upload error:", error);
@@ -395,7 +389,7 @@ export async function registerRoutes(
           console.error("Failed to clean up file:", unlinkError);
         }
       }
-      res.status(500).json({ error: "Failed to upload image" });
+      res.status(500).json({ error: "Failed to upload image: " + (error instanceof Error ? error.message : "Unknown error") });
     }
   });
 
