@@ -228,7 +228,7 @@ export default function Menu() {
   ), [isMobile]);
 
   return (
-    <section id="menu" className="py-16 sm:py-24 md:py-32 relative overflow-hidden bg-gradient-to-b from-[#1a1a1a] via-[#2d1810] to-[#241008]">
+    <section id="menu" className="py-16 sm:py-24 md:py-32 relative overflow-hidden bg-gradient-to-b from-[#0f0202] via-[#1a0505] to-[#2b0a0a]">
       {floatingLinesBackground}
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div 
@@ -236,11 +236,11 @@ export default function Menu() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-8 sm:mb-12 md:mb-16"
+          className="text-center mb-8 sm:mb-12 md:mb-16 bg-[#1a0505]/80 backdrop-blur-md p-8 sm:p-10 rounded-2xl border border-white/5 shadow-2xl max-w-4xl mx-auto"
         >
-          <span className="tracking-[0.2em] uppercase mb-2 sm:mb-4 block text-[#eb2d2d] text-[38px] font-black">Our Selection</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-medium text-[#241008]">Curated Indulgence</h2>
-          <p className="mt-2 sm:mt-4 max-w-xl mx-auto text-sm sm:text-base px-4 text-[#ffffff]">
+          <span className="tracking-[0.2em] uppercase mb-2 sm:mb-4 block text-primary text-[38px] font-black">Our Selection</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-medium text-white">Curated Indulgence</h2>
+          <p className="mt-2 sm:mt-4 max-w-xl mx-auto text-sm sm:text-base px-4 text-white/70">
             Click on any item to add to your bag
           </p>
           
@@ -367,7 +367,7 @@ export default function Menu() {
                     }}
                     whileHover={isCenter ? { scale: 1.08, y: -8 } : {}}
                   >
-                    <div className="bg-white rounded-2xl overflow-hidden shadow-2xl relative transition-all duration-500 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.3)]">
+                    <div className="bg-[#1a0505] rounded-2xl overflow-hidden shadow-2xl relative transition-all duration-500 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] border border-white/5">
                       {getItemQuantity(menuItem.id) > 0 && (
                         <div className="absolute top-3 right-3 z-20 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">
                           {getItemQuantity(menuItem.id)}
@@ -382,21 +382,21 @@ export default function Menu() {
                             draggable="false"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400">
+                          <div className="w-full h-full flex items-center justify-center bg-slate-800 text-slate-500">
                             No Image
                           </div>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                          <span className="uppercase tracking-wider opacity-80 mb-1 block font-medium text-[13px]">
+                          <span className="uppercase tracking-wider opacity-80 mb-1 block font-medium text-[13px] text-gold">
                             {getCategoryName(menuItem.categoryId)}
                           </span>
                           <h3 className="font-serif text-2xl font-bold mb-1">{menuItem.name}</h3>
-                          <p className="text-lg font-medium text-[#ffb76e]">{menuItem.price} DA</p>
+                          <p className="text-lg font-medium text-gold">{menuItem.price} DA</p>
                         </div>
                       </div>
-                      <div className="p-5 bg-white">
-                        <p className="text-sm leading-relaxed text-[#570e0e]">
+                      <div className="p-5 bg-[#1a0505]">
+                        <p className="text-sm leading-relaxed text-white/70">
                           {menuItem.description}
                         </p>
                       </div>
@@ -452,7 +452,7 @@ export default function Menu() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="bg-white rounded-3xl overflow-hidden shadow-2xl max-w-lg w-full"
+              className="bg-[#1a0505] rounded-3xl overflow-hidden shadow-2xl max-w-lg w-full border border-white/5"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="relative aspect-[4/3] overflow-hidden">
@@ -463,32 +463,32 @@ export default function Menu() {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400">
+                  <div className="w-full h-full flex items-center justify-center bg-slate-800 text-slate-500">
                     No Image
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <button
                   onClick={() => setSelectedItem(null)}
-                  className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-foreground hover:bg-white transition-colors"
+                  className="absolute top-4 right-4 w-10 h-10 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <span className="text-xs uppercase tracking-wider opacity-80 mb-2 block">
+                  <span className="text-xs uppercase tracking-wider text-gold mb-2 block">
                     {getCategoryName(selectedItem.categoryId)}
                   </span>
                   <h3 className="font-serif text-3xl font-bold">{selectedItem.name}</h3>
                 </div>
               </div>
               
-              <div className="p-6">
-                <p className="text-muted-foreground leading-relaxed mb-6">
+              <div className="p-6 bg-[#1a0505]">
+                <p className="text-white/70 leading-relaxed mb-6">
                   {selectedItem.description}
                 </p>
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-2xl font-serif font-bold text-primary">
+                  <span className="text-2xl font-serif font-bold text-gold">
                     {selectedItem.price} DA
                   </span>
                   
