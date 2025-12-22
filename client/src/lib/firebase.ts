@@ -363,12 +363,19 @@ export const orderService = {
   },
   
   async create(order: Omit<Order, "id" | "createdAt" | "updatedAt">): Promise<string> {
-    const docRef = await addDoc(collection(db, "orders"), {
-      ...order,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    });
-    return docRef.id;
+    try {
+      console.log("Firebase createOrder - data:", order);
+      const docRef = await addDoc(collection(db, "orders"), {
+        ...order,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+      console.log("Firebase createOrder - success, ID:", docRef.id);
+      return docRef.id;
+    } catch (error: any) {
+      console.error("Firebase createOrder - ERROR:", error.code, error.message);
+      throw error;
+    }
   },
   
   async update(id: string, order: Partial<Order>): Promise<void> {

@@ -154,8 +154,11 @@ function OrdersContent() {
                       <tr key={order.id} className="border-b hover:bg-slate-50">
                         <td className="p-4 font-mono text-sm">{order.orderNumber}</td>
                         <td className="p-4">
-                          <div className="text-sm">{order.customerName}</div>
+                          <div className="text-sm font-medium">{order.customerName}</div>
                           <div className="text-xs text-slate-500">{order.customerPhone}</div>
+                          <div className="text-xs text-slate-400 mt-1 max-w-[200px] truncate" title={order.customerAddress}>
+                            {order.customerAddress}
+                          </div>
                         </td>
                         <td className="p-4 text-sm">{order.items.length} items</td>
                         <td className="p-4 font-medium text-sm">DA {order.total.toFixed(2)}</td>
@@ -254,6 +257,10 @@ function OrdersContent() {
                 <div>
                   <p className="text-xs md:text-sm text-slate-500">Phone</p>
                   <p className="font-medium text-sm md:text-base">{selectedOrder.customerPhone || "-"}</p>
+                </div>
+                <div className="md:col-span-2">
+                  <p className="text-xs md:text-sm text-slate-500">Delivery Address</p>
+                  <p className="font-medium text-sm md:text-base bg-slate-50 p-2 rounded border">{selectedOrder.customerAddress || "-"}</p>
                 </div>
                 <div>
                   <p className="text-xs md:text-sm text-slate-500">Email</p>

@@ -77,6 +77,7 @@ export default function CheckoutPage() {
 
       const orderNumber = generateOrderNumber();
 
+      console.log("Creating order in Firebase...");
       await orderService.create({
         orderNumber,
         customerName: customerName.trim(),
@@ -94,6 +95,7 @@ export default function CheckoutPage() {
         notes: notes.trim() || undefined,
       });
 
+      console.log("Order created, clearing cart...");
       await clearCart();
 
       toast({ 
@@ -103,10 +105,10 @@ export default function CheckoutPage() {
 
       setLocation(`/my-orders?new=${orderNumber}`);
     } catch (error: any) {
-      console.error("Order error:", error);
+      console.error("Order error detail:", error);
       toast({ 
         title: "Order failed", 
-        description: "Something went wrong. Please try again.", 
+        description: `Something went wrong: ${error.message || "Please try again."}`, 
         variant: "destructive" 
       });
     } finally {
