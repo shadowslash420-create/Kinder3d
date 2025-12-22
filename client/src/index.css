@@ -54,6 +54,11 @@
 }
 
 @layer base {
+  /* Force dark theme globally */
+  :root {
+    color-scheme: dark;
+  }
+  
   html, body {
     width: 100%;
     height: 100%;
@@ -63,6 +68,8 @@
     -moz-osx-font-smoothing: grayscale;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    background-color: #1a1a1a;
+    color: #ffffff;
   }
   * {
     @apply border-border;
@@ -70,7 +77,8 @@
     text-rendering: optimizeLegibility;
   }
   body {
-    @apply font-sans antialiased bg-background text-foreground selection:bg-primary/20 selection:text-primary;
+    @apply font-sans antialiased text-foreground selection:bg-primary/20 selection:text-primary;
+    background-color: #1a1a1a;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
