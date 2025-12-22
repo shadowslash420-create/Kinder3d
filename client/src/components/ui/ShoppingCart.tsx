@@ -76,7 +76,7 @@ export default function ShoppingCart({ count, onAdd, onRemove }: ShoppingCartPro
         <AnimatePresence>
           {count > 0 && (
             <motion.div
-              className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center overflow-hidden"
+              className="absolute -top-2 -right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center overflow-hidden"
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0 }}
