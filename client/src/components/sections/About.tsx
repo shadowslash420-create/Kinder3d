@@ -73,16 +73,16 @@ export default function About() {
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
                transition={{ duration: 0.8 }}
-               className="bg-white/90 backdrop-blur-sm p-5 sm:p-6 md:p-8 rounded-lg shadow-xl"
+               className="bg-[#1a0505]/80 backdrop-blur-md p-5 sm:p-6 md:p-8 rounded-lg shadow-xl border border-white/5"
             >
-              <h2 className="text-xs sm:text-sm font-bold tracking-[0.2em] sm:tracking-[0.3em] text-primary uppercase mb-4 sm:mb-6">Our Story</h2>
+              <h2 className="text-xs sm:text-sm font-bold tracking-[0.2em] sm:tracking-[0.3em] text-gold uppercase mb-4 sm:mb-6">Our Story</h2>
               
-              <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-medium text-foreground mb-4 sm:mb-6 md:mb-8 leading-tight">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-medium text-white mb-4 sm:mb-6 md:mb-8 leading-tight">
                 Bringing European <br/>
-                <span className="italic text-secondary">Flavors Home</span>
+                <span className="italic text-gold">Flavors Home</span>
               </h3>
               
-              <div className="space-y-4 sm:space-y-6 text-muted-foreground text-sm sm:text-base md:text-lg font-light leading-relaxed">
+              <div className="space-y-4 sm:space-y-6 text-white/70 text-sm sm:text-base md:text-lg font-light leading-relaxed">
                 <p>
                   At Creperie Kinder 5, we blend authentic French technique with the warmth of Algerian hospitality. Each crepe is made fresh to order, crafted with premium ingredients and genuine care.
                 </p>
@@ -92,7 +92,7 @@ export default function About() {
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 mt-6 sm:mt-8 md:mt-12 bg-white/90 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-lg shadow-xl">
+            <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 mt-6 sm:mt-8 md:mt-12 bg-[#1a0505]/80 backdrop-blur-md p-4 sm:p-5 md:p-6 rounded-lg shadow-xl border border-white/5">
               {stats.map((stat, index) => (
                 <motion.div
                   key={index}
@@ -102,8 +102,8 @@ export default function About() {
                   transition={{ delay: 0.4 + (index * 0.1), duration: 0.8 }}
                   className="text-center sm:text-left"
                 >
-                  <h4 className="text-xl sm:text-2xl md:text-3xl font-serif text-foreground mb-1 sm:mb-2">{stat.value}</h4>
-                  <p className="text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest text-muted-foreground">{stat.label}</p>
+                  <h4 className="text-xl sm:text-2xl md:text-3xl font-serif text-white mb-1 sm:mb-2">{stat.value}</h4>
+                  <p className="text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest text-white/50">{stat.label}</p>
                 </motion.div>
               ))}
             </div>
