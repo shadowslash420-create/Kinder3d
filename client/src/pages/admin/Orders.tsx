@@ -10,8 +10,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Search, Eye } from "lucide-react";
+import { Search, Eye, Map } from "lucide-react";
 import { orderService, type Order } from "@/lib/firebase";
+import { MapModal } from "@/components/ui/MapModal";
 
 const statusColors: Record<string, string> = {
   pending: "bg-yellow-100 text-yellow-800",
@@ -41,6 +42,7 @@ function OrdersContent() {
   const [statusFilter, setStatusFilter] = useState("");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [notes, setNotes] = useState("");
+  const [mapOpen, setMapOpen] = useState(false);
 
   useEffect(() => {
     const unsubscribe = orderService.subscribe((data) => {
@@ -321,10 +323,33 @@ function OrdersContent() {
                   Save Notes
                 </Button>
               </div>
+
+              {selectedOrder.customerLat && selectedOrder.customerLng && (
+                <div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setMapOpen(true)}
+                    className="w-full md:w-auto gap-2"
+                  >
+                    <Map className="h-4 w-4" />
+                    View Location Map
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </DialogContent>
       </Dialog>
+
+      <MapModal
+        open={mapOpen}
+        onOpenChange={setMapOpen}
+        mode="view"
+        clientLat={selectedOrder?.customerLat}
+        clientLng={selectedOrder?.customerLng}
+        clientAddress={selectedOrder?.customerAddress}
+      />
     </AdminLayout>
   );
 }

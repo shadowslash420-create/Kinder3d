@@ -10,7 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { orderService, generateOrderNumber, type OrderItem } from "@/lib/firebase";
-import { ArrowLeft, MapPin, Phone, User, FileText, CreditCard } from "lucide-react";
+import { ArrowLeft, MapPin, Phone, User, FileText, CreditCard, Map } from "lucide-react";
+import { MapModal } from "@/components/ui/MapModal";
 
 export default function CheckoutPage() {
   const [, setLocation] = useLocation();
@@ -21,8 +22,11 @@ export default function CheckoutPage() {
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
+  const [customerLat, setCustomerLat] = useState<number | undefined>();
+  const [customerLng, setCustomerLng] = useState<number | undefined>();
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
+  const [mapOpen, setMapOpen] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -83,6 +87,8 @@ export default function CheckoutPage() {
         customerName: customerName.trim(),
         customerPhone: customerPhone.trim(),
         customerAddress: customerAddress.trim(),
+        customerLat,
+        customerLng,
         email: user.email || undefined,
         userId: user.uid,
         items: orderItems,
@@ -191,6 +197,21 @@ export default function CheckoutPage() {
                       required
                     />
                   </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setMapOpen(true)}
+                    className="w-full gap-2"
+                  >
+                    <Map className="h-4 w-4" />
+                    {customerLat && customerLng ? 'Update Location on Map' : 'Select Location on Map'}
+                  </Button>
+                  {customerLat && customerLng && (
+                    <p className="text-xs text-green-600 font-medium">
+                      ✓ Location selected: {customerLat.toFixed(4)}, {customerLng.toFixed(4)}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -268,6 +289,18 @@ export default function CheckoutPage() {
             </Card>
           </div>
         </form>
+
+        <MapModal
+          open={mapOpen}
+          onOpenChange={setMapOpen}
+          mode="select"
+          clientLat={customerLat}
+          clientLng={customerLng}
+          onLocationSelect={(lat, lng) => {
+            setCustomerLat(lat);
+            setCustomerLng(lng);
+          }}
+        />
       </div>
     </div>
   );
