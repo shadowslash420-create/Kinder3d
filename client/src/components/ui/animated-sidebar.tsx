@@ -91,13 +91,16 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          "h-10 px-4 py-4 flex flex-row md:hidden items-center justify-between bg-slate-900 text-white w-full"
+          "h-14 px-4 flex flex-row md:hidden items-center justify-between bg-slate-900 text-white w-full sticky top-0 z-50 shadow-md"
         )}
         {...props}
       >
-        <div className="flex justify-end z-20 w-full">
+        <div className="flex items-center gap-2">
+          <span className="font-bold text-lg">Creperie</span>
+        </div>
+        <div className="flex justify-end">
           <Menu
-            className="text-white cursor-pointer"
+            className="text-white cursor-pointer h-6 w-6"
             onClick={() => setOpen(!open)}
           />
         </div>
