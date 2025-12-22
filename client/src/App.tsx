@@ -27,6 +27,7 @@ const CheckoutPage = lazy(() => import("@/pages/CheckoutPage"));
 const MyOrdersPage = lazy(() => import("@/pages/MyOrdersPage"));
 const StaffA = lazy(() => import("@/pages/StaffA"));
 const StaffB = lazy(() => import("@/pages/StaffB"));
+const UploadTest = lazy(() => import("@/pages/UploadTest"));
 
 const PageLoader = () => (
   <div className="fixed inset-0 bg-[#1a1a1a] flex items-center justify-center">
@@ -45,6 +46,7 @@ function Router() {
         <Route path="/my-orders" component={MyOrdersPage} />
         <Route path="/staff-a" component={StaffA} />
         <Route path="/staff-b" component={StaffB} />
+        <Route path="/upload" component={UploadTest} />
         <Route path="/admin" component={AdminLogin} />
         <Route path="/admin/dashboard" component={Dashboard} />
         <Route path="/admin/orders" component={Orders} />

@@ -328,7 +328,7 @@ export async function registerRoutes(
   });
 
   // ImgBB image upload endpoint
-  app.post("/api/upload/imgbb", upload.single("image"), async (req, res) => {
+  app.post("/api/upload", upload.single("image"), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: "No image file provided" });
@@ -353,19 +353,26 @@ export async function registerRoutes(
         body: formData,
       });
 
-      const result = await response.json();
+      let result;
+      try {
+        result = await response.json();
+      } catch (parseError) {
+        console.error("Failed to parse ImgBB response:", parseError);
+        fs.unlinkSync(req.file.path);
+        return res.status(500).json({ error: "Invalid response from ImgBB" });
+      }
 
       // Clean up the temporary file
       fs.unlinkSync(req.file.path);
 
       if (!result.success) {
         console.error("ImgBB upload failed:", result);
-        return res.status(500).json({ error: "Failed to upload to ImgBB" });
+        return res.status(400).json({ error: result.error?.message || "Failed to upload to ImgBB" });
       }
 
       res.json({ 
         url: result.data.url,
-        displayUrl: result.data.display_url,
+        display_url: result.data.display_url,
         deleteUrl: result.data.delete_url,
         thumbnail: result.data.thumb?.url
       });
@@ -373,6 +380,12 @@ export async function registerRoutes(
       console.error("ImgBB upload error:", error);
       res.status(500).json({ error: "Failed to upload image" });
     }
+  });
+
+  app.post("/api/upload/imgbb", upload.single("image"), async (req, res) => {
+    // Deprecated: use /api/upload instead
+    // This endpoint is kept for backwards compatibility
+    return res.redirect(307, "/api/upload");
   });
 
   app.post("/api/admin/setup", async (req, res) => {
