@@ -367,8 +367,14 @@ export const orderService = {
   async create(order: Omit<Order, "id" | "createdAt" | "updatedAt">): Promise<string> {
     try {
       console.log("Firebase createOrder - data:", order);
+      const cleanedOrder: Record<string, any> = {};
+      for (const [key, value] of Object.entries(order)) {
+        if (value !== undefined) {
+          cleanedOrder[key] = value;
+        }
+      }
       const docRef = await addDoc(collection(db, "orders"), {
-        ...order,
+        ...cleanedOrder,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
