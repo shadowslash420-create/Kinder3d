@@ -68,8 +68,8 @@
     -moz-osx-font-smoothing: grayscale;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    background-color: #1a0f0d;
-    color: #f5ebe0;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
   }
   * {
     @apply border-border;
@@ -78,7 +78,7 @@
   }
   body {
     @apply font-sans antialiased text-foreground selection:bg-primary/20 selection:text-primary;
-    background-color: #1a0f0d;
+    background-color: var(--color-background);
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
