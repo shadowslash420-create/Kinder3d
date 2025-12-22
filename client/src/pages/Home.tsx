@@ -3,6 +3,7 @@ import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
 import { lazy, Suspense, useEffect, useRef } from "react";
 import Lenis from "lenis";
+import { useState } from "react";
 
 const About = lazy(() => import("@/components/sections/About"));
 const Menu = lazy(() => import("@/components/sections/Menu"));
@@ -19,8 +20,19 @@ const SectionLoader = () => (
 export default function Home() {
   const lenisRef = useRef<Lenis | null>(null);
   const rafIdRef = useRef<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   
   useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    // Disable smooth scrolling on mobile entirely for better performance
+    if (isMobile) return;
+    
     const initLenis = () => {
       if (lenisRef.current) return;
       
@@ -51,7 +63,7 @@ export default function Home() {
       }
       lenisRef.current?.destroy();
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <div className="w-full min-h-screen text-foreground overflow-x-hidden relative">

@@ -137,4 +137,25 @@ body {
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
   }
+  
+  /* Reduce blur effects on mobile */
+  .backdrop-blur-sm,
+  .backdrop-blur,
+  .blur-3xl {
+    filter: none !important;
+    backdrop-filter: none !important;
+  }
+  
+  /* Reduce box shadows on mobile */
+  .shadow-xl,
+  .shadow-2xl,
+  .drop-shadow-lg,
+  .shadow-lg {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* Disable complex transforms */
+  [style*="perspective"] {
+    perspective: none !important;
+  }
 }

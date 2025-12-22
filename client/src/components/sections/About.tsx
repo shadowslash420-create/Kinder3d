@@ -1,8 +1,18 @@
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import diningImage from "@assets/uiughuyguygyti7_210241_Maps_1766002062020.jpg";
 import GridMotion from "@/components/ui/GridMotion";
 
 export default function About() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const stats = [
     { value: "100%", label: "Authentic" },
     { value: "24h", label: "Batter Rest" },
@@ -48,9 +58,11 @@ export default function About() {
 
   return (
     <section id="about" className="py-16 sm:py-24 md:py-32 relative overflow-hidden min-h-screen bg-gradient-to-b from-[#241008] via-[#2d1810] to-[#3d2817]">
+      {!isMobile && (
       <div className="absolute inset-0 z-0 opacity-30">
         <GridMotion items={gridItems} gradientColor="transparent" />
       </div>
+      )}
       
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 items-center">

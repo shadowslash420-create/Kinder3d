@@ -16,8 +16,16 @@ const ratingEmojis: Record<number, string> = {
 export default function Reviews() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   const [formData, setFormData] = useState({
     userName: "",
@@ -106,8 +114,12 @@ export default function Reviews() {
     <section className="py-24 overflow-hidden relative bg-gradient-to-b from-[#3d2817] via-[#2d1810] to-[#1a1a1a]">
       {/* Background with multiple layered gradients - Dark Chocolate */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#2d1810]/40 via-transparent to-[#1a1a1a]/30"></div>
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#eb2d2d]/10 to-transparent rounded-full blur-3xl opacity-30"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#6B4423]/20 to-transparent rounded-full blur-3xl opacity-20"></div>
+      {!isMobile && (
+        <>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#eb2d2d]/10 to-transparent rounded-full blur-3xl opacity-30"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#6B4423]/20 to-transparent rounded-full blur-3xl opacity-20"></div>
+        </>
+      )}
       
       <div className="relative z-10 container mx-auto px-6 mb-16">
         <motion.div

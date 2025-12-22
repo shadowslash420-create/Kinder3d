@@ -112,6 +112,33 @@ export default function Menu() {
     let zIndex = 0;
 
     const xMultiplier = isMobile ? 0.55 : 1;
+    
+    // Simplify 3D transforms on mobile for better performance
+    if (isMobile) {
+      if (isCenter) {
+        x = 0;
+        z = 0;
+        rotateY = 0;
+        scale = 1;
+        opacity = 1;
+        zIndex = 5;
+      } else if (isLeft1 || isRight1) {
+        x = isLeft1 ? -200 : 200;
+        z = 0;
+        rotateY = 0;
+        scale = 0.8;
+        opacity = 0;
+        zIndex = 2;
+      } else {
+        x = adjustedDiff > 0 ? 400 : -400;
+        z = 0;
+        rotateY = 0;
+        scale = 0.5;
+        opacity = 0;
+        zIndex = 1;
+      }
+      return { x, z, rotateY, scale, opacity, zIndex };
+    }
 
     if (isCenter) {
       x = 0;
@@ -169,7 +196,8 @@ export default function Menu() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const floatingLinesBackground = useMemo(() => (
+  const floatingLinesBackground = useMemo(() => 
+    isMobile ? null : (
     <div className="absolute inset-0 z-0">
       <FloatingLines 
         linesGradient={['#8B4513', '#A0522D', '#CD853F', '#D2691E', '#B8860B']}
@@ -184,7 +212,7 @@ export default function Menu() {
         mixBlendMode="normal"
       />
     </div>
-  ), []);
+  ), [isMobile]);
 
   return (
     <section id="menu" className="py-16 sm:py-24 md:py-32 relative overflow-hidden bg-gradient-to-b from-[#1a1a1a] via-[#2d1810] to-[#241008]">
