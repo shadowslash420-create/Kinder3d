@@ -398,7 +398,9 @@ export const orderService = {
         createdAt: convertTimestamp(doc.data().createdAt),
         updatedAt: convertTimestamp(doc.data().updatedAt),
       })) as Order[];
-      callback(orders);
+      // Explicitly sort just in case orderBy is failing due to missing index
+      const sortedOrders = [...orders].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      callback(sortedOrders);
     }, (error) => {
       console.error("Error fetching orders:", error);
       callback([]);

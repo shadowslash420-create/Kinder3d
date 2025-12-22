@@ -196,8 +196,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </div>
         </MobileSidebar>
 
-        <main className="flex-1 md:ml-[300px] transition-all duration-300">
-          <div className="p-3 md:p-6">{children}</div>
+        <main className="flex-1 transition-all duration-300 min-w-0">
+          <div className="p-3 md:p-6 lg:ml-[300px] overflow-x-hidden">{children}</div>
         </main>
       </div>
     </AnimatedSidebar>

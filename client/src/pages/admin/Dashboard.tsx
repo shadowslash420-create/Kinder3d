@@ -11,10 +11,19 @@ function DashboardContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubOrders = orderService.subscribe(setOrders);
-    const unsubMenu = menuService.subscribe(setMenuItems);
-    setLoading(false);
+    let isMounted = true;
+    const unsubOrders = orderService.subscribe((data) => {
+      if (isMounted) {
+        setOrders(data);
+        setLoading(false);
+      }
+    });
+    const unsubMenu = menuService.subscribe((data) => {
+      if (isMounted) setMenuItems(data);
+    });
+    
     return () => {
+      isMounted = false;
       unsubOrders();
       unsubMenu();
     };
