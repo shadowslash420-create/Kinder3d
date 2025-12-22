@@ -29,7 +29,7 @@ const StaffA = lazy(() => import("@/pages/StaffA"));
 const StaffB = lazy(() => import("@/pages/StaffB"));
 
 const PageLoader = () => (
-  <div className="fixed inset-0 bg-[#FDFBF7] flex items-center justify-center">
+  <div className="fixed inset-0 bg-[#1a1a1a] flex items-center justify-center">
     <div className="w-12 h-12 border-3 border-primary border-t-transparent rounded-full animate-spin" />
   </div>
 );

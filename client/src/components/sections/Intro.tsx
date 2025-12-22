@@ -131,7 +131,7 @@ export default function Intro({ onEnter }: IntroProps) {
       initial={{ opacity: 1, scale: 1 }}
       animate={isExiting ? { opacity: 0, scale: 1.1 } : { opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
-      className="fixed inset-0 z-50 bg-[#FDFBF7] overflow-hidden"
+      className="fixed inset-0 z-50 bg-[#1a1a1a] overflow-hidden"
     >
       <motion.div
         className="absolute inset-0"
@@ -160,7 +160,7 @@ export default function Intro({ onEnter }: IntroProps) {
         initial={{ opacity: 0, y: 40 }}
         animate={isExiting ? { opacity: 0, y: 60 } : { opacity: 1, y: 0 }}
         transition={isExiting ? { duration: 0.7, ease: "easeIn" } : { duration: 0.8, delay: 0.4 }}
-        className="absolute bottom-0 left-0 right-0 text-center px-4 sm:px-6 py-8 sm:py-10 md:py-12 bg-gradient-to-t from-[#FDFBF7] via-[#FDFBF7]/80 to-transparent space-y-4 sm:space-y-6 z-20"
+        className="absolute bottom-0 left-0 right-0 text-center px-4 sm:px-6 py-8 sm:py-10 md:py-12 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a]/80 to-transparent space-y-4 sm:space-y-6 z-20"
       >
         <div>
           <h1 
@@ -190,7 +190,7 @@ export default function Intro({ onEnter }: IntroProps) {
             ref={buttonRef}
             onClick={handleEnter}
             disabled={isExiting}
-            className="relative text-lg sm:text-xl md:text-2xl font-semibold cursor-pointer bg-transparent border-none outline-none text-gray-800 hover:text-white px-8 sm:px-10 md:px-14 py-3 sm:py-4 flex items-center gap-2 sm:gap-3 disabled:opacity-80 disabled:cursor-not-allowed transition-colors duration-300"
+            className="relative text-lg sm:text-xl md:text-2xl font-semibold cursor-pointer bg-transparent border-none outline-none text-white hover:text-primary px-8 sm:px-10 md:px-14 py-3 sm:py-4 flex items-center gap-2 sm:gap-3 disabled:opacity-80 disabled:cursor-not-allowed transition-colors duration-300"
           >
             <span className="relative z-10 flex items-center gap-2 sm:gap-3">
               Enter

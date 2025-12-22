@@ -12,18 +12,18 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* Kinder-inspired Luxury Palette */
-  /* Cream White Background */
-  --color-background: #FDFBF7; 
-  /* Dark Chocolate Text */
-  --color-foreground: #4A3728; 
+  /* Dark Theme Colors */
+  /* Dark Background */
+  --color-background: #1a1a1a; 
+  /* Light Text */
+  --color-foreground: #ffffff; 
 
-  /* Card White */
-  --color-card: #FFFFFF;
-  --color-card-foreground: #4A3728;
+  /* Dark Card */
+  --color-card: #2d2d2d;
+  --color-card-foreground: #ffffff;
 
-  --color-popover: #FFFFFF;
-  --color-popover-foreground: #4A3728;
+  --color-popover: #2d2d2d;
+  --color-popover-foreground: #ffffff;
 
   /* Kinder Red Primary */
   --color-primary: #DC2626; 
@@ -37,17 +37,17 @@
   --color-secondary: #A0826D;
   --color-secondary-foreground: #FFFFFF;
 
-  --color-muted: #E8E0D5;
-  --color-muted-foreground: #6B5A4E;
+  --color-muted: #4a4a4a;
+  --color-muted-foreground: #a0a0a0;
 
-  --color-accent: #F5EDE4;
-  --color-accent-foreground: #4A3728;
+  --color-accent: #3a3a3a;
+  --color-accent-foreground: #ffffff;
 
   --color-destructive: #EF4444;
   --color-destructive-foreground: #FAFAFA;
 
-  --color-border: #D4C4B5;
-  --color-input: #D4C4B5;
+  --color-border: #3a3a3a;
+  --color-input: #3a3a3a;
   --color-ring: #DC2626;
 
   --radius: 1rem;
