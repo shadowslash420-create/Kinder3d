@@ -35,14 +35,20 @@ export default function ImageUpload({ value, onChange, onError }: ImageUploadPro
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await fetch("/api/upload/imgbb", {
+      const response = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       });
 
-      const result = await response.json();
+      const text = await response.text();
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (e) {
+        throw new Error("Server returned an invalid response. Please try again.");
+      }
 
-      if (!response.ok) {
+      if (!response.ok || result.success === false) {
         throw new Error(result.error || "Upload failed");
       }
 

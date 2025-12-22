@@ -327,59 +327,74 @@ export async function registerRoutes(
     }
   });
 
+import formidable from "formidable";
+
+// ... existing code ...
+
   // ImgBB image upload endpoint
-  app.post("/api/upload", upload.single("image"), async (req, res) => {
-    try {
-      if (!req.file) {
-        return res.status(400).json({ error: "No image file provided" });
+  app.post("/api/upload", async (req, res) => {
+    const form = formidable({
+      maxFileSize: 5 * 1024 * 1024,
+      keepExtensions: true,
+    });
+
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        console.error("Formidable parse error:", err);
+        return res.status(400).json({ success: false, error: "Failed to parse form data" });
       }
 
-      const apiKey = process.env.IMGBB_API_KEY;
-      if (!apiKey) {
-        return res.status(500).json({ error: "ImgBB API key not configured" });
+      const file = Array.isArray(files.image) ? files.image[0] : files.image;
+      if (!file) {
+        return res.status(400).json({ success: false, error: "No image file provided" });
       }
 
-      // Read the file and convert to base64
-      const imageBuffer = fs.readFileSync(req.file.path);
-      const base64Image = imageBuffer.toString("base64");
-
-      // Upload to ImgBB
-      const formData = new URLSearchParams();
-      formData.append("key", apiKey);
-      formData.append("image", base64Image);
-
-      const response = await fetch("https://api.imgbb.com/1/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      let result;
       try {
-        result = await response.json();
-      } catch (parseError) {
-        console.error("Failed to parse ImgBB response:", parseError);
-        fs.unlinkSync(req.file.path);
-        return res.status(500).json({ error: "Invalid response from ImgBB" });
+        const apiKey = process.env.IMGBB_API_KEY;
+        if (!apiKey) {
+          return res.status(500).json({ success: false, error: "ImgBB API key not configured" });
+        }
+
+        // Read the file and convert to base64
+        const imageBuffer = fs.readFileSync(file.filepath);
+        const base64Image = imageBuffer.toString("base64");
+
+        // Upload to ImgBB
+        const formData = new URLSearchParams();
+        formData.append("key", apiKey);
+        formData.append("image", base64Image);
+
+        const response = await fetch("https://api.imgbb.com/1/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const text = await response.text();
+        let result;
+        try {
+          result = JSON.parse(text);
+        } catch (parseError) {
+          console.error("Failed to parse ImgBB response:", text);
+          return res.status(500).json({ success: false, error: "Invalid response from ImgBB" });
+        }
+
+        if (!result.success) {
+          console.error("ImgBB upload failed:", result);
+          return res.status(400).json({ success: false, error: result.error?.message || "Failed to upload to ImgBB" });
+        }
+
+        res.json({ 
+          success: true,
+          url: result.data.url,
+          display_url: result.data.display_url,
+          deleteUrl: result.data.delete_url,
+          thumbnail: result.data.thumb?.url
+        });
+      } catch (error) {
+        console.error("ImgBB upload error:", error);
+        res.status(500).json({ success: false, error: "Failed to upload image" });
       }
-
-      // Clean up the temporary file
-      fs.unlinkSync(req.file.path);
-
-      if (!result.success) {
-        console.error("ImgBB upload failed:", result);
-        return res.status(400).json({ error: result.error?.message || "Failed to upload to ImgBB" });
-      }
-
-      res.json({ 
-        url: result.data.url,
-        display_url: result.data.display_url,
-        deleteUrl: result.data.delete_url,
-        thumbnail: result.data.thumb?.url
-      });
-    } catch (error) {
-      console.error("ImgBB upload error:", error);
-      res.status(500).json({ error: "Failed to upload image" });
-    }
+    });
   });
 
   app.post("/api/upload/imgbb", upload.single("image"), async (req, res) => {

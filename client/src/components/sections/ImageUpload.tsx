@@ -60,7 +60,14 @@ export default function ImageUpload() {
         body: formData,
       });
 
-      const data: UploadResponse = await response.json();
+      const text = await response.text();
+      let data: UploadResponse;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        setError("Server returned an invalid response. Please try again.");
+        return;
+      }
 
       if (!response.ok || data.error) {
         setError(data.error || "Upload failed");
