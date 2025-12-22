@@ -13,6 +13,7 @@ export default defineConfig({
     "import.meta.env.VITE_FIREBASE_STORAGE_BUCKET": JSON.stringify(process.env.FIREBASE_STORAGE_BUCKET),
     "import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID": JSON.stringify(process.env.FIREBASE_MESSAGING_SENDER_ID),
     "import.meta.env.VITE_FIREBASE_APP_ID": JSON.stringify(process.env.FIREBASE_APP_ID),
+    "import.meta.env.VITE_IMGBB_API_KEY": JSON.stringify(process.env.IMGBB_API_KEY),
   },
   plugins: [
     react(),
