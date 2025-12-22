@@ -1,6 +1,10 @@
 {
   "buildCommand": "npm run build",
-  "routes": [
-    { "src": "/(.*)", "dest": "/api/index.cjs" }
+  "outputDirectory": "dist/public",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }

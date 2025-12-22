@@ -327,19 +327,16 @@ export async function registerRoutes(
     }
   });
 
-  // Image upload endpoint (ImgBB only)
+  // ImgBB image upload endpoint
   app.post("/api/upload/imgbb", upload.single("image"), async (req, res) => {
     try {
       if (!req.file) {
-        console.error("No file provided to upload endpoint");
         return res.status(400).json({ error: "No image file provided" });
       }
 
       const apiKey = process.env.IMGBB_API_KEY;
-      
       if (!apiKey) {
-        console.error("IMGBB_API_KEY not set");
-        return res.status(500).json({ error: "Image upload service not configured" });
+        return res.status(500).json({ error: "ImgBB API key not configured" });
       }
 
       // Read the file and convert to base64
@@ -356,22 +353,14 @@ export async function registerRoutes(
         body: formData,
       });
 
-      // Clean up the temporary file
-      if (req.file?.path && fs.existsSync(req.file.path)) {
-        fs.unlinkSync(req.file.path);
-      }
-
-      // Check if response status is ok before parsing JSON
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("ImgBB API error:", response.status, errorText);
-        return res.status(response.status).json({ error: "Failed to upload to ImgBB" });
-      }
-
       const result = await response.json();
+
+      // Clean up the temporary file
+      fs.unlinkSync(req.file.path);
+
       if (!result.success) {
         console.error("ImgBB upload failed:", result);
-        return res.status(400).json({ error: "ImgBB upload failed: " + (result.error?.message || "Unknown error") });
+        return res.status(500).json({ error: "Failed to upload to ImgBB" });
       }
 
       res.json({ 
@@ -381,15 +370,8 @@ export async function registerRoutes(
         thumbnail: result.data.thumb?.url
       });
     } catch (error) {
-      console.error("Image upload error:", error);
-      if (req.file?.path && fs.existsSync(req.file.path)) {
-        try {
-          fs.unlinkSync(req.file.path);
-        } catch (unlinkError) {
-          console.error("Failed to clean up file:", unlinkError);
-        }
-      }
-      res.status(500).json({ error: "Failed to upload image: " + (error instanceof Error ? error.message : "Unknown error") });
+      console.error("ImgBB upload error:", error);
+      res.status(500).json({ error: "Failed to upload image" });
     }
   });
 

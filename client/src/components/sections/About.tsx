@@ -1,11 +1,8 @@
 import { motion } from "framer-motion";
 import diningImage from "@assets/uiughuyguygyti7_210241_Maps_1766002062020.jpg";
 import GridMotion from "@/components/ui/GridMotion";
-import { memo, useMemo } from "react";
 
-const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768;
-
-const About = memo(function About() {
+export default function About() {
   const stats = [
     { value: "100%", label: "Authentic" },
     { value: "24h", label: "Batter Rest" },
@@ -50,12 +47,10 @@ const About = memo(function About() {
   ];
 
   return (
-    <section id="about" className="py-16 sm:py-24 md:py-32 relative overflow-hidden min-h-screen">
-      {!isMobileDevice && (
-        <div className="absolute inset-0 z-0 opacity-30">
-          <GridMotion items={gridItems} gradientColor="transparent" />
-        </div>
-      )}
+    <section id="about" className="py-16 sm:py-24 md:py-32 relative overflow-hidden min-h-screen bg-gradient-to-b from-[#241008] via-[#2d1810] to-[#3d2817]">
+      <div className="absolute inset-0 z-0 opacity-30">
+        <GridMotion items={gridItems} gradientColor="transparent" />
+      </div>
       
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 items-center">
@@ -124,6 +119,4 @@ const About = memo(function About() {
       </div>
     </section>
   );
-});
-
-export default About;
+}

@@ -1,12 +1,8 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
-import { lazy, Suspense, useEffect, useRef, useMemo } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import Lenis from "lenis";
-
-// Detect if running on mobile/low-end device
-const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768;
-const isReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const About = lazy(() => import("@/components/sections/About"));
 const Menu = lazy(() => import("@/components/sections/Menu"));
@@ -25,9 +21,6 @@ export default function Home() {
   const rafIdRef = useRef<number | null>(null);
   
   useEffect(() => {
-    // Disable smooth scroll on mobile for better performance
-    if (isMobileDevice || isReducedMotion) return;
-
     const initLenis = () => {
       if (lenisRef.current) return;
       

@@ -1,11 +1,9 @@
 import { motion } from "framer-motion";
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect } from "react";
 import { reviewService, type Review } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Star } from "lucide-react";
-
-const isReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const ratingEmojis: Record<number, string> = {
   1: "😞",
@@ -15,7 +13,7 @@ const ratingEmojis: Record<number, string> = {
   5: "🤩"
 };
 
-const Reviews = memo(function Reviews() {
+export default function Reviews() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
@@ -105,7 +103,7 @@ const Reviews = memo(function Reviews() {
   ];
 
   return (
-    <section className="py-24 overflow-hidden relative">
+    <section className="py-24 overflow-hidden relative bg-gradient-to-b from-[#3d2817] via-[#2d1810] to-[#1a1a1a]">
       {/* Background with multiple layered gradients - Dark Chocolate */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#2d1810]/40 via-transparent to-[#1a1a1a]/30"></div>
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#eb2d2d]/10 to-transparent rounded-full blur-3xl opacity-30"></div>
@@ -292,13 +290,6 @@ const Reviews = memo(function Reviews() {
       </div>
 
       <style>{`
-        @media (prefers-reduced-motion: reduce) {
-          * {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
         .marquee {
           overflow: hidden;
           width: 100%;
@@ -352,6 +343,4 @@ const Reviews = memo(function Reviews() {
       `}</style>
     </section>
   );
-});
-
-export default Reviews;
+}
