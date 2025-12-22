@@ -73,7 +73,7 @@ export default function About() {
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
                transition={{ duration: 0.8 }}
-               className="bg-[#1a0505]/80 backdrop-blur-md p-5 sm:p-6 md:p-8 rounded-lg shadow-xl border border-white/5"
+               className="bg-[#1a0505]/80 backdrop-blur-md p-5 sm:p-6 md:p-8 rounded-lg shadow-xl border border-primary/30 shadow-[var(--neon-glow)]"
             >
               <h2 className="text-xs sm:text-sm font-bold tracking-[0.2em] sm:tracking-[0.3em] text-gold uppercase mb-4 sm:mb-6">Our Story</h2>
               
@@ -92,7 +92,7 @@ export default function About() {
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 mt-6 sm:mt-8 md:mt-12 bg-[#1a0505]/80 backdrop-blur-md p-4 sm:p-5 md:p-6 rounded-lg shadow-xl border border-white/5">
+            <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 mt-6 sm:mt-8 md:mt-12 bg-[#1a0505]/80 backdrop-blur-md p-4 sm:p-5 md:p-6 rounded-lg shadow-xl border border-primary/30 shadow-[var(--neon-glow)]">
               {stats.map((stat, index) => (
                 <motion.div
                   key={index}

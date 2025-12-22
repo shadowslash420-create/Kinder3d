@@ -236,7 +236,7 @@ export default function Menu() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-8 sm:mb-12 md:mb-16 bg-[#1a0505]/80 backdrop-blur-md p-8 sm:p-10 rounded-2xl border border-white/5 shadow-2xl max-w-4xl mx-auto"
+          className="text-center mb-8 sm:mb-12 md:mb-16 bg-[#1a0505]/80 backdrop-blur-md p-8 sm:p-10 rounded-2xl border border-primary/30 shadow-[var(--neon-glow)] max-w-4xl mx-auto"
         >
           <span className="tracking-[0.2em] uppercase mb-2 sm:mb-4 block text-primary text-[38px] font-black">Our Selection</span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-medium text-white">Curated Indulgence</h2>
@@ -367,7 +367,7 @@ export default function Menu() {
                     }}
                     whileHover={isCenter ? { scale: 1.08, y: -8 } : {}}
                   >
-                    <div className="bg-[#1a0505] rounded-2xl overflow-hidden shadow-2xl relative transition-all duration-500 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] border border-white/5">
+                    <div className="bg-[#1a0505] rounded-2xl overflow-hidden shadow-2xl relative transition-all duration-500 hover:shadow-[var(--neon-glow)] border border-primary/30">
                       {getItemQuantity(menuItem.id) > 0 && (
                         <div className="absolute top-3 right-3 z-20 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">
                           {getItemQuantity(menuItem.id)}
@@ -452,7 +452,7 @@ export default function Menu() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="bg-[#1a0505] rounded-3xl overflow-hidden shadow-2xl max-w-lg w-full border border-white/5"
+              className="bg-[#1a0505] rounded-3xl overflow-hidden shadow-2xl max-w-lg w-full border border-primary/40 shadow-[var(--neon-glow)]"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="relative aspect-[4/3] overflow-hidden">
