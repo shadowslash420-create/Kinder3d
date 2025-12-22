@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Upload, X, Loader2 } from "lucide-react";
+import { uploadToImgBB } from "@/lib/upload";
 
 interface ImageUploadProps {
   value?: string;
@@ -29,37 +30,20 @@ export default function ImageUpload({ value, onChange, onError }: ImageUploadPro
     }
 
     setUploading(true);
-    setPreview(URL.createObjectURL(file));
+    const objectUrl = URL.createObjectURL(file);
+    setPreview(objectUrl);
 
     try {
-      const formData = new FormData();
-      formData.append("image", file);
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const text = await response.text();
-      let result;
-      try {
-        result = JSON.parse(text);
-      } catch (e) {
-        throw new Error("Server returned an invalid response. Please try again.");
-      }
-
-      if (!response.ok || result.success === false) {
-        throw new Error(result.error || "Upload failed");
-      }
-
-      onChange(result.url);
-      setPreview(result.url);
+      const url = await uploadToImgBB(file);
+      onChange(url);
+      setPreview(url);
     } catch (error: any) {
       console.error("Upload error:", error);
       onError?.(error.message || "Failed to upload image");
       setPreview(value || null);
     } finally {
       setUploading(false);
+      URL.revokeObjectURL(objectUrl);
     }
   };
 

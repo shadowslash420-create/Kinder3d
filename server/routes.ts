@@ -11,7 +11,6 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
-import formidable from "formidable";
 
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
 
@@ -326,106 +325,6 @@ export async function registerRoutes(
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch popular items" });
     }
-  });
-
-  // ImgBB image upload endpoint
-  app.post("/api/upload", async (req, res) => {
-    console.log("Upload request received");
-    const form = formidable({
-      maxFileSize: 5 * 1024 * 1024,
-      keepExtensions: true,
-      uploadDir: "/tmp", // Explicitly use /tmp
-    });
-
-    form.parse(req, async (err: any, fields: any, files: any) => {
-      if (err) {
-        console.error("Formidable parse error:", err);
-        return res.status(400).json({ success: false, error: "Failed to parse form data" });
-      }
-
-      console.log("Form parsed successfully", { fields, fileKeys: Object.keys(files) });
-
-      // Handle both "image" and "file" field names for compatibility
-      const file = files.image || files.file;
-      const actualFile = Array.isArray(file) ? file[0] : file;
-
-      if (!actualFile) {
-        console.error("No file found in request. Available keys:", Object.keys(files));
-        return res.status(400).json({ success: false, error: "No image file provided" });
-      }
-
-      try {
-        const apiKey = process.env.IMGBB_API_KEY;
-        if (!apiKey) {
-          console.error("IMGBB_API_KEY missing");
-          return res.status(500).json({ success: false, error: "ImgBB API key not configured" });
-        }
-
-        console.log("Reading file from path:", actualFile.filepath);
-        if (!fs.existsSync(actualFile.filepath)) {
-          console.error("File does not exist at path:", actualFile.filepath);
-          return res.status(500).json({ success: false, error: "Temporary file lost" });
-        }
-
-        // Read the file and convert to base64
-        const imageBuffer = fs.readFileSync(actualFile.filepath);
-        const base64Image = imageBuffer.toString("base64");
-
-        // Upload to ImgBB
-        const formData = new URLSearchParams();
-        formData.append("key", apiKey);
-        formData.append("image", base64Image);
-
-        console.log("Uploading to ImgBB...");
-        const response = await fetch("https://api.imgbb.com/1/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        const text = await response.text();
-        console.log("ImgBB response received:", text.substring(0, 100) + "...");
-
-        let result;
-        try {
-          result = JSON.parse(text);
-        } catch (parseError) {
-          console.error("Failed to parse ImgBB response:", text);
-          return res.status(500).json({ success: false, error: "Invalid response from ImgBB" });
-        }
-
-        if (!result.success) {
-          console.error("ImgBB upload failed:", result);
-          return res.status(400).json({ success: false, error: result.error?.message || "Failed to upload to ImgBB" });
-        }
-
-        console.log("Upload successful:", result.data.url);
-        res.json({ 
-          success: true,
-          url: result.data.url,
-          display_url: result.data.display_url,
-          deleteUrl: result.data.delete_url,
-          thumbnail: result.data.thumb?.url
-        });
-      } catch (error) {
-        console.error("ImgBB upload error:", error);
-        res.status(500).json({ success: false, error: "Failed to upload image" });
-      } finally {
-        // Clean up temp file
-        try {
-          if (actualFile && fs.existsSync(actualFile.filepath)) {
-            fs.unlinkSync(actualFile.filepath);
-          }
-        } catch (e) {
-          console.error("Cleanup error:", e);
-        }
-      }
-    });
-  });
-
-  app.post("/api/upload/imgbb", upload.single("image"), async (req, res) => {
-    // Deprecated: use /api/upload instead
-    // This endpoint is kept for backwards compatibility
-    return res.redirect(307, "/api/upload");
   });
 
   app.post("/api/admin/setup", async (req, res) => {

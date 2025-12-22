@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Upload, X } from "lucide-react";
+import { uploadToImgBB } from "@/lib/upload";
 
 interface UploadResponse {
   url?: string;
@@ -52,29 +53,8 @@ export default function ImageUpload() {
     setResult(null);
 
     try {
-      const formData = new FormData();
-      formData.append("image", file);
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const text = await response.text();
-      let data: UploadResponse;
-      try {
-        data = JSON.parse(text);
-      } catch (e) {
-        setError("Server returned an invalid response. Please try again.");
-        return;
-      }
-
-      if (!response.ok || data.error) {
-        setError(data.error || "Upload failed");
-        return;
-      }
-
-      setResult(data);
+      const url = await uploadToImgBB(file);
+      setResult({ url });
       setFile(null);
       setPreview("");
     } catch (err) {
