@@ -83,7 +83,7 @@ function OrdersContent() {
 
   return (
     <AdminLayout>
-      <div className="space-y-4 md:space-y-6">
+      <div className="space-y-4 md:space-y-6 w-full overflow-hidden">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-xl md:text-2xl font-bold text-slate-900">Orders</h1>

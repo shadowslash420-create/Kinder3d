@@ -84,7 +84,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   return (
     <AnimatedSidebar open={sidebarOpen} setOpen={setSidebarOpen}>
-      <div className="min-h-screen bg-slate-50 flex">
+      <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row">
         <DesktopSidebar>
           <AnimatedSidebarBody>
             <SidebarHeader>
@@ -196,8 +196,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </div>
         </MobileSidebar>
 
-        <main className="flex-1 transition-all duration-300 min-w-0">
-          <div className="p-3 md:p-6 lg:pl-[300px] overflow-x-hidden min-h-screen">{children}</div>
+        <main className="flex-1 w-full min-w-0 bg-slate-50">
+          <div className="p-3 md:p-6 lg:pl-[300px] w-full max-w-full overflow-hidden min-h-screen">
+            {children}
+          </div>
         </main>
       </div>
     </AnimatedSidebar>
