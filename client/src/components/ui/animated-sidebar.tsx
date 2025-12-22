@@ -66,7 +66,7 @@ export const DesktopSidebar = ({
   return (
     <motion.div
       className={cn(
-        "h-full px-4 py-4 hidden md:flex md:flex-col bg-slate-900 text-white w-[300px] flex-shrink-0 fixed left-0 top-0 z-40",
+        "h-full px-4 py-4 hidden lg:flex lg:flex-col bg-slate-900 text-white w-[300px] flex-shrink-0 fixed left-0 top-0 z-40",
         className
       )}
       animate={{
@@ -91,14 +91,14 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          "h-14 px-4 flex flex-row md:hidden items-center justify-between bg-slate-900 text-white w-full sticky top-0 z-50 shadow-md"
+          "h-14 px-4 flex flex-row lg:hidden items-center justify-between bg-slate-900 text-white w-full sticky top-0 z-50 shadow-md"
         )}
         {...props}
       >
         <div className="flex items-center gap-2">
           <span className="font-bold text-lg">Creperie</span>
         </div>
-        <div className="flex justify-end">
+        <div className="flex justify-end z-[110]">
           <Menu
             className="text-white cursor-pointer h-6 w-6"
             onClick={() => setOpen(!open)}
