@@ -14,41 +14,41 @@
 
   /* Dark Theme Colors */
   /* Dark Background */
-  --color-background: #1a1a1a; 
+  --color-background: #1a0f0d; 
   /* Light Text */
-  --color-foreground: #ffffff; 
+  --color-foreground: #f5ebe0; 
 
   /* Dark Card */
-  --color-card: #2d2d2d;
-  --color-card-foreground: #ffffff;
+  --color-card: #2d1b18;
+  --color-card-foreground: #f5ebe0;
 
-  --color-popover: #2d2d2d;
-  --color-popover-foreground: #ffffff;
+  --color-popover: #2d1b18;
+  --color-popover-foreground: #f5ebe0;
 
   /* Kinder Red Primary */
-  --color-primary: #DC2626; 
+  --color-primary: #8b4513; 
   --color-primary-foreground: #FFFFFF;
 
   /* Luxury Gold Accent */
-  --color-gold: #EAB308;
+  --color-gold: #c69b7b;
   --color-gold-foreground: #000000;
 
   /* Milk Chocolate Secondary */
-  --color-secondary: #A0826D;
+  --color-secondary: #4a2c2a;
   --color-secondary-foreground: #FFFFFF;
 
-  --color-muted: #4a4a4a;
-  --color-muted-foreground: #a0a0a0;
+  --color-muted: #3d2624;
+  --color-muted-foreground: #a08c8a;
 
-  --color-accent: #3a3a3a;
-  --color-accent-foreground: #ffffff;
+  --color-accent: #3d2624;
+  --color-accent-foreground: #f5ebe0;
 
-  --color-destructive: #EF4444;
+  --color-destructive: #7f1d1d;
   --color-destructive-foreground: #FAFAFA;
 
-  --color-border: #3a3a3a;
-  --color-input: #3a3a3a;
-  --color-ring: #DC2626;
+  --color-border: #3d2624;
+  --color-input: #3d2624;
+  --color-ring: #8b4513;
 
   --radius: 1rem;
 }
@@ -68,8 +68,8 @@
     -moz-osx-font-smoothing: grayscale;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    background-color: #1a1a1a;
-    color: #ffffff;
+    background-color: #1a0f0d;
+    color: #f5ebe0;
   }
   * {
     @apply border-border;
@@ -78,7 +78,7 @@
   }
   body {
     @apply font-sans antialiased text-foreground selection:bg-primary/20 selection:text-primary;
-    background-color: #1a1a1a;
+    background-color: #1a0f0d;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
