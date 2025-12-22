@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
+import GradientDivider from "@/components/ui/GradientDivider";
 import { lazy, Suspense, useEffect, useRef } from "react";
 import Lenis from "lenis";
 import { useState } from "react";
@@ -91,18 +92,23 @@ export default function Home() {
       <Navbar />
       <main className="relative z-10">
         <Hero />
+        <GradientDivider fromColor="#1a1a1a" toColor="#241008" height="h-24" />
         <Suspense fallback={<SectionLoader />}>
           <About />
         </Suspense>
+        <GradientDivider fromColor="#3d2817" toColor="#241008" height="h-24" />
         <Suspense fallback={<SectionLoader />}>
           <Menu />
         </Suspense>
+        <GradientDivider fromColor="#241008" toColor="#1a1a1a" height="h-24" />
         <Suspense fallback={<SectionLoader />}>
           <Reviews />
         </Suspense>
+        <GradientDivider fromColor="#1a1a1a" toColor="#1a1a1a" height="h-24" />
         <Suspense fallback={<SectionLoader />}>
           <WhyUs />
         </Suspense>
+        <GradientDivider fromColor="#1a1a1a" toColor="#241008" height="h-24" />
         <Suspense fallback={<SectionLoader />}>
           <Contact />
         </Suspense>
