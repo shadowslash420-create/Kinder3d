@@ -57,26 +57,24 @@ export default function Intro({ onEnter }: IntroProps) {
       if (creperieSpan) {
         const creperieLetters = creperieSpan.querySelectorAll('.letter');
         tl.add(creperieLetters, {
-          translateY: [{ from: 80, to: 0 }],
+          translateY: [{ from: 40, to: 0 }],
           opacity: [{ from: 0, to: 1 }],
-          rotateX: [{ from: 90, to: 0 }],
           ease: 'outExpo',
-          duration: 1200,
-          delay: stagger(60, { start: 300 })
+          duration: 800,
+          delay: stagger(40, { start: 200 })
         });
       }
 
       if (kinderSpan) {
         const kinderLetters = kinderSpan.querySelectorAll('.letter');
         tl.add(kinderLetters, {
-          translateY: [{ from: 80, to: 0 }],
+          translateY: [{ from: 40, to: 0 }],
           opacity: [{ from: 0, to: 1 }],
-          rotateX: [{ from: 90, to: 0 }],
-          scale: [{ from: 0.5, to: 1 }],
+          scale: [{ from: 0.8, to: 1 }],
           ease: 'outExpo',
-          duration: 1000,
-          delay: stagger(80)
-        }, '-=600');
+          duration: 700,
+          delay: stagger(60)
+        }, '-=400');
       }
     }
 

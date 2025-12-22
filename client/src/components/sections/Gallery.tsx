@@ -31,9 +31,10 @@ export default function Gallery() {
           trigger: triggerRef.current,
           start: "top top",
           end: `+=${totalWidth}`,
-          scrub: 1,
+          scrub: 0.5,
           pin: true,
           anticipatePin: 1,
+          fastScrollEnd: true,
         }
       });
       
