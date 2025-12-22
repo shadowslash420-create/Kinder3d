@@ -153,7 +153,7 @@ export default function Reviews() {
           >
             <div className="relative">
               <div className="absolute -top-8 -left-6 text-7xl text-stone-300 opacity-25 font-serif">"</div>
-              <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-12 shadow-2xl text-center overflow-hidden relative">
+              <div className="bg-[#1a0505]/80 backdrop-blur-sm border border-primary/40 rounded-3xl p-12 shadow-2xl text-center overflow-hidden relative shadow-[var(--neon-glow)]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-40"></div>
                 <div className="relative z-10">
                   <h3 className="text-white font-serif text-lg tracking-widest mb-8 font-light">✦ Featured Review ✦</h3>
@@ -221,39 +221,39 @@ export default function Reviews() {
               <span>✦</span>
               <span>✦</span>
             </div>
-            <div className="bg-gradient-to-br from-stone-100 via-amber-50 to-stone-150 border border-amber-800 rounded-3xl shadow-2xl p-12 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-transparent to-white/30"></div>
+            <div className="bg-[#1a0505]/90 border border-primary/40 rounded-3xl shadow-2xl p-12 relative overflow-hidden shadow-[var(--neon-glow)]">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/5 opacity-40"></div>
               <div className="relative z-10">
-                <h3 className="text-3xl md:text-4xl font-serif font-light text-transparent bg-clip-text bg-gradient-to-r from-amber-950 to-stone-700 mb-3 text-center">Share Your Delight</h3>
-                <p className="text-amber-900 text-center mb-10 font-light tracking-wide">Let us know about your refined experience</p>
+                <h3 className="text-3xl md:text-4xl font-serif font-light text-white mb-3 text-center">Share Your Delight</h3>
+                <p className="text-white/70 text-center mb-10 font-light tracking-wide">Let us know about your refined experience</p>
                 
                 <form onSubmit={handleSubmitReview} className="space-y-6">
                   <div>
-                    <label className="block text-sm font-serif text-amber-950 mb-3 tracking-wider font-light">Your Name</label>
+                    <label className="block text-sm font-serif text-white/80 mb-3 tracking-wider font-light">Your Name</label>
                     <input
                       type="text"
                       value={formData.userName}
                       onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
                       placeholder="Enter your name"
-                      className="w-full px-5 py-3 border border-amber-800 bg-white/80 text-stone-900 placeholder-amber-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-900 focus:bg-white transition-all duration-300 backdrop-blur-sm"
+                      className="w-full px-5 py-3 border border-primary/30 bg-[#1a0505]/50 text-white placeholder-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:bg-[#1a0505] transition-all duration-300 backdrop-blur-sm"
                       disabled={submitting}
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-serif text-amber-950 mb-3 tracking-wider font-light">Email</label>
+                    <label className="block text-sm font-serif text-white/80 mb-3 tracking-wider font-light">Email</label>
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="your@email.com"
-                      className="w-full px-5 py-3 border border-amber-800 bg-white/80 text-stone-900 placeholder-amber-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-900 focus:bg-white transition-all duration-300 backdrop-blur-sm"
+                      className="w-full px-5 py-3 border border-primary/30 bg-[#1a0505]/50 text-white placeholder-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:bg-[#1a0505] transition-all duration-300 backdrop-blur-sm"
                       disabled={submitting}
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-serif text-amber-950 mb-4 tracking-wider font-light">Your Rating</label>
+                    <label className="block text-sm font-serif text-white/80 mb-4 tracking-wider font-light">Your Rating</label>
                     <div className="flex gap-4 justify-center">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <motion.button
@@ -266,7 +266,7 @@ export default function Reviews() {
                         >
                           <Star
                             size={36}
-                            className={star <= formData.rating ? "fill-amber-900 text-amber-900 drop-shadow-lg" : "text-amber-700 drop-shadow"}
+                            className={star <= formData.rating ? "fill-gold text-gold drop-shadow-[0_0_8px_rgba(198,155,123,0.5)]" : "text-white/20 drop-shadow"}
                           />
                         </motion.button>
                       ))}
@@ -274,13 +274,13 @@ export default function Reviews() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-serif text-amber-950 mb-3 tracking-wider font-light">Your Review</label>
+                    <label className="block text-sm font-serif text-white/80 mb-3 tracking-wider font-light">Your Review</label>
                     <textarea
                       value={formData.comment}
                       onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
                       placeholder="Tell us about your experience..."
                       rows={4}
-                      className="w-full px-5 py-3 border border-amber-800 bg-white/80 text-stone-900 placeholder-amber-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-900 focus:bg-white transition-all duration-300 resize-none backdrop-blur-sm"
+                      className="w-full px-5 py-3 border border-primary/30 bg-[#1a0505]/50 text-white placeholder-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:bg-[#1a0505] transition-all duration-300 resize-none backdrop-blur-sm"
                       disabled={submitting}
                     />
                   </div>
@@ -288,7 +288,7 @@ export default function Reviews() {
                   <motion.button
                     type="submit"
                     disabled={submitting}
-                    className="w-full bg-gradient-to-r from-amber-900 via-stone-800 to-amber-950 hover:from-amber-950 hover:via-stone-900 hover:to-stone-950 disabled:from-gray-400 disabled:to-gray-500 text-stone-50 font-serif font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl border border-stone-900 tracking-wide"
+                    className="w-full bg-gradient-to-r from-primary via-[#4a0505] to-primary hover:from-[#8a1a1a] hover:to-[#4a0505] disabled:from-gray-600 disabled:to-gray-700 text-white font-serif font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-xl hover:shadow-[var(--neon-glow)] border border-white/5 tracking-wide"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >

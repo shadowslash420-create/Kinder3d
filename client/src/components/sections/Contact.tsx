@@ -60,7 +60,7 @@ export default function Contact() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-white/5 backdrop-blur-sm p-6 sm:p-8 md:p-10 lg:p-12 rounded-sm border border-white/10 will-change-opacity"
+            className="bg-[#1a0505]/80 backdrop-blur-sm p-6 sm:p-8 md:p-10 lg:p-12 rounded-sm border border-primary/30 shadow-[var(--neon-glow)] will-change-opacity"
           >
             <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

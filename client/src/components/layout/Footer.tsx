@@ -22,7 +22,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="relative z-10" style={{ minHeight: "14rem" }}>
+    <footer className="relative z-10 border-t border-primary/30 shadow-[0_-10px_30px_rgba(100,16,16,0.3)]" style={{ minHeight: "14rem" }}>
       <svg style={{ position: "fixed", top: "100vh" }}>
         <defs>
           <filter id="blob">

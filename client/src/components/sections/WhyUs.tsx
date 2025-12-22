@@ -55,14 +55,14 @@ export default function WhyUs() {
             </div>
           </div>
           
-          <div className="relative h-[350px] sm:h-[400px] md:h-[500px] bg-secondary/5 rounded-2xl sm:rounded-3xl overflow-hidden p-4 sm:p-6 md:p-8 flex items-center justify-center">
+          <div className="relative h-[350px] sm:h-[400px] md:h-[500px] bg-secondary/5 rounded-2xl sm:rounded-3xl overflow-hidden p-4 sm:p-6 md:p-8 flex items-center justify-center border border-primary/30 shadow-[var(--neon-glow)]">
              <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 bg-primary/5 rounded-full blur-3xl" />
              <div className="absolute bottom-0 left-0 w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 bg-secondary/10 rounded-full blur-3xl" />
              
              <div className="relative z-10 text-center">
                 <span className="text-5xl sm:text-7xl md:text-9xl font-serif font-bold select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary/10">KINDER</span>
-                <div className="bg-white/80 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl shadow-xl border border-white">
-                   <h3 className="font-serif font-bold text-lg sm:text-xl md:text-2xl mb-2 text-foreground">Top Rated</h3>
+                <div className="bg-[#1a0505]/90 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl shadow-xl border border-primary/40 shadow-[var(--neon-glow)]">
+                   <h3 className="font-serif font-bold text-lg sm:text-xl md:text-2xl mb-2 text-white">Top Rated</h3>
                    <div className="flex text-yellow-400 justify-center mb-2 gap-0.5">
                       <Star className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" />
                       <Star className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" />

@@ -195,7 +195,7 @@ export default function Hero() {
             transition={{ delay: 1.5 }}
             className="flex flex-wrap gap-3 sm:gap-4 md:gap-6"
           >
-            <MagneticButton className="rounded-full px-5 sm:px-8 md:px-10 py-3 sm:py-5 md:py-7 text-sm sm:text-base md:text-lg bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/20 transition-all duration-500">
+            <MagneticButton className="rounded-full px-5 sm:px-8 md:px-10 py-3 sm:py-5 md:py-7 text-sm sm:text-base md:text-lg bg-primary hover:bg-primary/90 shadow-[var(--neon-glow)] border border-primary/50 transition-all duration-500">
               Explore Menu
             </MagneticButton>
           </motion.div>
