@@ -13,42 +13,42 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   /* Dark Theme Colors */
-  /* Dark Background */
-  --color-background: #1a0f0d; 
-  /* Light Text */
+  /* Deep Maroon/Black Background */
+  --color-background: #0f0202; 
+  /* Light Cream/Silk Text */
   --color-foreground: #f5ebe0; 
 
-  /* Dark Card */
-  --color-card: #2d1b18;
+  /* Deep Maroon Card */
+  --color-card: #1a0505;
   --color-card-foreground: #f5ebe0;
 
-  --color-popover: #2d1b18;
+  --color-popover: #1a0505;
   --color-popover-foreground: #f5ebe0;
 
-  /* Kinder Red Primary */
-  --color-primary: #8b4513; 
+  /* Rich Burgundy Primary */
+  --color-primary: #641010; 
   --color-primary-foreground: #FFFFFF;
 
   /* Luxury Gold Accent */
   --color-gold: #c69b7b;
   --color-gold-foreground: #000000;
 
-  /* Milk Chocolate Secondary */
-  --color-secondary: #4a2c2a;
+  /* Deep Chocolate Secondary */
+  --color-secondary: #2b0a0a;
   --color-secondary-foreground: #FFFFFF;
 
-  --color-muted: #3d2624;
+  --color-muted: #250808;
   --color-muted-foreground: #a08c8a;
 
-  --color-accent: #3d2624;
+  --color-accent: #3d0a0a;
   --color-accent-foreground: #f5ebe0;
 
-  --color-destructive: #7f1d1d;
+  --color-destructive: #4a0505;
   --color-destructive-foreground: #FAFAFA;
 
-  --color-border: #3d2624;
-  --color-input: #3d2624;
-  --color-ring: #8b4513;
+  --color-border: #330c0c;
+  --color-input: #330c0c;
+  --color-ring: #641010;
 
   --radius: 1rem;
 }

@@ -73,17 +73,17 @@ export default function Home() {
         style={{
           background: `linear-gradient(
             180deg,
-            #1a1a1a 0%,
-            #2d1810 8%,
-            #6B4423 18%,
-            #A67B5B 28%,
-            #F3E5AB 38%,
-            #FDFBF7 48%,
-            #F3E5AB 58%,
-            #A67B5B 68%,
-            #6B4423 78%,
-            #2d1810 88%,
-            #1a1a1a 100%
+            #0f0202 0%,
+            #2b0a0a 8%,
+            #4a0505 18%,
+            #641010 28%,
+            #801515 38%,
+            #1a0505 48%,
+            #641010 58%,
+            #4a0505 68%,
+            #2b0a0a 78%,
+            #1a0505 88%,
+            #0f0202 100%
           )`,
           backgroundSize: '100% 600vh',
           backgroundAttachment: 'fixed'
@@ -92,23 +92,23 @@ export default function Home() {
       <Navbar />
       <main className="relative z-10">
         <Hero />
-        <GradientDivider fromColor="#1a1a1a" toColor="#241008" height="h-24" />
+        <GradientDivider fromColor="#0f0202" toColor="#1a0505" height="h-24" />
         <Suspense fallback={<SectionLoader />}>
           <About />
         </Suspense>
-        <GradientDivider fromColor="#3d2817" toColor="#241008" height="h-24" />
+        <GradientDivider fromColor="#2b0a0a" toColor="#1a0505" height="h-24" />
         <Suspense fallback={<SectionLoader />}>
           <Menu />
         </Suspense>
-        <GradientDivider fromColor="#241008" toColor="#1a1a1a" height="h-24" />
+        <GradientDivider fromColor="#1a0505" toColor="#0f0202" height="h-24" />
         <Suspense fallback={<SectionLoader />}>
           <Reviews />
         </Suspense>
-        <GradientDivider fromColor="#1a1a1a" toColor="#1a1a1a" height="h-24" />
+        <GradientDivider fromColor="#0f0202" toColor="#0f0202" height="h-24" />
         <Suspense fallback={<SectionLoader />}>
           <WhyUs />
         </Suspense>
-        <GradientDivider fromColor="#1a1a1a" toColor="#241008" height="h-24" />
+        <GradientDivider fromColor="#0f0202" toColor="#1a0505" height="h-24" />
         <Suspense fallback={<SectionLoader />}>
           <Contact />
         </Suspense>

@@ -64,10 +64,10 @@ function FloatingChocolate() {
           <mesh ref={meshRef}>
             <boxGeometry args={[3, 1, 0.4]} />
             <meshStandardMaterial 
-              color="#3E2723" 
-              roughness={0.2} 
-              metalness={0.1} 
-              envMapIntensity={1.5}
+              color="#4a0505" 
+              roughness={0.1} 
+              metalness={0.2} 
+              envMapIntensity={2}
             />
           </mesh>
           {/* White creamy layer inside - subtle reveal at ends */}
@@ -131,7 +131,7 @@ export default function Hero() {
           decoding="async"
           fetchPriority="high"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20 md:from-black/40 md:via-black/20 md:to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0f0202]/80 via-[#1a0505]/60 to-transparent" />
       </motion.div>
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 lg:gap-12 items-center min-h-screen py-16 sm:py-20 md:py-24">
