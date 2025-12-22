@@ -11,6 +11,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
+import formidable from "formidable";
 
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
 
@@ -327,10 +328,6 @@ export async function registerRoutes(
     }
   });
 
-import formidable from "formidable";
-
-// ... existing code ...
-
   // ImgBB image upload endpoint
   app.post("/api/upload", async (req, res) => {
     const form = formidable({
@@ -338,7 +335,7 @@ import formidable from "formidable";
       keepExtensions: true,
     });
 
-    form.parse(req, async (err, fields, files) => {
+    form.parse(req, async (err: any, fields: any, files: any) => {
       if (err) {
         console.error("Formidable parse error:", err);
         return res.status(400).json({ success: false, error: "Failed to parse form data" });
