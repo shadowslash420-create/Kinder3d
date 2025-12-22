@@ -111,7 +111,7 @@ export default function Reviews() {
   ];
 
   return (
-    <section className="py-24 overflow-hidden relative bg-gradient-to-b from-[#3d2817] via-[#2d1810] to-[#1a1a1a]">
+    <section className="py-24 overflow-hidden relative bg-gradient-to-b from-[#2b0a0a] via-[#1a0505] to-[#0f0202]">
       {/* Background with multiple layered gradients - Dark Chocolate */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#2d1810]/40 via-transparent to-[#1a1a1a]/30"></div>
       {!isMobile && (
@@ -129,16 +129,16 @@ export default function Reviews() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center"
         >
-          <span className="text-[#eb2d2d] font-bold tracking-[0.3em] text-xs uppercase mb-6 block opacity-90">
+          <span className="text-primary font-bold tracking-[0.3em] text-xs uppercase mb-6 block opacity-90">
             ✧ Guest Testimonials ✧
           </span>
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif font-light text-white mb-4">
             Celebrated by Our Patrons
           </h2>
           <div className="flex items-center justify-center gap-4 mt-6">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#eb2d2d]"></div>
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary"></div>
             <span className="text-white/70 text-sm font-light tracking-wider">Refined Dining Experiences</span>
-            <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#eb2d2d]"></div>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
           </div>
         </motion.div>
 

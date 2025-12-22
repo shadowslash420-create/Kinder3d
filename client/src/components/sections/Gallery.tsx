@@ -58,7 +58,7 @@ export default function Gallery() {
   }, []);
 
   return (
-    <section ref={triggerRef} id="gallery" className="h-screen bg-[#1a1a1a] text-white overflow-hidden flex flex-col justify-center relative">
+    <section ref={triggerRef} id="gallery" className="h-screen bg-[#0f0202] text-white overflow-hidden flex flex-col justify-center relative">
       <div className="absolute top-8 sm:top-12 left-4 sm:left-6 md:left-24 z-10 max-w-lg px-2 sm:px-0">
         <span className="text-primary font-bold tracking-[0.15em] sm:tracking-[0.2em] text-xs uppercase mb-2 sm:mb-4 block">The Gallery</span>
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-serif font-medium leading-tight">Visual <br/> Symphony</h2>

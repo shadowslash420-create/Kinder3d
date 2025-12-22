@@ -131,12 +131,12 @@ export default function Intro({ onEnter }: IntroProps) {
       initial={{ opacity: 1, scale: 1 }}
       animate={isExiting ? { opacity: 0, scale: 1.1 } : { opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
-      className="fixed inset-0 z-50 bg-[#1a1a1a] overflow-hidden"
+      className="fixed inset-0 z-50 bg-[#0f0202] overflow-hidden"
     >
       <motion.div
         className="absolute inset-0"
-        initial={{ background: "radial-gradient(circle at 20% 50%, rgba(230, 57, 70, 0.1) 0%, transparent 50%)" }}
-        animate={{ background: "radial-gradient(circle at 80% 50%, rgba(230, 57, 70, 0.15) 0%, transparent 50%)" }}
+        initial={{ background: "radial-gradient(circle at 20% 50%, rgba(100, 16, 16, 0.1) 0%, transparent 50%)" }}
+        animate={{ background: "radial-gradient(circle at 80% 50%, rgba(100, 16, 16, 0.15) 0%, transparent 50%)" }}
         transition={{ duration: 6, repeat: Infinity, repeatType: "reverse" }}
       />
 
@@ -160,7 +160,7 @@ export default function Intro({ onEnter }: IntroProps) {
         initial={{ opacity: 0, y: 40 }}
         animate={isExiting ? { opacity: 0, y: 60 } : { opacity: 1, y: 0 }}
         transition={isExiting ? { duration: 0.7, ease: "easeIn" } : { duration: 0.8, delay: 0.4 }}
-        className="absolute bottom-0 left-0 right-0 text-center px-4 sm:px-6 py-8 sm:py-10 md:py-12 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a]/80 to-transparent space-y-4 sm:space-y-6 z-20"
+        className="absolute bottom-0 left-0 right-0 text-center px-4 sm:px-6 py-8 sm:py-10 md:py-12 bg-gradient-to-t from-[#0f0202] via-[#0f0202]/80 to-transparent space-y-4 sm:space-y-6 z-20"
       >
         <div>
           <h1 
@@ -208,7 +208,7 @@ export default function Intro({ onEnter }: IntroProps) {
                 top: "100%",
                 height: "4px",
                 width: "100%",
-                backgroundColor: "#DC2626"
+                backgroundColor: "var(--color-primary)"
               }}
             />
           </button>

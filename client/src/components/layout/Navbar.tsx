@@ -58,13 +58,13 @@ export default function Navbar() {
         left: 0,
         right: 0,
         zIndex: 99999,
-        backgroundColor: '#4A3728',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        backgroundColor: 'var(--color-background)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
         padding: isScrolled 
           ? '8px 24px' 
           : '12px 24px',
-        transition: 'padding 0.3s ease',
-        boxShadow: '0 4px 20px rgba(74, 55, 40, 0.4)',
+        transition: 'all 0.3s ease',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.6)',
       }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -115,14 +115,14 @@ export default function Navbar() {
               letterSpacing: '0.15em',
               fontWeight: '600',
               color: 'white',
-              backgroundColor: '#DC2626',
+              backgroundColor: 'var(--color-primary)',
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              transition: 'background-color 0.3s',
+              transition: 'all 0.3s',
             }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#B91C1C'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#DC2626'}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-accent)'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-primary)'}
           >
             Order Now
           </button>
@@ -376,8 +376,8 @@ export default function Navbar() {
             inset: 0,
             top: '80px',
             zIndex: 100000,
-            backgroundColor: '#4A3728',
-            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            backgroundColor: 'var(--color-background)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.05)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -520,7 +520,7 @@ export default function Navbar() {
               letterSpacing: '0.15em',
               fontWeight: '600',
               color: 'white',
-              backgroundColor: '#DC2626',
+              backgroundColor: 'var(--color-primary)',
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',

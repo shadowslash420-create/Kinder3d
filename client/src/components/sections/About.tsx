@@ -20,44 +20,44 @@ export default function About() {
   ];
 
   const colors = {
-    brown: '#6B4423',
-    vanilla: '#F3E5AB',
-    lightBrown: '#A67B5B'
+    maroon: '#2b0a0a',
+    gold: '#c69b7b',
+    burgundy: '#641010'
   };
 
   const gridItems = [
-    <div key='block-1' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
-    <div key='block-2' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
-    <div key='block-3' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
-    <div key='block-4' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
-    <div key='block-5' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
-    <div key='block-6' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
-    <div key='block-7' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
-    <div key='block-8' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
-    <div key='block-9' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
-    <div key='block-10' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
-    <div key='block-11' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
-    <div key='block-12' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
-    <div key='block-13' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
-    <div key='block-14' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
-    <div key='block-15' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
-    <div key='block-16' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
-    <div key='block-17' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
-    <div key='block-18' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
-    <div key='block-19' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
-    <div key='block-20' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
-    <div key='block-21' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
-    <div key='block-22' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
-    <div key='block-23' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
-    <div key='block-24' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
-    <div key='block-25' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
-    <div key='block-26' className="w-full h-full" style={{ backgroundColor: colors.vanilla }} />,
-    <div key='block-27' className="w-full h-full" style={{ backgroundColor: colors.lightBrown }} />,
-    <div key='block-28' className="w-full h-full" style={{ backgroundColor: colors.brown }} />,
+    <div key='block-1' className="w-full h-full" style={{ backgroundColor: colors.maroon }} />,
+    <div key='block-2' className="w-full h-full" style={{ backgroundColor: colors.gold }} />,
+    <div key='block-3' className="w-full h-full" style={{ backgroundColor: colors.burgundy }} />,
+    <div key='block-4' className="w-full h-full" style={{ backgroundColor: colors.maroon }} />,
+    <div key='block-5' className="w-full h-full" style={{ backgroundColor: colors.gold }} />,
+    <div key='block-6' className="w-full h-full" style={{ backgroundColor: colors.burgundy }} />,
+    <div key='block-7' className="w-full h-full" style={{ backgroundColor: colors.maroon }} />,
+    <div key='block-8' className="w-full h-full" style={{ backgroundColor: colors.gold }} />,
+    <div key='block-9' className="w-full h-full" style={{ backgroundColor: colors.burgundy }} />,
+    <div key='block-10' className="w-full h-full" style={{ backgroundColor: colors.maroon }} />,
+    <div key='block-11' className="w-full h-full" style={{ backgroundColor: colors.gold }} />,
+    <div key='block-12' className="w-full h-full" style={{ backgroundColor: colors.burgundy }} />,
+    <div key='block-13' className="w-full h-full" style={{ backgroundColor: colors.maroon }} />,
+    <div key='block-14' className="w-full h-full" style={{ backgroundColor: colors.gold }} />,
+    <div key='block-15' className="w-full h-full" style={{ backgroundColor: colors.burgundy }} />,
+    <div key='block-16' className="w-full h-full" style={{ backgroundColor: colors.maroon }} />,
+    <div key='block-17' className="w-full h-full" style={{ backgroundColor: colors.gold }} />,
+    <div key='block-18' className="w-full h-full" style={{ backgroundColor: colors.burgundy }} />,
+    <div key='block-19' className="w-full h-full" style={{ backgroundColor: colors.maroon }} />,
+    <div key='block-20' className="w-full h-full" style={{ backgroundColor: colors.gold }} />,
+    <div key='block-21' className="w-full h-full" style={{ backgroundColor: colors.burgundy }} />,
+    <div key='block-22' className="w-full h-full" style={{ backgroundColor: colors.maroon }} />,
+    <div key='block-23' className="w-full h-full" style={{ backgroundColor: colors.gold }} />,
+    <div key='block-24' className="w-full h-full" style={{ backgroundColor: colors.burgundy }} />,
+    <div key='block-25' className="w-full h-full" style={{ backgroundColor: colors.maroon }} />,
+    <div key='block-26' className="w-full h-full" style={{ backgroundColor: colors.gold }} />,
+    <div key='block-27' className="w-full h-full" style={{ backgroundColor: colors.burgundy }} />,
+    <div key='block-28' className="w-full h-full" style={{ backgroundColor: colors.maroon }} />,
   ];
 
   return (
-    <section id="about" className="py-16 sm:py-24 md:py-32 relative overflow-hidden min-h-screen bg-gradient-to-b from-[#241008] via-[#2d1810] to-[#3d2817]">
+    <section id="about" className="py-16 sm:py-24 md:py-32 relative overflow-hidden min-h-screen bg-gradient-to-b from-[#0f0202] via-[#1a0505] to-[#2b0a0a]">
       {!isMobile && (
       <div className="absolute inset-0 z-0 opacity-30">
         <GridMotion items={gridItems} gradientColor="transparent" />

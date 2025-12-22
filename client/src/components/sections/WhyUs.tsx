@@ -26,12 +26,12 @@ const features = [
 
 export default function WhyUs() {
   return (
-    <section className="py-16 sm:py-20 md:py-24 relative overflow-hidden bg-gradient-to-b from-[#1a1a1a]/90 via-[#2d1810]/85 to-[#1a1a1a]/90">
+    <section className="py-16 sm:py-20 md:py-24 relative overflow-hidden bg-gradient-to-b from-[#0f0202]/90 via-[#1a0505]/85 to-[#0f0202]/90">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
           <div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold mb-4 sm:mb-6 text-[#bdaea2]">Why We Are Different</h2>
-            <p className="mb-8 sm:mb-10 md:mb-12 max-w-md text-sm sm:text-base text-[#e8e8e8]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold mb-4 sm:mb-6 text-foreground">Why We Are Different</h2>
+            <p className="mb-8 sm:mb-10 md:mb-12 max-w-md text-sm sm:text-base text-foreground/80">
               It's not just a crepe; it's an experience. We combine traditional techniques with modern indulgence.
             </p>
             
@@ -45,11 +45,11 @@ export default function WhyUs() {
                   transition={{ delay: idx * 0.1 }}
                   className="flex flex-col items-start"
                 >
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-3 sm:mb-4 text-[#ff0000]">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3 sm:mb-4 text-primary">
                     {feature.icon}
                   </div>
-                  <h3 className="font-bold text-base sm:text-lg mb-1 sm:mb-2 text-[#ff1c1c]">{feature.title}</h3>
-                  <p className="text-xs sm:text-sm text-[#e8e6e3]">{feature.description}</p>
+                  <h3 className="font-bold text-base sm:text-lg mb-1 sm:mb-2 text-primary">{feature.title}</h3>
+                  <p className="text-xs sm:text-sm text-foreground/70">{feature.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -60,7 +60,7 @@ export default function WhyUs() {
              <div className="absolute bottom-0 left-0 w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 bg-secondary/10 rounded-full blur-3xl" />
              
              <div className="relative z-10 text-center">
-                <span className="text-5xl sm:text-7xl md:text-9xl font-serif font-bold select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#ff00001a]">KINDER</span>
+                <span className="text-5xl sm:text-7xl md:text-9xl font-serif font-bold select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary/10">KINDER</span>
                 <div className="bg-white/80 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl shadow-xl border border-white">
                    <h3 className="font-serif font-bold text-lg sm:text-xl md:text-2xl mb-2 text-foreground">Top Rated</h3>
                    <div className="flex text-yellow-400 justify-center mb-2 gap-0.5">

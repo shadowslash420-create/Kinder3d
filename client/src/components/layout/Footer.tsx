@@ -41,7 +41,7 @@ export default function Footer() {
       <div 
         className="absolute top-0 left-0 right-0 h-4"
         style={{ 
-          backgroundColor: "#DC2626",
+          backgroundColor: "var(--color-primary)",
           filter: "url(#blob)"
         }}
       >
@@ -51,7 +51,7 @@ export default function Footer() {
             className="absolute rounded-full"
             style={{
               left: bubble.position,
-              backgroundColor: "#DC2626",
+              backgroundColor: "var(--color-primary)",
               width: bubble.size,
               height: bubble.size,
               animation: `bubble-size ${bubble.time} ease-in infinite ${bubble.delay}, bubble-move ${bubble.time} ease-in infinite ${bubble.delay}`,
@@ -63,7 +63,7 @@ export default function Footer() {
 
       <div 
         className="relative z-20 pt-20 pb-10"
-        style={{ backgroundColor: "#DC2626" }}
+        style={{ backgroundColor: "var(--color-primary)" }}
       >
         <div className="container mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-10 sm:mb-12 md:mb-16">
