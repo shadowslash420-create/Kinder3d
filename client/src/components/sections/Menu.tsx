@@ -3,6 +3,8 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import ShoppingCart from "@/components/ui/ShoppingCart";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import FloatingLines from "@/components/ui/FloatingLines";
 import { menuService, categoryService, type MenuItem, type Category } from "@/lib/firebase";
 
@@ -15,6 +17,8 @@ export default function Menu() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const { addToCart, removeFromCart, getItemQuantity, totalItems } = useCart();
+  const { toast } = useToast();
+  const { user } = useAuth();
 
   useEffect(() => {
     const unsubMenu = menuService.subscribe((items) => {
@@ -67,6 +71,15 @@ export default function Menu() {
   }, [handleNext, handlePrev, selectedItem]);
 
   const handleAddToCart = (item: MenuItem) => {
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to add items to your cart",
+        variant: "destructive"
+      });
+      // Optionally redirect to login, but toast is sufficient
+      return;
+    }
     addToCart({
       id: item.id,
       menuItemId: item.id,

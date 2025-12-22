@@ -159,6 +159,8 @@ export async function getUserRole(user: User): Promise<UserRole> {
 }
 
 export function signInWithGoogle() {
+  // Force account selection every time to allow switching between Gmail accounts
+  googleProvider.setCustomParameters({ prompt: 'select_account' });
   return signInWithPopup(auth, googleProvider);
 }
 
