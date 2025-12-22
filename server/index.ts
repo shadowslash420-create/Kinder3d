@@ -22,6 +22,14 @@ app.use(
 
 app.use(express.urlencoded({ extended: false }));
 
+// Add cache control headers to prevent caching issues across browsers
+app.use((req, res, next) => {
+  res.set("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.set("Pragma", "no-cache");
+  res.set("Expires", "0");
+  next();
+});
+
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
     hour: "numeric",
