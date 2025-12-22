@@ -92,7 +92,7 @@ export default function CheckoutPage() {
         status: "pending",
         paymentStatus: "pending",
         paymentMethod: "COD",
-        notes: notes.trim() || undefined,
+        notes: notes.trim() || "",
       });
 
       console.log("Order created, clearing cart...");
@@ -235,20 +235,20 @@ export default function CheckoutPage() {
               <CardContent className="space-y-3">
                 {cart.map((item) => (
                   <div key={item.id} className="flex justify-between text-sm">
-                    <span className="text-slate-600">
+                    <span className="text-slate-900 font-medium">
                       {item.name} x {item.quantity}
                     </span>
-                    <span className="font-medium">{item.price * item.quantity} DA</span>
+                    <span className="font-bold text-slate-900">{item.price * item.quantity} DA</span>
                   </div>
                 ))}
-                <Separator />
-                <div className="flex justify-between text-slate-600">
+                <Separator className="bg-slate-200" />
+                <div className="flex justify-between text-slate-800 font-medium">
                   <span>Subtotal</span>
                   <span>{totalPrice} DA</span>
                 </div>
-                <div className="flex justify-between text-slate-600">
+                <div className="flex justify-between text-slate-800 font-medium">
                   <span>Delivery</span>
-                  <span className="text-green-600">Free</span>
+                  <span className="text-green-700">Free</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between text-lg font-bold">
