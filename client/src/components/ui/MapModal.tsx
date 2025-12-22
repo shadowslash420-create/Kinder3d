@@ -32,6 +32,7 @@ export function MapModal({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const [selectedLat, setSelectedLat] = useState<number | null>(clientLat || null);
   const [selectedLng, setSelectedLng] = useState<number | null>(clientLng || null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [adminLocation, setAdminLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [requestingLocation, setRequestingLocation] = useState(false);
 
@@ -43,22 +44,26 @@ export function MapModal({
     if (navigator.geolocation) {
       const timeout = setTimeout(() => {
         setRequestingLocation(false);
-      }, 2000);
+      }, 5000);
       
       navigator.geolocation.getCurrentPosition(
         (position) => {
           clearTimeout(timeout);
           setRequestingLocation(false);
-          if (mode === 'view') {
-            setAdminLocation({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            });
+          const location = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          if (mode === 'select') {
+            setUserLocation(location);
+          } else if (mode === 'view') {
+            setAdminLocation(location);
           }
         },
-        () => {
+        (error) => {
           clearTimeout(timeout);
           setRequestingLocation(false);
+          console.error('Geolocation error:', error.message);
         }
       );
     } else {
@@ -80,8 +85,8 @@ export function MapModal({
       if (!mapContainerRef.current) return;
 
       try {
-        const lat = clientLat || adminLat || adminLocation?.lat || 36.737;
-        const lng = clientLng || adminLng || adminLocation?.lng || 3.0588;
+        const lat = clientLat || adminLat || userLocation?.lat || adminLocation?.lat || 36.737;
+        const lng = clientLng || adminLng || userLocation?.lng || adminLocation?.lng || 3.0588;
 
         mapRef.current = L.map(mapContainerRef.current).setView([lat, lng], 13);
 
@@ -126,6 +131,20 @@ export function MapModal({
             .bindPopup('Selected Location');
         }
 
+        // Add user marker in select mode
+        if (userLocation && mode === 'select' && mapRef.current) {
+          L.circleMarker([userLocation.lat, userLocation.lng], {
+            radius: 10,
+            fillColor: '#3b82f6',
+            color: '#1e40af',
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.8,
+          })
+            .addTo(mapRef.current)
+            .bindPopup('Your Current Location');
+        }
+
         // Add admin marker
         if (adminLocation && mode === 'view' && mapRef.current) {
           L.circleMarker([adminLocation.lat, adminLocation.lng], {
@@ -160,7 +179,7 @@ export function MapModal({
         mapRef.current = null;
       }
     };
-  }, [open, clientLat, clientLng, selectedLat, selectedLng, adminLocation, mode, clientAddress, adminLat, adminLng]);
+  }, [open, clientLat, clientLng, selectedLat, selectedLng, userLocation, adminLocation, mode, clientAddress, adminLat, adminLng]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
