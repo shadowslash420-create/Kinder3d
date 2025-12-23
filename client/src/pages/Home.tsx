@@ -86,7 +86,7 @@ export default function Home() {
             #0f0202 100%
           )`,
           backgroundSize: '100% 600vh',
-          backgroundAttachment: 'fixed'
+          backgroundAttachment: isMobile ? 'scroll' : 'fixed'
         }}
       />
       <Navbar />

@@ -19,6 +19,8 @@ export default function Menu() {
   const { addToCart, removeFromCart, getItemQuantity, totalItems } = useCart();
   const { toast } = useToast();
   const { user } = useAuth();
+  
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   useEffect(() => {
     const unsubMenu = menuService.subscribe((items) => {
@@ -53,9 +55,11 @@ export default function Menu() {
 
   useEffect(() => {
     if (isDragging || selectedItem) return;
+    // Disable auto-rotation on mobile to reduce CPU usage
+    if (isMobile) return;
     const interval = setInterval(handleNext, 4000);
     return () => clearInterval(interval);
-  }, [handleNext, isDragging, selectedItem]);
+  }, [handleNext, isDragging, selectedItem, isMobile]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -200,14 +204,6 @@ export default function Menu() {
     return { x, z, rotateY, scale, opacity, zIndex };
   };
 
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const floatingLinesBackground = useMemo(() => 
     isMobile ? null : (

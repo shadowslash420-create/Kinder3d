@@ -10,10 +10,18 @@ interface IntroProps {
 export default function Intro({ onEnter }: IntroProps) {
   const [isExiting, setIsExiting] = useState(false);
   const [animationsReady, setAnimationsReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleEnter = () => {
     setIsExiting(true);
@@ -33,6 +41,12 @@ export default function Intro({ onEnter }: IntroProps) {
   };
 
   useEffect(() => {
+    // Skip heavy animations on mobile
+    if (isMobile) {
+      setAnimationsReady(true);
+      return;
+    }
+
     const tl = new Timeline({ autoplay: true });
 
     if (titleRef.current) {
@@ -60,8 +74,8 @@ export default function Intro({ onEnter }: IntroProps) {
           translateY: [{ from: 40, to: 0 }],
           opacity: [{ from: 0, to: 1 }],
           ease: 'outExpo',
-          duration: 800,
-          delay: stagger(40, { start: 200 })
+          duration: 600,
+          delay: stagger(30, { start: 100 })
         });
       }
 
@@ -72,9 +86,9 @@ export default function Intro({ onEnter }: IntroProps) {
           opacity: [{ from: 0, to: 1 }],
           scale: [{ from: 0.8, to: 1 }],
           ease: 'outExpo',
-          duration: 700,
-          delay: stagger(60)
-        }, '-=400');
+          duration: 500,
+          delay: stagger(40)
+        }, '-=300');
       }
     }
 
@@ -83,8 +97,8 @@ export default function Intro({ onEnter }: IntroProps) {
         translateY: [{ from: 30, to: 0 }],
         opacity: [{ from: 0, to: 1 }],
         ease: 'outExpo',
-        duration: 800
-      }, '-=400');
+        duration: 600
+      }, '-=300');
     }
 
     tl.then(() => {
@@ -100,7 +114,7 @@ export default function Intro({ onEnter }: IntroProps) {
         height: "120%",
         top: "50%",
         width: "120%",
-        duration: 300,
+        duration: 250,
         ease: 'outQuad'
       });
     };
@@ -110,7 +124,7 @@ export default function Intro({ onEnter }: IntroProps) {
         height: "4px",
         top: "100%",
         width: "100%",
-        duration: 300,
+        duration: 250,
         ease: 'outQuad'
       });
     };
@@ -122,7 +136,7 @@ export default function Intro({ onEnter }: IntroProps) {
       button.removeEventListener("mouseenter", handleMouseEnter);
       button.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <motion.div
