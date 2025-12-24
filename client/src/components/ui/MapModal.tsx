@@ -134,6 +134,7 @@ export function MapModal({
 
         // Add shop markers in view mode
         if (mode === 'view' && mapRef.current) {
+          const map = mapRef.current;
           SHOPS.forEach(shop => {
             L.marker([shop.location.lat, shop.location.lng], {
               icon: L.divIcon({
@@ -143,7 +144,7 @@ export function MapModal({
                 iconAnchor: [7, 7]
               })
             })
-            .addTo(mapRef.current)
+            .addTo(map)
             .bindPopup(`<strong>${shop.name}</strong>`);
           });
         }
