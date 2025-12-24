@@ -27,6 +27,8 @@ const CheckoutPage = lazy(() => import("@/pages/CheckoutPage"));
 const MyOrdersPage = lazy(() => import("@/pages/MyOrdersPage"));
 const StaffA = lazy(() => import("@/pages/StaffA"));
 const StaffB = lazy(() => import("@/pages/StaffB"));
+const StaffBMessages = lazy(() => import("@/pages/StaffBMessages"));
+const StaffBReviews = lazy(() => import("@/pages/StaffBReviews"));
 const UploadTest = lazy(() => import("@/pages/UploadTest"));
 
 const PageLoader = () => (
@@ -46,6 +48,8 @@ function Router() {
         <Route path="/my-orders" component={MyOrdersPage} />
         <Route path="/staff-a" component={StaffA} />
         <Route path="/staff-b" component={StaffB} />
+        <Route path="/staff-b/messages" component={StaffBMessages} />
+        <Route path="/staff-b/reviews" component={StaffBReviews} />
         <Route path="/upload" component={UploadTest} />
         <Route path="/admin" component={AdminLogin} />
         <Route path="/admin/dashboard" component={Dashboard} />
@@ -67,7 +71,7 @@ function App() {
   const isAdminRoute = location.startsWith("/admin");
   
   const pathWithoutQuery = location.split("?")[0];
-  const isStaffRoute = pathWithoutQuery === "/staff-a" || pathWithoutQuery === "/staff-b";
+  const isStaffRoute = pathWithoutQuery === "/staff-a" || pathWithoutQuery === "/staff-b" || pathWithoutQuery.startsWith("/staff-b/");
   const isCustomerRoute = ["/customer-login", "/cart", "/checkout", "/my-orders"].includes(pathWithoutQuery) || pathWithoutQuery.startsWith("/my-orders");
 
   const [hasEntered, setHasEntered] = useState(() => {
