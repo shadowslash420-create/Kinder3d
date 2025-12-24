@@ -49,6 +49,7 @@ function StaffContent() {
 
     try {
       await setDoc(doc(db, "staff", formData.email), {
+        email: formData.email,
         name: formData.name,
         role: formData.role,
         createdAt: serverTimestamp(),
