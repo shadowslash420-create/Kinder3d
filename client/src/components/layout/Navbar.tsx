@@ -35,12 +35,19 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    let scrollTimeout: NodeJS.Timeout | null = null;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        setIsScrolled(window.scrollY > 50);
+      }, 0);
     };
     
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+    };
   }, []);
 
   const navLinks = [

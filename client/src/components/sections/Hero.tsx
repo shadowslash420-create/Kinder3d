@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, Environment, ContactShadows, Sparkles } from "@react-three/drei";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
@@ -7,17 +7,19 @@ import { ArrowRight } from "lucide-react";
 import * as THREE from "three";
 import heroBg from "@assets/generated_images/luxury_chocolate_swirl_background.png";
 
-// Magnetic Button Component
+// Magnetic Button Component - Disabled on mobile for performance
 const MagneticButton = ({ children, className, ...props }: any) => {
   const ref = useRef<HTMLButtonElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const handleMouse = (e: React.MouseEvent) => {
+    if (isMobile) return;
     const { clientX, clientY } = e;
     const { height, width, left, top } = ref.current!.getBoundingClientRect();
     const middleX = clientX - (left + width / 2);
     const middleY = clientY - (top + height / 2);
-    setPosition({ x: middleX * 0.1, y: middleY * 0.1 });
+    setPosition({ x: middleX * 0.05, y: middleY * 0.05 });
   };
 
   const reset = () => {
@@ -28,7 +30,7 @@ const MagneticButton = ({ children, className, ...props }: any) => {
   return (
     <motion.div
       animate={{ x, y }}
-      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      transition={{ type: "spring", stiffness: 120, damping: 20, mass: 0.1 }}
     >
       <Button
         ref={ref}
@@ -45,11 +47,11 @@ const MagneticButton = ({ children, className, ...props }: any) => {
 
 function FloatingChocolate() {
   const meshRef = useRef<THREE.Mesh>(null);
+  const isMobile = window.innerWidth < 768;
   
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
     if (meshRef.current) {
-      // Slower, more elegant rotation
       meshRef.current.rotation.x = Math.cos(t / 8) / 10;
       meshRef.current.rotation.y = t / 10; 
       meshRef.current.position.y = (1 + Math.sin(t / 2)) / 15;
@@ -60,7 +62,6 @@ function FloatingChocolate() {
     <group rotation={[0, 0, 0.1]}>
       <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.4}>
         <group scale={1.8}>
-           {/* Chocolate Bar Base */}
           <mesh ref={meshRef}>
             <boxGeometry args={[3, 1, 0.4]} />
             <meshStandardMaterial 
@@ -70,13 +71,11 @@ function FloatingChocolate() {
               envMapIntensity={2}
             />
           </mesh>
-          {/* White creamy layer inside - subtle reveal at ends */}
           <mesh position={[1.51, 0, 0]} scale={[0.01, 0.9, 0.8]}>
             <boxGeometry args={[1, 1, 0.4]} />
             <meshStandardMaterial color="#FDFBF7" roughness={0.4} />
           </mesh>
-           {/* Gold flakes/Sparkles around */}
-           <Sparkles count={20} scale={4} size={4} speed={0.4} opacity={0.5} color="#FFD700" />
+          {!isMobile && <Sparkles count={15} scale={4} size={3} speed={0.4} opacity={0.4} color="#FFD700" />}
         </group>
       </Float>
     </group>
@@ -101,13 +100,13 @@ const letterAnimation: any = {
     opacity: 1,
     transition: {
       type: "spring",
-      damping: 12,
-      stiffness: 100,
+      damping: 15,
+      stiffness: 80,
     }
   },
   hover: {
     y: -5,
-    scale: 1.1,
+    scale: 1.05,
     color: "#FFD700",
     textShadow: "0 0 20px rgba(255, 215, 0, 0.8)",
     transition: { duration: 0.3 }
@@ -116,13 +115,14 @@ const letterAnimation: any = {
 
 export default function Hero() {
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 200]);
+  const isMobile = window.innerWidth < 768;
+  const y = useTransform(scrollY, [0, 500], [0, isMobile ? 100 : 200]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
     <section id="hero" className="relative min-h-screen w-full overflow-hidden flex items-center">
       {/* Background Image */}
-      <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
+      <motion.div style={{ y: isMobile ? 0 : y, opacity }} className="absolute inset-0 z-0">
         <img 
           src="/kinder-luxury.jpg" 
           alt="Luxury Dining Background" 

@@ -22,24 +22,31 @@ export default function Home() {
   const lenisRef = useRef<Lenis | null>(null);
   const rafIdRef = useRef<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    const handleResize = () => {
+      if (resizeTimeoutRef.current) clearTimeout(resizeTimeoutRef.current);
+      resizeTimeoutRef.current = setTimeout(checkMobile, 150);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (resizeTimeoutRef.current) clearTimeout(resizeTimeoutRef.current);
+    };
   }, []);
 
   useEffect(() => {
-    // Disable smooth scrolling on mobile entirely for better performance
     if (isMobile) return;
     
     const initLenis = () => {
       if (lenisRef.current) return;
       
       lenisRef.current = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        duration: 0.8,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -8 * t)),
         orientation: 'vertical',
         smoothWheel: true,
       });
@@ -53,9 +60,9 @@ export default function Home() {
     };
 
     if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(initLenis, { timeout: 2000 });
+      (window as any).requestIdleCallback(initLenis, { timeout: 1000 });
     } else {
-      setTimeout(initLenis, 100);
+      setTimeout(initLenis, 200);
     }
 
     return () => {

@@ -1,16 +1,24 @@
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import diningImage from "@assets/uiughuyguygyti7_210241_Maps_1766002062020.jpg";
 import GridMotion from "@/components/ui/GridMotion";
 
 export default function About() {
   const [isMobile, setIsMobile] = useState(false);
+  const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    const handleResize = () => {
+      if (resizeTimeoutRef.current) clearTimeout(resizeTimeoutRef.current);
+      resizeTimeoutRef.current = setTimeout(checkMobile, 150);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (resizeTimeoutRef.current) clearTimeout(resizeTimeoutRef.current);
+    };
   }, []);
 
   const stats = [
