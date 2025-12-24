@@ -23,16 +23,20 @@ export default function CustomerLogin() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user && !authLoading) {
+    if (user && !authLoading && role !== null) {
       // Redirect based on user role
+      console.log("Redirecting user with role:", role);
       if (role === "admin") {
         setLocation("/admin/dashboard");
       } else if (role === "staff_a") {
+        console.log("Redirecting to staff-a");
         setLocation("/staff-a");
       } else if (role === "staff_b") {
+        console.log("Redirecting to staff-b");
         setLocation("/staff-b");
       } else {
         // Regular customer
+        console.log("Redirecting to customer home");
         setLocation("/");
       }
     }
