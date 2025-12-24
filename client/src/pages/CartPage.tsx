@@ -214,11 +214,11 @@ export default function CartPage() {
                             </div>
 
                             {item.supplements && item.supplements.length > 0 && (
-                              <div className="mt-2 text-xs text-slate-600">
-                                <p className="font-medium">Supplements:</p>
+                              <div className="mt-2 text-xs text-slate-700">
+                                <p className="font-bold">Supplements:</p>
                                 <ul className="list-disc list-inside">
                                   {item.supplements.map(s => (
-                                    <li key={s.id}>{s.name} (+{s.price} DA)</li>
+                                    <li key={s.id} className="font-medium">{s.name} (+{s.price} DA)</li>
                                   ))}
                                 </ul>
                               </div>

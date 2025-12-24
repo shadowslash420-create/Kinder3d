@@ -175,10 +175,10 @@ export default function MyOrdersPage() {
                         <div className="space-y-2 mb-3">
                           {order.items.map((item, idx) => (
                             <div key={idx} className="flex justify-between text-sm">
-                              <span className="text-slate-600">
+                              <span className="text-slate-800 font-medium">
                                 {item.name} x {item.quantity}
                               </span>
-                              <span className="font-medium">{item.price * item.quantity} DA</span>
+                              <span className="font-bold text-slate-900">{item.price * item.quantity} DA</span>
                             </div>
                           ))}
                         </div>
@@ -186,24 +186,24 @@ export default function MyOrdersPage() {
                         <Separator className="my-3" />
                         
                         <div className="flex justify-between items-center">
-                          <div className="text-sm text-slate-600">
-                            <p>Payment: <span className="font-medium">{order.paymentMethod || "COD"}</span></p>
-                            <p>Status: <span className={order.paymentStatus === "paid" ? "text-green-600 font-medium" : "text-yellow-600 font-medium"}>
+                          <div className="text-sm text-slate-700">
+                            <p>Payment: <span className="font-bold text-slate-900">{order.paymentMethod || "COD"}</span></p>
+                            <p>Status: <span className={order.paymentStatus === "paid" ? "text-green-700 font-bold" : "text-amber-700 font-bold"}>
                               {order.paymentStatus === "paid" ? "Paid" : "Pending"}
                             </span></p>
                           </div>
                           <div className="text-right">
-                            <p className="text-sm text-slate-600">Total</p>
-                            <p className="text-lg font-bold text-red-600">{order.total} DA</p>
+                            <p className="text-sm text-slate-700 font-medium">Total</p>
+                            <p className="text-lg font-extrabold text-red-700">{order.total} DA</p>
                           </div>
                         </div>
 
                         {order.customerAddress && (
                           <>
                             <Separator className="my-3" />
-                            <div className="text-sm text-slate-600">
-                              <p className="font-medium text-slate-700">Delivery Address:</p>
-                              <p>{order.customerAddress}</p>
+                            <div className="text-sm text-slate-700">
+                              <p className="font-bold text-slate-800">Delivery Address:</p>
+                              <p className="font-medium">{order.customerAddress}</p>
                             </div>
                           </>
                         )}
@@ -211,9 +211,9 @@ export default function MyOrdersPage() {
                         {order.notes && (
                           <>
                             <Separator className="my-3" />
-                            <div className="text-sm text-slate-600">
-                              <p className="font-medium text-slate-700">Notes:</p>
-                              <p>{order.notes}</p>
+                            <div className="text-sm text-slate-700">
+                              <p className="font-bold text-slate-800">Notes:</p>
+                              <p className="font-medium">{order.notes}</p>
                             </div>
                           </>
                         )}

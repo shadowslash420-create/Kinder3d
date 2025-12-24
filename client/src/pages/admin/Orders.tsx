@@ -129,13 +129,13 @@ function OrdersContent() {
               <table className="w-full">
                 <thead className="bg-slate-50 border-b">
                   <tr>
-                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Order #</th>
-                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Customer</th>
-                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Items</th>
-                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Total</th>
-                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Status</th>
-                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Date</th>
-                    <th className="text-left p-4 font-medium text-slate-600 text-sm">Actions</th>
+                    <th className="text-left p-4 font-bold text-slate-800 text-sm">Order #</th>
+                    <th className="text-left p-4 font-bold text-slate-800 text-sm">Customer</th>
+                    <th className="text-left p-4 font-bold text-slate-800 text-sm">Items</th>
+                    <th className="text-left p-4 font-bold text-slate-800 text-sm">Total</th>
+                    <th className="text-left p-4 font-bold text-slate-800 text-sm">Status</th>
+                    <th className="text-left p-4 font-bold text-slate-800 text-sm">Date</th>
+                    <th className="text-left p-4 font-bold text-slate-800 text-sm">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -156,9 +156,9 @@ function OrdersContent() {
                       <tr key={order.id} className="border-b hover:bg-slate-50">
                         <td className="p-4 font-mono text-sm">{order.orderNumber}</td>
                         <td className="p-4">
-                          <div className="text-sm font-medium">{order.customerName}</div>
-                          <div className="text-xs text-slate-500">{order.customerPhone}</div>
-                          <div className="text-xs text-slate-400 mt-1 max-w-[200px] truncate" title={order.customerAddress}>
+                          <div className="text-sm font-bold text-slate-900">{order.customerName}</div>
+                          <div className="text-xs text-slate-700 font-medium">{order.customerPhone}</div>
+                          <div className="text-xs text-slate-600 mt-1 max-w-[200px] truncate font-medium" title={order.customerAddress}>
                             {order.customerAddress}
                           </div>
                         </td>
@@ -253,24 +253,24 @@ function OrdersContent() {
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 <div>
-                  <p className="text-xs md:text-sm text-slate-500">Customer</p>
-                  <p className="font-medium text-sm md:text-base">{selectedOrder.customerName}</p>
+                  <p className="text-xs md:text-sm text-slate-600 font-bold">Customer</p>
+                  <p className="font-bold text-sm md:text-base text-slate-900">{selectedOrder.customerName}</p>
                 </div>
                 <div>
-                  <p className="text-xs md:text-sm text-slate-500">Phone</p>
-                  <p className="font-medium text-sm md:text-base">{selectedOrder.customerPhone || "-"}</p>
+                  <p className="text-xs md:text-sm text-slate-600 font-bold">Phone</p>
+                  <p className="font-bold text-sm md:text-base text-slate-900">{selectedOrder.customerPhone || "-"}</p>
                 </div>
                 <div className="md:col-span-2">
-                  <p className="text-xs md:text-sm text-slate-500">Delivery Address</p>
-                  <p className="font-medium text-sm md:text-base bg-slate-50 p-2 rounded border">{selectedOrder.customerAddress || "-"}</p>
+                  <p className="text-xs md:text-sm text-slate-600 font-bold">Delivery Address</p>
+                  <p className="font-bold text-sm md:text-base bg-slate-50 p-2 rounded border text-slate-900">{selectedOrder.customerAddress || "-"}</p>
                 </div>
                 <div>
-                  <p className="text-xs md:text-sm text-slate-500">Email</p>
-                  <p className="font-medium text-sm md:text-base break-all">{selectedOrder.email || "-"}</p>
+                  <p className="text-xs md:text-sm text-slate-600 font-bold">Email</p>
+                  <p className="font-bold text-sm md:text-base break-all text-slate-900">{selectedOrder.email || "-"}</p>
                 </div>
                 <div>
-                  <p className="text-xs md:text-sm text-slate-500">Date</p>
-                  <p className="font-medium text-sm md:text-base">
+                  <p className="text-xs md:text-sm text-slate-600 font-bold">Date</p>
+                  <p className="font-bold text-sm md:text-base text-slate-900">
                     {selectedOrder.createdAt.toLocaleString()}
                   </p>
                 </div>
