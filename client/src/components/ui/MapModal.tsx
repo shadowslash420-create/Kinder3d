@@ -3,7 +3,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { MapPin, Navigation } from 'lucide-react';
+import { MapPin, Navigation, Store } from 'lucide-react';
+import { SHOPS } from '@/lib/shopLogic';
 
 interface MapModalProps {
   open: boolean;
@@ -119,16 +120,32 @@ export function MapModal({
 
         // Add selected marker
         if (selectedLat && selectedLng && mode === 'select' && mapRef.current) {
-          L.circleMarker([selectedLat, selectedLng], {
-            radius: 8,
-            fillColor: '#ef4444',
-            color: '#991b1b',
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.8,
+          L.marker([selectedLat, selectedLng], {
+            icon: L.divIcon({
+              className: 'custom-div-icon',
+              html: `<div style="background-color: #ef4444; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.3);"></div>`,
+              iconSize: [12, 12],
+              iconAnchor: [6, 6]
+            })
           })
             .addTo(mapRef.current)
-            .bindPopup('Selected Location');
+            .bindPopup('Selected Delivery Location');
+        }
+
+        // Add shop markers in view mode
+        if (mode === 'view' && mapRef.current) {
+          SHOPS.forEach(shop => {
+            L.marker([shop.location.lat, shop.location.lng], {
+              icon: L.divIcon({
+                className: 'shop-icon',
+                html: `<div style="background-color: #3b82f6; width: 14px; height: 14px; border-radius: 2px; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.3);"></div>`,
+                iconSize: [14, 14],
+                iconAnchor: [7, 7]
+              })
+            })
+            .addTo(mapRef.current)
+            .bindPopup(`<strong>${shop.name}</strong>`);
+          });
         }
 
         // Add user marker in select mode

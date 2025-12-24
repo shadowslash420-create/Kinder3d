@@ -274,6 +274,15 @@ function OrdersContent() {
                     {selectedOrder.createdAt.toLocaleString()}
                   </p>
                 </div>
+                {selectedOrder.assignedShopName && (
+                  <div className="md:col-span-2 p-3 bg-blue-50 border border-blue-100 rounded-lg">
+                    <p className="text-xs text-blue-600 font-semibold uppercase tracking-wider">Assigned Logistics</p>
+                    <div className="flex justify-between items-center mt-1">
+                      <p className="font-bold text-blue-900">{selectedOrder.assignedShopName}</p>
+                      <p className="text-sm font-medium text-blue-700">{selectedOrder.distanceKm?.toFixed(2)} km away</p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div>

@@ -12,6 +12,7 @@ import { useCart } from "@/context/CartContext";
 import { orderService, generateOrderNumber, type OrderItem } from "@/lib/firebase";
 import { ArrowLeft, MapPin, Phone, User, FileText, CreditCard, Map } from "lucide-react";
 import { MapModal } from "@/components/ui/MapModal";
+import { getNearestShop } from "@/lib/shopLogic";
 
 export default function CheckoutPage() {
   const [, setLocation] = useLocation();
@@ -81,6 +82,16 @@ export default function CheckoutPage() {
 
       const orderNumber = generateOrderNumber();
 
+      let shopInfo = {};
+      if (customerLat && customerLng) {
+        const nearest = getNearestShop({ lat: customerLat, lng: customerLng });
+        shopInfo = {
+          assignedShopId: nearest.shop.id,
+          assignedShopName: nearest.shop.name,
+          distanceKm: nearest.distanceKm
+        };
+      }
+
       console.log("Creating order in Firebase...");
       await orderService.create({
         orderNumber,
@@ -89,6 +100,7 @@ export default function CheckoutPage() {
         customerAddress: customerAddress.trim(),
         customerLat,
         customerLng,
+        ...shopInfo,
         email: user.email || undefined,
         userId: user.uid,
         items: orderItems,
