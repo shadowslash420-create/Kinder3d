@@ -12,7 +12,7 @@ export const SHOPS = [
   {
     id: "shop_4",
     name: "Creperie Kinder 4",
-    location: { lat: 35.5701, lng: 6.1917 }
+    location: { lat: 35.5418, lng: 6.1565 }
   }
 ];
 
