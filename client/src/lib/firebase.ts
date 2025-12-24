@@ -160,6 +160,29 @@ export async function getUserRole(user: User): Promise<UserRole> {
   return "customer";
 }
 
+export async function getStaffRoleByEmail(email: string): Promise<{ role: UserRole; staffData?: any } | null> {
+  if (email === ADMIN_EMAIL) {
+    return { role: "admin" };
+  }
+  
+  try {
+    const staffDoc = await getDoc(doc(db, "staff", email));
+    if (staffDoc.exists()) {
+      const staffData = staffDoc.data();
+      let role: UserRole = "customer";
+      
+      if (staffData.role === "Staff A") role = "staff_a";
+      if (staffData.role === "Staff B") role = "staff_b";
+      
+      return { role, staffData };
+    }
+    return null;
+  } catch (error) {
+    console.error(`Error fetching staff role for ${email}:`, error);
+    return null;
+  }
+}
+
 export function signInWithGoogle() {
   // Force account selection every time to allow switching between Gmail accounts
   googleProvider.setCustomParameters({ prompt: 'select_account' });
