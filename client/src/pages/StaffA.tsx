@@ -6,13 +6,15 @@ import { LogOut, Home, Package, Clock, AlertCircle, CheckCircle } from "lucide-r
 
 export default function StaffA() {
   const [, setLocation] = useLocation();
-  const { user, role, logout } = useAuth();
+  const { user, role, logout, loading } = useAuth();
 
   useEffect(() => {
-    if (role !== "staff_a") {
+    console.log("StaffA - Current role:", role, "Loading:", loading, "User:", user?.email);
+    if (!loading && role !== "staff_a") {
+      console.log("Redirecting - role is not staff_a");
       setLocation("/");
     }
-  }, [role, setLocation]);
+  }, [role, setLocation, loading]);
 
   const handleLogout = async () => {
     await logout();
