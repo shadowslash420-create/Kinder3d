@@ -151,10 +151,24 @@ export async function getUserRole(user: User): Promise<UserRole> {
   }
   
   const staffDoc = await getDoc(doc(db, "staff", user.email!));
+  console.log("Staff doc lookup for", user.email, "- Exists:", staffDoc.exists());
+  
   if (staffDoc.exists()) {
     const staffData = staffDoc.data();
-    if (staffData.role === "Staff A") return "staff_a";
-    if (staffData.role === "Staff B") return "staff_b";
+    console.log("Staff data:", staffData);
+    console.log("Role value:", staffData.role, "Type:", typeof staffData.role);
+    
+    if (staffData.role === "Staff A") {
+      console.log("Matched Staff A - returning staff_a");
+      return "staff_a";
+    }
+    if (staffData.role === "Staff B") {
+      console.log("Matched Staff B - returning staff_b");
+      return "staff_b";
+    }
+    console.log("No role match found, returning customer");
+  } else {
+    console.log("No staff document found for", user.email);
   }
   
   return "customer";
