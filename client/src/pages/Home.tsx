@@ -45,6 +45,7 @@ export default function Home() {
   
   useEffect(() => {
     if (user && "Notification" in window) {
+      console.log("Notification check - Current permission:", Notification.permission);
       if (Notification.permission === "default") {
         const timer = setTimeout(() => {
           handleEnableNotifications();
