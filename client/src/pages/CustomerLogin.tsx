@@ -117,9 +117,11 @@ export default function CustomerLogin() {
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-      await signInWithGoogle();
+      const result = await signInWithGoogle();
+      console.log("Google login success for customer, result:", result);
       toast({ title: "Welcome!", description: "You have been logged in successfully." });
     } catch (error: any) {
+      console.error("Google login error:", error);
       toast({ title: "Login Failed", description: error.message, variant: "destructive" });
     } finally {
       setLoading(false);

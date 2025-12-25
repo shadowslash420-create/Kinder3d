@@ -19,17 +19,18 @@ export default function AdminLogin() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        console.log("AdminLogin: Auth state changed, user found:", user.email);
         const role = await getUserRole(user);
+        console.log("AdminLogin: Detected role:", role);
         if (role === "admin") {
           setLocation("/admin/dashboard");
         } else if (role === "staff_a") {
           setLocation("/staff-a");
         } else if (role === "staff_b") {
           setLocation("/staff-b");
-        } else if (!role) {
-          // Customer trying to access admin - stay on login
-          setCheckingAuth(false);
-          return;
+        } else if (role === "customer") {
+          console.log("AdminLogin: Customer redirected to home");
+          setLocation("/");
         }
       }
       setCheckingAuth(false);
