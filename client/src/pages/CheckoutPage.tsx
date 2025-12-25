@@ -121,7 +121,8 @@ export default function CheckoutPage() {
         description: `Your order #${orderNumber} has been received. We'll contact you soon.`
       });
 
-      setLocation(`/my-orders?new=${orderNumber}`);
+      // Force navigation to My Orders
+      window.location.href = `/my-orders?new=${orderNumber}`;
     } catch (error: any) {
       console.error("Order error detail:", error);
       toast({ 

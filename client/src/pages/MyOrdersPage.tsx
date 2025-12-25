@@ -41,23 +41,33 @@ export default function MyOrdersPage() {
   };
 
   useEffect(() => {
+    // Check if we need to redirect if not loaded in a reasonable time
+    const timer = setTimeout(() => {
+      if (loading && orders.length === 0) {
+        console.log("Order loading timeout, checking if user has orders via direct query");
+      }
+    }, 5000);
+    
     if (!user) return;
 
     console.log("Fetching orders for user:", user.uid, "email:", user.email);
     
-    // Try the dual method first, but fall back if it fails
-    let unsubscribe = orderService.subscribeToUserOrdersByEmailAndId(
+    // Use the combined subscription for real-time updates
+    const unsubscribe = orderService.subscribeToUserOrdersByEmailAndId(
       user.uid, 
-      user.email, 
+      user.email || null, 
       (userOrders) => {
-        console.log("Orders fetched via dual method:", userOrders.length);
+        console.log("Orders fetched:", userOrders.length);
         setOrders(userOrders);
         setLoading(false);
       }
     );
 
-    return () => unsubscribe && unsubscribe();
-  }, [user]);
+    return () => {
+      clearTimeout(timer);
+      unsubscribe && unsubscribe();
+    };
+  }, [user, setLocation]);
 
   useEffect(() => {
     if (!user?.email) return;
