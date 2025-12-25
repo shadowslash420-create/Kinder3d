@@ -53,6 +53,7 @@ export const orders = pgTable("orders", {
   status: text("status").notNull().default("pending"),
   paymentStatus: text("payment_status").default("pending"),
   paymentMethod: text("payment_method"),
+  userId: text("user_id"),
   notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

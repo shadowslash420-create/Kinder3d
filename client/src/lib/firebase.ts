@@ -15,9 +15,12 @@ if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.proj
   throw new Error("Missing Firebase configuration. Please set FIREBASE_* environment variables in your Replit Secrets.");
 }
 
+import { getMessaging } from "firebase/messaging";
+
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const messaging = getMessaging(app);
 export const googleProvider = new GoogleAuthProvider();
 
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || "oussamaanis2005@gmail.com";

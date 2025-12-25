@@ -50,10 +50,56 @@ function requireAdmin(req: Request, res: Response, next: NextFunction) {
   next();
 }
 
+import { adminDb, sendPushNotification } from "./firebase-admin";
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  // FCM Token Registration
+  app.post("/api/notifications/register", async (req, res) => {
+    try {
+      const { userId, role, token } = req.body;
+      if (!userId || !token) return res.status(400).json({ error: "Missing userId or token" });
+      
+      const tokenRef = adminDb.collection("fcm_tokens").doc(token);
+      await tokenRef.set({
+        userId,
+        role: role || "client",
+        token,
+        updatedAt: new Date(),
+      });
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Token registration error:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Helper to notify admins and staff
+  async function notifyStaff(title: string, body: string, url: string) {
+    const snapshot = await adminDb.collection("fcm_tokens")
+      .where("role", "in", ["admin", "staff_a", "staff_b"])
+      .get();
+    
+    const tokens = snapshot.docs.map(doc => doc.data().token);
+    if (tokens.length > 0) {
+      await sendPushNotification({ tokens, title, body, url });
+    }
+  }
+
+  // Helper to notify client
+  async function notifyClient(userId: string, title: string, body: string, url: string) {
+    const snapshot = await adminDb.collection("fcm_tokens")
+      .where("userId", "==", userId)
+      .get();
+    
+    const tokens = snapshot.docs.map(doc => doc.data().token);
+    if (tokens.length > 0) {
+      await sendPushNotification({ tokens, title, body, url });
+    }
+  }
   app.use(
     session({
       secret: SESSION_SECRET,
@@ -288,6 +334,17 @@ export async function registerRoutes(
       if (!parsed.success) return res.status(400).json({ error: parsed.error.message });
       const order = await storage.updateOrder(req.params.id, parsed.data);
       if (!order) return res.status(404).json({ error: "Order not found" });
+
+      // Notify client about status update
+      if (parsed.data.status && order.userId) {
+        notifyClient(
+          order.userId,
+          "Order Update",
+          `Your order #${order.orderNumber} is now ${parsed.data.status}`,
+          "/orders"
+        ).catch(err => console.error("Notification error:", err));
+      }
+
       res.json(order);
     } catch (error) {
       res.status(500).json({ error: "Failed to update order" });
@@ -299,6 +356,13 @@ export async function registerRoutes(
       const parsed = insertOrderSchema.safeParse(req.body);
       if (!parsed.success) return res.status(400).json({ error: parsed.error.message });
       const order = await storage.createOrder(parsed.data);
+      // Notify admins/staff about new order
+      notifyStaff(
+        "New Order Received!",
+        `Order #${order.orderNumber} from ${order.customerName}`,
+        "/admin/orders"
+      ).catch(err => console.error("Notification error:", err));
+      
       res.status(201).json(order);
     } catch (error) {
       res.status(500).json({ error: "Failed to create order" });

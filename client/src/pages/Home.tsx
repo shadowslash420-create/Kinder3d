@@ -5,6 +5,10 @@ import GradientDivider from "@/components/ui/GradientDivider";
 import { lazy, Suspense, useEffect, useRef } from "react";
 import Lenis from "lenis";
 import { useState } from "react";
+import { requestNotificationPermission } from "@/lib/notifications";
+import { useAuth } from "@/context/AuthContext";
+import { Button } from "@/components/ui/button";
+import { Bell } from "lucide-react";
 
 const About = lazy(() => import("@/components/sections/About"));
 const Menu = lazy(() => import("@/components/sections/Menu"));
@@ -19,10 +23,17 @@ const SectionLoader = () => (
 );
 
 export default function Home() {
+  const { user, role } = useAuth();
   const lenisRef = useRef<Lenis | null>(null);
   const rafIdRef = useRef<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleEnableNotifications = async () => {
+    if (user) {
+      await requestNotificationPermission(user.uid, role || "customer");
+    }
+  };
   
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -98,6 +109,17 @@ export default function Home() {
       />
       <Navbar />
       <main className="relative z-10">
+        <div className="fixed top-24 right-4 z-50">
+          <Button 
+            onClick={handleEnableNotifications}
+            variant="outline" 
+            size="sm"
+            className="bg-background/80 backdrop-blur-sm border-primary/20 hover:border-primary text-xs"
+          >
+            <Bell className="w-3 h-3 mr-2" />
+            Enable Push
+          </Button>
+        </div>
         <Hero />
         <GradientDivider fromColor="#0f0202" toColor="#1a0505" height="h-24" />
         <Suspense fallback={<SectionLoader />}>
