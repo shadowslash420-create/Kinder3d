@@ -1,6 +1,33 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, type User } from "firebase/auth";
-import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, setDoc, query, where, orderBy, onSnapshot, serverTimestamp, type DocumentData, Timestamp } from "firebase/firestore";
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  signInWithRedirect, 
+  getRedirectResult, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged, 
+  type User 
+} from "firebase/auth";
+import { 
+  getFirestore, 
+  collection, 
+  doc, 
+  getDoc, 
+  getDocs, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  setDoc, 
+  query, 
+  where, 
+  orderBy, 
+  onSnapshot, 
+  serverTimestamp, 
+  Timestamp 
+} from "firebase/firestore";
 import { getMessaging } from "firebase/messaging";
 
 const firebaseConfig = {
@@ -175,24 +202,10 @@ export async function getUserRole(user: User): Promise<UserRole> {
   }
   
   const staffDoc = await getDoc(doc(db, "staff", user.email!));
-  console.log("Staff doc lookup for", user.email, "- Exists:", staffDoc.exists());
-  
   if (staffDoc.exists()) {
     const staffData = staffDoc.data();
-    console.log("Staff data:", staffData);
-    console.log("Role value:", staffData.role, "Type:", typeof staffData.role);
-    
-    if (staffData.role === "Staff A") {
-      console.log("Matched Staff A - returning staff_a");
-      return "staff_a";
-    }
-    if (staffData.role === "Staff B") {
-      console.log("Matched Staff B - returning staff_b");
-      return "staff_b";
-    }
-    console.log("No role match found, returning customer");
-  } else {
-    console.log("No staff document found for", user.email);
+    if (staffData.role === "Staff A") return "staff_a";
+    if (staffData.role === "Staff B") return "staff_b";
   }
   
   return "customer";
@@ -208,43 +221,13 @@ export async function getStaffRoleByEmail(email: string): Promise<{ role: UserRo
     if (staffDoc.exists()) {
       const staffData = staffDoc.data();
       let role: UserRole = "customer";
-      
       if (staffData.role === "Staff A") role = "staff_a";
       if (staffData.role === "Staff B") role = "staff_b";
-      
       return { role, staffData };
     }
     return null;
   } catch (error) {
     console.error(`Error fetching staff role for ${email}:`, error);
-    return null;
-  }
-}
-
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, type User } from "firebase/auth";
-
-// ... keep config ...
-
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: 'select_account' });
-
-export function signInWithGoogle() {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if (isMobile) {
-    return signInWithRedirect(auth, googleProvider);
-  }
-  return signInWithPopup(auth, googleProvider);
-}
-
-// Add this to handle redirect results
-export async function handleRedirectResult() {
-  try {
-    const result = await getRedirectResult(auth);
-    return result;
-  } catch (error) {
-    console.error("Error getting redirect result:", error);
     return null;
   }
 }
@@ -298,20 +281,13 @@ export const menuService = {
   },
   
   async update(id: string, item: Partial<MenuItem>): Promise<void> {
-    try {
-      console.log("Updating menu item:", id, item);
-      const cleanedItem: Record<string, any> = { updatedAt: serverTimestamp() };
-      for (const [key, value] of Object.entries(item)) {
-        if (value !== undefined) {
-          cleanedItem[key] = value;
-        }
+    const cleanedItem: Record<string, any> = { updatedAt: serverTimestamp() };
+    for (const [key, value] of Object.entries(item)) {
+      if (value !== undefined) {
+        cleanedItem[key] = value;
       }
-      await updateDoc(doc(db, "menu", id), cleanedItem);
-      console.log("Menu item updated successfully");
-    } catch (error: any) {
-      console.error("Error updating menu item:", error.code, error.message);
-      throw error;
     }
+    await updateDoc(doc(db, "menu", id), cleanedItem);
   },
   
   async delete(id: string): Promise<void> {
@@ -319,16 +295,13 @@ export const menuService = {
   },
   
   subscribe(callback: (items: MenuItem[]) => void) {
-    console.log("Subscribing to menu collection...");
     return onSnapshot(collection(db, "menu"), (snapshot) => {
-      console.log("Menu snapshot received, count:", snapshot.docs.length);
       const items = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
         createdAt: convertTimestamp(doc.data().createdAt),
         updatedAt: convertTimestamp(doc.data().updatedAt),
       })) as MenuItem[];
-      console.log("Available items after filtering:", items.filter(i => i.isAvailable).length);
       callback(items);
     }, (error) => {
       console.error("Error fetching menu items:", error);
@@ -365,21 +338,13 @@ export const categoryService = {
   },
   
   async update(id: string, category: Partial<Category>): Promise<void> {
-    try {
-      console.log("Updating category:", id, category);
-      const cleanedCategory: Record<string, any> = { updatedAt: serverTimestamp() };
-      for (const [key, value] of Object.entries(category)) {
-        if (value !== undefined && key !== "id" && key !== "createdAt" && key !== "updatedAt") {
-          cleanedCategory[key] = value;
-        }
+    const cleanedCategory: Record<string, any> = { updatedAt: serverTimestamp() };
+    for (const [key, value] of Object.entries(category)) {
+      if (value !== undefined && key !== "id" && key !== "createdAt" && key !== "updatedAt") {
+        cleanedCategory[key] = value;
       }
-      console.log("Cleaned category data:", cleanedCategory);
-      await updateDoc(doc(db, "categories", id), cleanedCategory);
-      console.log("Category updated successfully");
-    } catch (error: any) {
-      console.error("Error updating category:", error.code, error.message, error);
-      throw error;
     }
+    await updateDoc(doc(db, "categories", id), cleanedCategory);
   },
   
   async delete(id: string): Promise<void> {
@@ -387,9 +352,7 @@ export const categoryService = {
   },
   
   subscribe(callback: (categories: Category[]) => void) {
-    console.log("Subscribing to categories collection...");
     return onSnapshot(collection(db, "categories"), (snapshot) => {
-      console.log("Categories snapshot received, count:", snapshot.docs.length);
       const categories = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
@@ -448,25 +411,18 @@ export const orderService = {
   },
   
   async create(order: Omit<Order, "id" | "createdAt" | "updatedAt">): Promise<string> {
-    try {
-      console.log("Firebase createOrder - data:", order);
-      const cleanedOrder: Record<string, any> = {};
-      for (const [key, value] of Object.entries(order)) {
-        if (value !== undefined) {
-          cleanedOrder[key] = value;
-        }
+    const cleanedOrder: Record<string, any> = {};
+    for (const [key, value] of Object.entries(order)) {
+      if (value !== undefined) {
+        cleanedOrder[key] = value;
       }
-      const docRef = await addDoc(collection(db, "orders"), {
-        ...cleanedOrder,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-      console.log("Firebase createOrder - success, ID:", docRef.id);
-      return docRef.id;
-    } catch (error: any) {
-      console.error("Firebase createOrder - ERROR:", error.code, error.message);
-      throw error;
     }
+    const docRef = await addDoc(collection(db, "orders"), {
+      ...cleanedOrder,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return docRef.id;
   },
   
   async update(id: string, order: Partial<Order>): Promise<void> {
@@ -489,7 +445,6 @@ export const orderService = {
         createdAt: convertTimestamp(doc.data().createdAt),
         updatedAt: convertTimestamp(doc.data().updatedAt),
       })) as Order[];
-      // Explicitly sort just in case orderBy is failing due to missing index
       const sortedOrders = [...orders].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
       callback(sortedOrders);
     }, (error) => {
@@ -522,8 +477,7 @@ export const orderService = {
     const unsubscribers: (() => void)[] = [];
     const userIdOrders = new Map<string, Order>();
     const emailOrders = new Map<string, Order>();
-    let initialLoadComplete = { byUserId: false, byEmail: !email, fallback: false };
-    let useFallback = false;
+    let initialLoadComplete = { byUserId: false, byEmail: !email };
 
     const mergeAndCallback = () => {
       if (initialLoadComplete.byUserId && initialLoadComplete.byEmail) {
@@ -533,19 +487,13 @@ export const orderService = {
         
         const allOrders = Array.from(mergedMap.values());
         allOrders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        console.log("Merged orders count:", allOrders.length, "useFallback:", useFallback);
         callback(allOrders);
       }
     };
 
-    // Try userId query without orderBy first (doesn't require composite index)
     try {
-      const userIdQuery = query(
-        collection(db, "orders"),
-        where("userId", "==", userId)
-      );
+      const userIdQuery = query(collection(db, "orders"), where("userId", "==", userId));
       unsubscribers.push(onSnapshot(userIdQuery, (snapshot) => {
-        console.log("UserId query snapshot received:", snapshot.docs.length, "docs");
         userIdOrders.clear();
         snapshot.docs.forEach(doc => {
           userIdOrders.set(doc.id, {
@@ -557,26 +505,16 @@ export const orderService = {
         });
         initialLoadComplete.byUserId = true;
         mergeAndCallback();
-      }, (error) => {
-        console.error("Error fetching user orders by userId:", error);
-        initialLoadComplete.byUserId = true;
-        mergeAndCallback();
       }));
     } catch (e) {
-      console.error("Exception in userId query:", e);
       initialLoadComplete.byUserId = true;
       mergeAndCallback();
     }
 
-    // Try email query if provided
     if (email) {
       try {
-        const emailQuery = query(
-          collection(db, "orders"),
-          where("email", "==", email)
-        );
+        const emailQuery = query(collection(db, "orders"), where("email", "==", email));
         unsubscribers.push(onSnapshot(emailQuery, (snapshot) => {
-          console.log("Email query snapshot received:", snapshot.docs.length, "docs");
           emailOrders.clear();
           snapshot.docs.forEach(doc => {
             emailOrders.set(doc.id, {
@@ -588,35 +526,14 @@ export const orderService = {
           });
           initialLoadComplete.byEmail = true;
           mergeAndCallback();
-        }, (error) => {
-          console.error("Error fetching user orders by email:", error);
-          initialLoadComplete.byEmail = true;
-          mergeAndCallback();
         }));
       } catch (e) {
-        console.error("Exception in email query:", e);
         initialLoadComplete.byEmail = true;
         mergeAndCallback();
       }
     }
 
-    return () => {
-      unsubscribers.forEach(unsub => unsub());
-    };
-  },
-
-  async linkExistingOrdersToUser(userId: string, email: string): Promise<number> {
-    const emailOrders = await this.getByEmail(email);
-    let linkedCount = 0;
-    
-    for (const order of emailOrders) {
-      if (!order.userId || order.userId !== userId) {
-        await this.update(order.id, { userId });
-        linkedCount++;
-      }
-    }
-    
-    return linkedCount;
+    return () => unsubscribers.forEach(unsub => unsub());
   }
 };
 
@@ -695,14 +612,12 @@ export const reviewService = {
   },
   
   async setTopRated(id: string, isTopRated: boolean): Promise<void> {
-    // Remove top rated from all reviews first
     const allReviews = await this.getAll();
     for (const review of allReviews) {
       if (review.isTopRated) {
         await updateDoc(doc(db, "reviews", review.id), { isTopRated: false });
       }
     }
-    // Set the new top rated review
     await updateDoc(doc(db, "reviews", id), { isTopRated });
   },
   
@@ -723,7 +638,6 @@ export const reviewService = {
   },
   
   subscribeToApproved(callback: (reviews: Review[]) => void) {
-    // Subscribe to all reviews and filter approved ones client-side to avoid needing composite index
     const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"));
     return onSnapshot(q, (snapshot) => {
       const reviews = snapshot.docs
@@ -732,7 +646,6 @@ export const reviewService = {
           ...doc.data(),
           createdAt: convertTimestamp(doc.data().createdAt),
         })) as Review[];
-      // Filter approved reviews client-side
       const approvedReviews = reviews.filter(r => r.isApproved);
       callback(approvedReviews);
     }, (error) => {
@@ -741,160 +654,5 @@ export const reviewService = {
     });
   }
 };
-
-export const contactService = {
-  async getAll(): Promise<ContactMessage[]> {
-    const q = query(collection(db, "contact_messages"), orderBy("createdAt", "desc"));
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: convertTimestamp(doc.data().createdAt),
-    })) as ContactMessage[];
-  },
-  
-  async create(message: Omit<ContactMessage, "id" | "createdAt" | "isRead" | "isResolved">): Promise<string> {
-    const docRef = await addDoc(collection(db, "contact_messages"), {
-      ...message,
-      isRead: false,
-      isResolved: false,
-      createdAt: serverTimestamp(),
-    });
-    return docRef.id;
-  },
-  
-  async markAsRead(id: string): Promise<void> {
-    await updateDoc(doc(db, "contact_messages", id), { isRead: true });
-  },
-  
-  async markAsResolved(id: string): Promise<void> {
-    await updateDoc(doc(db, "contact_messages", id), { isResolved: true });
-  },
-  
-  async delete(id: string): Promise<void> {
-    await deleteDoc(doc(db, "contact_messages", id));
-  },
-  
-  subscribe(callback: (messages: ContactMessage[]) => void) {
-    const q = query(collection(db, "contact_messages"), orderBy("createdAt", "desc"));
-    return onSnapshot(q, (snapshot) => {
-      const messages = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: convertTimestamp(doc.data().createdAt),
-      })) as ContactMessage[];
-      callback(messages);
-    });
-  }
-};
-
-export const staffService = {
-  async getAll(): Promise<StaffMember[]> {
-    const snapshot = await getDocs(collection(db, "staff"));
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      email: doc.id,
-      ...doc.data(),
-      createdAt: convertTimestamp(doc.data().createdAt),
-    })) as StaffMember[];
-  },
-  
-  async create(staff: { email: string; name: string; role: "Staff A" | "Staff B" }): Promise<void> {
-    await updateDoc(doc(db, "staff", staff.email), {
-      name: staff.name,
-      role: staff.role,
-      createdAt: serverTimestamp(),
-    }).catch(() => {
-      return addDoc(collection(db, "staff"), {
-        ...staff,
-        createdAt: serverTimestamp(),
-      });
-    });
-  },
-  
-  async update(email: string, data: { name?: string; role?: "Staff A" | "Staff B" }): Promise<void> {
-    await updateDoc(doc(db, "staff", email), data);
-  },
-  
-  async delete(email: string): Promise<void> {
-    await deleteDoc(doc(db, "staff", email));
-  },
-  
-  subscribe(callback: (staff: StaffMember[]) => void) {
-    return onSnapshot(collection(db, "staff"), (snapshot) => {
-      const staff = snapshot.docs.map(doc => ({
-        id: doc.id,
-        email: doc.id,
-        ...doc.data(),
-        createdAt: convertTimestamp(doc.data().createdAt),
-      })) as StaffMember[];
-      callback(staff);
-    });
-  }
-};
-
-export const settingsService = {
-  async get(key: string): Promise<any> {
-    const docRef = await getDoc(doc(db, "settings", key));
-    if (!docRef.exists()) return null;
-    return docRef.data().value;
-  },
-  
-  async set(key: string, value: any): Promise<void> {
-    await updateDoc(doc(db, "settings", key), { value }).catch(() => {
-      return addDoc(collection(db, "settings"), { key, value });
-    });
-  }
-};
-
-export const supplementService = {
-  async getAll(): Promise<Supplement[]> {
-    const snapshot = await getDocs(collection(db, "supplements"));
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: convertTimestamp(doc.data().createdAt),
-      updatedAt: convertTimestamp(doc.data().updatedAt),
-    })) as Supplement[];
-  },
-  
-  async create(supplement: Omit<Supplement, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
-    const docRef = await addDoc(collection(db, "supplements"), {
-      ...supplement,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    });
-    return docRef.id;
-  },
-  
-  async update(id: string, data: Partial<Omit<Supplement, 'id' | 'createdAt' | 'updatedAt'>>): Promise<void> {
-    await updateDoc(doc(db, "supplements", id), {
-      ...data,
-      updatedAt: serverTimestamp(),
-    });
-  },
-  
-  async delete(id: string): Promise<void> {
-    await deleteDoc(doc(db, "supplements", id));
-  },
-  
-  subscribe(callback: (supplements: Supplement[]) => void) {
-    return onSnapshot(collection(db, "supplements"), (snapshot) => {
-      const supplements = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: convertTimestamp(doc.data().createdAt),
-        updatedAt: convertTimestamp(doc.data().updatedAt),
-      })) as Supplement[];
-      callback(supplements);
-    });
-  }
-};
-
-export function generateOrderNumber(): string {
-  const timestamp = Date.now().toString(36).toUpperCase();
-  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-  return `ORD-${timestamp}-${random}`;
-}
 
 export { onAuthStateChanged, type User };
