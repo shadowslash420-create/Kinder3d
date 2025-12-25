@@ -29,11 +29,29 @@ export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const [notificationStatus, setNotificationStatus] = useState<"idle" | "requesting" | "enabled" | "denied">("idle");
+
   const handleEnableNotifications = async () => {
     if (user) {
-      await requestNotificationPermission(user.uid, role || "customer");
+      setNotificationStatus("requesting");
+      const token = await requestNotificationPermission(user.uid, role || "customer");
+      if (token) {
+        setNotificationStatus("enabled");
+      } else {
+        setNotificationStatus("denied");
+      }
     }
   };
+  
+  useEffect(() => {
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        setNotificationStatus("enabled");
+      } else if (Notification.permission === "denied") {
+        setNotificationStatus("denied");
+      }
+    }
+  }, []);
   
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -114,10 +132,15 @@ export default function Home() {
             onClick={handleEnableNotifications}
             variant="outline" 
             size="sm"
-            className="bg-background/80 backdrop-blur-sm border-primary/20 hover:border-primary text-xs"
+            className={`bg-background/80 backdrop-blur-sm border-primary/20 hover:border-primary text-xs ${
+              notificationStatus === "enabled" ? "text-green-500 border-green-500" : ""
+            }`}
+            disabled={notificationStatus === "enabled" || notificationStatus === "requesting"}
           >
             <Bell className="w-3 h-3 mr-2" />
-            Enable Push
+            {notificationStatus === "enabled" ? "Notifications Enabled" : 
+             notificationStatus === "requesting" ? "Requesting..." :
+             notificationStatus === "denied" ? "Permission Denied" : "Enable Push"}
           </Button>
         </div>
         <Hero />
