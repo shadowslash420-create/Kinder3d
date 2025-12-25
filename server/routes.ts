@@ -69,7 +69,7 @@ export async function registerRoutes(
         token,
         updatedAt: new Date(),
       });
-      
+      cek7
       res.json({ success: true });
     } catch (error) {
       console.error("Token registration error:", error);
