@@ -4,14 +4,28 @@ import { getFirestore } from "firebase-admin/firestore";
 
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || "{}");
 
-export const firebaseAdmin = getApps().length > 0 
-  ? getApp() 
-  : initializeApp({
-      credential: cert(serviceAccount),
-    });
+let firebaseAdmin: ReturnType<typeof getApp> | null = null;
+let adminDb: ReturnType<typeof getFirestore> | null = null;
+let messaging: ReturnType<typeof getMessaging> | null = null;
 
-export const adminDb = getFirestore(firebaseAdmin);
-export const messaging = getMessaging(firebaseAdmin);
+try {
+  if (process.env.FIREBASE_SERVICE_ACCOUNT && Object.keys(serviceAccount).length > 0) {
+    firebaseAdmin = getApps().length > 0 
+      ? getApp() 
+      : initializeApp({
+          credential: cert(serviceAccount),
+        });
+    
+    adminDb = getFirestore(firebaseAdmin);
+    messaging = getMessaging(firebaseAdmin);
+  } else {
+    console.warn("Firebase Admin SDK not initialized: FIREBASE_SERVICE_ACCOUNT not configured");
+  }
+} catch (error) {
+  console.warn("Firebase Admin SDK initialization failed:", error);
+}
+
+export { firebaseAdmin, adminDb, messaging };
 
 export async function sendPushNotification({ tokens, title, body, icon, data, url }: {
   tokens: string[];
@@ -21,6 +35,11 @@ export async function sendPushNotification({ tokens, title, body, icon, data, ur
   data?: Record<string, string>;
   url?: string;
 }) {
+  if (!messaging) {
+    console.warn("Cannot send push notification: Firebase Admin SDK not initialized");
+    return;
+  }
+
   if (tokens.length === 0) return;
 
   const message = {
