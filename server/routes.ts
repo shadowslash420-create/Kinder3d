@@ -59,6 +59,10 @@ export async function registerRoutes(
   // FCM Token Registration
   app.post("/api/notifications/register", async (req, res) => {
     try {
+      if (!adminDb) {
+        return res.status(503).json({ error: "Push notifications not available" });
+      }
+      
       const { userId, role, token } = req.body;
       if (!userId || !token) return res.status(400).json({ error: "Missing userId or token" });
       
@@ -69,7 +73,7 @@ export async function registerRoutes(
         token,
         updatedAt: new Date(),
       });
-      cek7
+      
       res.json({ success: true });
     } catch (error) {
       console.error("Token registration error:", error);
@@ -79,6 +83,11 @@ export async function registerRoutes(
 
   // Helper to notify admins and staff
   async function notifyStaff(title: string, body: string, url: string) {
+    if (!adminDb) {
+      console.warn("Push notifications not available: Firebase not configured");
+      return;
+    }
+    
     const snapshot = await adminDb.collection("fcm_tokens")
       .where("role", "in", ["admin", "staff_a", "staff_b"])
       .get();
@@ -91,6 +100,11 @@ export async function registerRoutes(
 
   // Helper to notify client
   async function notifyClient(userId: string, title: string, body: string, url: string) {
+    if (!adminDb) {
+      console.warn("Push notifications not available: Firebase not configured");
+      return;
+    }
+    
     const snapshot = await adminDb.collection("fcm_tokens")
       .where("userId", "==", userId)
       .get();

@@ -655,4 +655,156 @@ export const reviewService = {
   }
 };
 
+export const supplementService = {
+  async getAll(): Promise<Supplement[]> {
+    const snapshot = await getDocs(collection(db, "supplements"));
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: convertTimestamp(doc.data().createdAt),
+      updatedAt: convertTimestamp(doc.data().updatedAt),
+    })) as Supplement[];
+  },
+  
+  async getById(id: string): Promise<Supplement | null> {
+    const docRef = await getDoc(doc(db, "supplements", id));
+    if (!docRef.exists()) return null;
+    return { id: docRef.id, ...docRef.data(), createdAt: convertTimestamp(docRef.data().createdAt), updatedAt: convertTimestamp(docRef.data().updatedAt) } as Supplement;
+  },
+  
+  async create(supplement: Omit<Supplement, "id" | "createdAt" | "updatedAt">): Promise<string> {
+    const docRef = await addDoc(collection(db, "supplements"), {
+      ...supplement,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return docRef.id;
+  },
+  
+  async update(id: string, supplement: Partial<Supplement>): Promise<void> {
+    const cleanedSupplement: Record<string, any> = { updatedAt: serverTimestamp() };
+    for (const [key, value] of Object.entries(supplement)) {
+      if (value !== undefined) {
+        cleanedSupplement[key] = value;
+      }
+    }
+    await updateDoc(doc(db, "supplements", id), cleanedSupplement);
+  },
+  
+  async delete(id: string): Promise<void> {
+    await deleteDoc(doc(db, "supplements", id));
+  },
+  
+  subscribe(callback: (supplements: Supplement[]) => void) {
+    return onSnapshot(collection(db, "supplements"), (snapshot) => {
+      const supplements = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: convertTimestamp(doc.data().createdAt),
+        updatedAt: convertTimestamp(doc.data().updatedAt),
+      })) as Supplement[];
+      callback(supplements);
+    }, (error) => {
+      console.error("Error fetching supplements:", error);
+      callback([]);
+    });
+  }
+};
+
+export const contactService = {
+  async getAll(): Promise<ContactMessage[]> {
+    const q = query(collection(db, "contacts"), orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: convertTimestamp(doc.data().createdAt),
+    })) as ContactMessage[];
+  },
+  
+  async create(message: Omit<ContactMessage, "id" | "createdAt">): Promise<string> {
+    const docRef = await addDoc(collection(db, "contacts"), {
+      ...message,
+      createdAt: serverTimestamp(),
+    });
+    return docRef.id;
+  },
+  
+  async markAsRead(id: string): Promise<void> {
+    await updateDoc(doc(db, "contacts", id), { isRead: true });
+  },
+  
+  async markAsResolved(id: string): Promise<void> {
+    await updateDoc(doc(db, "contacts", id), { isResolved: true });
+  },
+  
+  async delete(id: string): Promise<void> {
+    await deleteDoc(doc(db, "contacts", id));
+  },
+  
+  subscribe(callback: (messages: ContactMessage[]) => void) {
+    const q = query(collection(db, "contacts"), orderBy("createdAt", "desc"));
+    return onSnapshot(q, (snapshot) => {
+      const messages = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: convertTimestamp(doc.data().createdAt),
+      })) as ContactMessage[];
+      callback(messages);
+    }, (error) => {
+      console.error("Error fetching contact messages:", error);
+      callback([]);
+    });
+  }
+};
+
+export const staffService = {
+  async getAll(): Promise<StaffMember[]> {
+    const snapshot = await getDocs(collection(db, "staff"));
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: convertTimestamp(doc.data().createdAt),
+    })) as StaffMember[];
+  },
+  
+  async getById(id: string): Promise<StaffMember | null> {
+    const docRef = await getDoc(doc(db, "staff", id));
+    if (!docRef.exists()) return null;
+    return { id: docRef.id, ...docRef.data(), createdAt: convertTimestamp(docRef.data().createdAt) } as StaffMember;
+  },
+  
+  async create(staff: Omit<StaffMember, "id" | "createdAt">): Promise<string> {
+    const docRef = await setDoc(doc(db, "staff", staff.email), {
+      ...staff,
+      createdAt: serverTimestamp(),
+    });
+    return staff.email;
+  },
+  
+  async delete(email: string): Promise<void> {
+    await deleteDoc(doc(db, "staff", email));
+  },
+  
+  subscribe(callback: (staff: StaffMember[]) => void) {
+    return onSnapshot(collection(db, "staff"), (snapshot) => {
+      const staff = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: convertTimestamp(doc.data().createdAt),
+      })) as StaffMember[];
+      callback(staff);
+    }, (error) => {
+      console.error("Error fetching staff:", error);
+      callback([]);
+    });
+  }
+};
+
+export function generateOrderNumber(): string {
+  const timestamp = Date.now().toString(36).toUpperCase();
+  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `ORD-${timestamp}-${random}`;
+}
+
 export { onAuthStateChanged, type User };

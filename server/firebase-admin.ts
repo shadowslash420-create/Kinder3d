@@ -2,16 +2,31 @@ import { initializeApp, cert, getApps, getApp } from "firebase-admin/app";
 import { getMessaging } from "firebase-admin/messaging";
 import { getFirestore } from "firebase-admin/firestore";
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || "{}");
+let firebaseAdmin: ReturnType<typeof getApp> | null = null;
+let adminDb: ReturnType<typeof getFirestore> | null = null;
+let messaging: ReturnType<typeof getMessaging> | null = null;
 
-export const firebaseAdmin = getApps().length > 0 
-  ? getApp() 
-  : initializeApp({
-      credential: cert(serviceAccount),
-    });
+try {
+  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || "{}");
+  
+  if (serviceAccount.project_id) {
+    firebaseAdmin = getApps().length > 0 
+      ? getApp() 
+      : initializeApp({
+          credential: cert(serviceAccount),
+        });
 
-export const adminDb = getFirestore(firebaseAdmin);
-export const messaging = getMessaging(firebaseAdmin);
+    adminDb = getFirestore(firebaseAdmin);
+    messaging = getMessaging(firebaseAdmin);
+    console.log("Firebase Admin initialized successfully");
+  } else {
+    console.warn("Firebase Admin not initialized: FIREBASE_SERVICE_ACCOUNT not configured");
+  }
+} catch (error) {
+  console.warn("Firebase Admin initialization failed:", error);
+}
+
+export { firebaseAdmin, adminDb, messaging };
 
 export async function sendPushNotification({ tokens, title, body, icon, data, url }: {
   tokens: string[];
@@ -21,6 +36,11 @@ export async function sendPushNotification({ tokens, title, body, icon, data, ur
   data?: Record<string, string>;
   url?: string;
 }) {
+  if (!messaging) {
+    console.warn("Push notifications not available: Firebase Admin not initialized");
+    return null;
+  }
+
   if (tokens.length === 0) return;
 
   const message = {
