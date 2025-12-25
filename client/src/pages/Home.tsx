@@ -44,14 +44,21 @@ export default function Home() {
   };
   
   useEffect(() => {
-    if ("Notification" in window) {
-      if (Notification.permission === "granted") {
+    if (user && "Notification" in window) {
+      if (Notification.permission === "default") {
+        const timer = setTimeout(() => {
+          handleEnableNotifications();
+        }, 3000); // Ask after 3 seconds of browsing
+        return () => clearTimeout(timer);
+      } else if (Notification.permission === "granted") {
         setNotificationStatus("enabled");
+        // Ensure token is registered even if already granted
+        requestNotificationPermission(user.uid, role || "customer");
       } else if (Notification.permission === "denied") {
         setNotificationStatus("denied");
       }
     }
-  }, []);
+  }, [user]);
   
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
