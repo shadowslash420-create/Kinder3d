@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { auth, onAuthStateChanged, getUserRole, logOut, type User, type UserRole } from "@/lib/firebase";
+import { auth, onAuthStateChanged, getUserRole, logOut, handleRedirectResult, type User, type UserRole } from "@/lib/firebase";
 
 interface AuthContextType {
   user: User | null;
@@ -20,6 +20,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Handle redirect result first
+    handleRedirectResult();
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
