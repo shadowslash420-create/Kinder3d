@@ -80,13 +80,16 @@ export default function AdminLogin() {
     setLoading(true);
     try {
       const result = await signInWithGoogle();
+      console.log("Google login success, result:", result);
       const role = await getUserRole(result.user);
       
       console.log(`Google login for ${result.user.email} - Role: ${role}`);
       
       if (role !== "admin" && role !== "staff_a" && role !== "staff_b") {
         console.error(`User ${result.user.email} has role '${role}' but is not admin or staff`);
-        throw new Error("You don't have admin access. Please contact the administrator.");
+        toast({ title: "Access Denied", description: `You have been logged in as '${role}'. You don't have admin access.`, variant: "destructive" });
+        setLocation("/"); // Redirect to home instead of throwing if they are just a customer
+        return;
       }
 
       toast({ title: "Welcome back!", description: "You have been logged in successfully." });
