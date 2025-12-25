@@ -51,10 +51,7 @@ export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 export function signInWithGoogle() {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if (isMobile) {
-    return signInWithRedirect(auth, googleProvider);
-  }
+  // Use popup instead of redirect to avoid 403 errors with redirect URIs in dev environments
   return signInWithPopup(auth, googleProvider);
 }
 
