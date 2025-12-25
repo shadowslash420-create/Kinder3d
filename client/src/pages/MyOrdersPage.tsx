@@ -75,12 +75,18 @@ export default function MyOrdersPage() {
     const linkedKey = `orders_linked_${user.uid}`;
     if (sessionStorage.getItem(linkedKey)) return;
     
-    orderService.linkExistingOrdersToUser(user.uid, user.email).then((linkedCount) => {
-      sessionStorage.setItem(linkedKey, 'true');
-      if (linkedCount > 0) {
-        console.log(`Linked ${linkedCount} existing orders to user account`);
-      }
-    }).catch(console.error);
+    // Check if function exists before calling to avoid runtime crashes
+    if (typeof (orderService as any).linkExistingOrdersToUser === 'function') {
+      (orderService as any).linkExistingOrdersToUser(user.uid, user.email).then((linkedCount: number) => {
+        sessionStorage.setItem(linkedKey, 'true');
+        if (linkedCount > 0) {
+          console.log(`Linked ${linkedCount} existing orders to user account`);
+        }
+      }).catch(console.error);
+    } else {
+      console.warn("orderService.linkExistingOrdersToUser is not defined in firebase.ts");
+      sessionStorage.setItem(linkedKey, 'true'); // Don't keep trying if it's missing
+    }
   }, [user?.uid, user?.email]);
 
   useEffect(() => {
