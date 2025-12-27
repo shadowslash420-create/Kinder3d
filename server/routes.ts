@@ -62,6 +62,7 @@ export async function registerRoutes(
       const { userId, role, token } = req.body;
       if (!userId || !token) return res.status(400).json({ error: "Missing userId or token" });
       
+      if (!adminDb) return res.status(500).json({ error: "Firebase not initialized" });
       const tokenRef = adminDb.collection("fcm_tokens").doc(token);
       await tokenRef.set({
         userId,
@@ -79,6 +80,7 @@ export async function registerRoutes(
 
   // Helper to notify admins and staff
   async function notifyStaff(title: string, body: string, url: string) {
+    if (!adminDb) return;
     const snapshot = await adminDb.collection("fcm_tokens")
       .where("role", "in", ["admin", "staff_a", "staff_b"])
       .get();
@@ -91,6 +93,7 @@ export async function registerRoutes(
 
   // Helper to notify client
   async function notifyClient(userId: string, title: string, body: string, url: string) {
+    if (!adminDb) return;
     const snapshot = await adminDb.collection("fcm_tokens")
       .where("userId", "==", userId)
       .get();
