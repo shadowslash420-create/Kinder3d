@@ -45,7 +45,7 @@ export function MapModal({
     if (navigator.geolocation) {
       const timeout = setTimeout(() => {
         setRequestingLocation(false);
-      }, 5000);
+      }, 10000); // Increased timeout to 10s for mobile
       
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -55,8 +55,15 @@ export function MapModal({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
+          console.log('Location obtained:', location);
           if (mode === 'select') {
             setUserLocation(location);
+            // Auto-center on user if no location selected yet
+            if (!selectedLat || !selectedLng) {
+              setSelectedLat(location.lat);
+              setSelectedLng(location.lng);
+              mapRef.current?.setView([location.lat, location.lng], 15);
+            }
           } else if (mode === 'view') {
             setAdminLocation(location);
           }
@@ -64,8 +71,13 @@ export function MapModal({
         (error) => {
           clearTimeout(timeout);
           setRequestingLocation(false);
-          console.error('Geolocation error:', error.message);
-        }
+          console.error('Geolocation error:', error.code, error.message);
+          // Fallback to a default location if denied
+          if (error.code === error.PERMISSION_DENIED) {
+            console.warn('Geolocation permission denied by user.');
+          }
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
     } else {
       setRequestingLocation(false);
