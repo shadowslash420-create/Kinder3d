@@ -18,12 +18,11 @@ export async function requestNotificationPermission(userId: string, role: string
       console.log("Attempting to get FCM token with VAPID key:", VAPID_KEY);
       try {
         console.log("Registering service worker...");
-        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
-          scope: '/'
-        });
+        // Use a simpler approach for registration
+        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
         
+        // Wait for it to be ready
         await navigator.serviceWorker.ready;
-        console.log("Service worker ready, getting token...");
         
         const token = await getToken(messaging, { 
           vapidKey: VAPID_KEY,
