@@ -6,15 +6,19 @@ export const VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY || "";
 export async function requestNotificationPermission(userId: string, role: string) {
   try {
     console.log("Requesting notification permission...");
-    const permission = await Notification.requestPermission();
-    console.log("Permission result:", permission);
+    let permission = Notification.permission;
+    console.log("Current permission:", permission);
+    
+    if (permission === 'default') {
+      permission = await Notification.requestPermission();
+      console.log("New permission result:", permission);
+    }
     
     if (permission === 'granted') {
       console.log("Attempting to get FCM token with VAPID key:", VAPID_KEY);
       const token = await getToken(messaging, { vapidKey: VAPID_KEY });
       if (token) {
         console.log("FCM Token generated successfully:", token);
-        // Send token to backend
         const response = await fetch('/api/notifications/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
