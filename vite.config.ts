@@ -75,10 +75,5 @@ export default defineConfig({
       strict: true,
       deny: ["**/.*"],
     },
-    middlewareMode: false,
-    hmr: {
-      host: "localhost",
-      port: 5000,
-    },
   },
 });
