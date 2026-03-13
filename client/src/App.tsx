@@ -7,6 +7,7 @@ import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { lazy, Suspense, useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
+import OrderStatusNotifier from "@/components/OrderStatusNotifier";
 
 const Home = lazy(() => import("@/pages/Home"));
 const NotFound = lazy(() => import("@/pages/not-found"));
@@ -117,6 +118,7 @@ function App() {
           <CartProvider>
             <TooltipProvider>
               <Toaster />
+              <OrderStatusNotifier />
               <Router />
             </TooltipProvider>
           </CartProvider>
@@ -131,6 +133,7 @@ function App() {
         <CartProvider>
           <TooltipProvider>
             <Toaster />
+            <OrderStatusNotifier />
             <AnimatePresence mode="wait">
               {!hasEntered ? (
                 <Suspense fallback={<PageLoader />}>
