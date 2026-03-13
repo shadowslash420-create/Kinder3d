@@ -6,11 +6,13 @@ declare global {
   interface Window {
     onFCMTokenReceived?: (token: string) => void;
     FirebasePush?: { postMessage: (msg: string) => void };
+    __fcmToken?: string;
   }
 }
 
 window.onFCMTokenReceived = function (token: string) {
   console.log("Received FCM Token from App:", token);
+  window.__fcmToken = token;
 
   fetch("/api/notifications/register", {
     method: "POST",

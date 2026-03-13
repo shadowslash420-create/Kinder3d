@@ -59,21 +59,74 @@ export async function registerRoutes(
   // FCM Token Registration
   app.post("/api/notifications/register", async (req, res) => {
     try {
-      const { userId, role, token } = req.body;
-      if (!userId || !token) return res.status(400).json({ error: "Missing userId or token" });
+      const { userId, role, token, email } = req.body;
+      if (!token) return res.status(400).json({ error: "Missing token" });
       
       if (!adminDb) return res.status(500).json({ error: "Firebase not initialized" });
       const tokenRef = adminDb.collection("fcm_tokens").doc(token);
-      await tokenRef.set({
-        userId,
-        role: role || "client",
+      const data: Record<string, any> = {
         token,
+        role: role || "customer",
         updatedAt: new Date(),
-      });
+      };
+      if (userId) data.userId = userId;
+      if (email) data.email = email;
+      await tokenRef.set(data, { merge: true });
       
       res.json({ success: true });
     } catch (error) {
       console.error("Token registration error:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Notify customer about order status change (called from client-side admin/staff pages)
+  app.post("/api/notifications/order-status", async (req, res) => {
+    try {
+      const { orderId, orderNumber, status, userId, email } = req.body;
+      if (!orderId || !status) return res.status(400).json({ error: "Missing orderId or status" });
+      if (!adminDb) return res.status(500).json({ error: "Firebase not initialized" });
+
+      const statusLabels: Record<string, string> = {
+        pending: "Pending",
+        received: "Received",
+        preparing: "Being Prepared",
+        ready: "Ready for Pickup",
+        picked_up: "Picked Up",
+        in_transit: "On Its Way",
+        delivered: "Delivered",
+        cancelled: "Cancelled",
+      };
+
+      const statusLabel = statusLabels[status] || status;
+      const title = "Order Update 🔔";
+      const body = `Your order #${orderNumber || orderId} is now: ${statusLabel}`;
+      const url = "/my-orders";
+
+      let tokens: string[] = [];
+
+      if (userId) {
+        const snapshot = await adminDb.collection("fcm_tokens")
+          .where("userId", "==", userId)
+          .get();
+        tokens = snapshot.docs.map(doc => doc.data().token);
+      }
+
+      if (tokens.length === 0 && email) {
+        const snapshot = await adminDb.collection("fcm_tokens")
+          .where("email", "==", email)
+          .get();
+        tokens = snapshot.docs.map(doc => doc.data().token);
+      }
+
+      if (tokens.length > 0) {
+        await sendPushNotification({ tokens, title, body, url });
+        res.json({ success: true, notified: tokens.length });
+      } else {
+        res.json({ success: true, notified: 0, message: "No tokens found for this customer" });
+      }
+    } catch (error) {
+      console.error("Order status notification error:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   });

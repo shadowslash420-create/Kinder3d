@@ -73,6 +73,13 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### March 13, 2026 - Push Notification for Order Status Updates
+- **FCM Token Bridge**: `window.onFCMTokenReceived` handler in `main.tsx` for native app WebView integration
+- **Token Registration**: FCM tokens stored in Firestore `fcm_tokens` collection, linked to userId and email on auth
+- **Order Status Notifications**: New `/api/notifications/order-status` endpoint sends push notifications to customers when admin/staff updates order status
+- **Admin & Staff Integration**: Both `admin/Orders.tsx` and `StaffA.tsx` call the notification endpoint after status changes
+- **Status Labels**: Human-readable status labels in notifications (e.g., "Being Prepared", "On Its Way", "Ready for Pickup")
+
 ### December 17, 2025 - Customer Ordering System
 - **Customer Authentication**: Email/password and Google sign-in via Firebase
 - **Shopping Cart**: Firebase-persisted cart that syncs across sessions

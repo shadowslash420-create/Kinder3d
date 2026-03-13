@@ -28,6 +28,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (firebaseUser) {
         const userRole = await getUserRole(firebaseUser);
         setRole(userRole);
+
+        if (window.__fcmToken) {
+          fetch("/api/notifications/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              token: window.__fcmToken,
+              userId: firebaseUser.uid,
+              email: firebaseUser.email,
+              role: userRole,
+            }),
+          }).catch((err) => console.error("Failed to update FCM token with user:", err));
+        }
       } else {
         setRole(null);
       }

@@ -74,6 +74,20 @@ export default function StaffA() {
   const updateStatus = async (orderId: string, status: string) => {
     try {
       await orderService.update(orderId, { status: status as Order["status"] });
+      const order = orders.find(o => o.id === orderId);
+      if (order) {
+        fetch("/api/notifications/order-status", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId,
+            orderNumber: order.orderNumber,
+            status,
+            userId: order.userId,
+            email: order.email,
+          }),
+        }).catch(err => console.error("Notification error:", err));
+      }
       toast({ title: "Success", description: "Order status updated" });
       if (selectedOrder?.id === orderId) {
         setSelectedOrder({ ...selectedOrder, status: status as Order["status"] });
