@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { auth, onAuthStateChanged, getUserRole, logOut, handleRedirectResult, type User, type UserRole } from "@/lib/firebase";
+import { auth, onAuthStateChanged, getUserRole, logOut, handleRedirectResult, notificationService, type User, type UserRole } from "@/lib/firebase";
 
 interface AuthContextType {
   user: User | null;
@@ -30,16 +30,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setRole(userRole);
 
         if (window.__fcmToken) {
-          fetch("/api/notifications/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              token: window.__fcmToken,
-              userId: firebaseUser.uid,
-              email: firebaseUser.email,
-              role: userRole,
-            }),
-          }).catch((err) => console.error("Failed to update FCM token with user:", err));
+          notificationService
+            .saveToken(window.__fcmToken, firebaseUser.uid, firebaseUser.email || undefined, userRole)
+            .catch((err) => console.error("Failed to update FCM token with user:", err));
         }
       } else {
         setRole(null);

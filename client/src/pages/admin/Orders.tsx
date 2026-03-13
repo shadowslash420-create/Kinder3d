@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Search, Eye, Map } from "lucide-react";
-import { orderService, type Order } from "@/lib/firebase";
+import { orderService, notificationService, type Order } from "@/lib/firebase";
 import { MapModal } from "@/components/ui/MapModal";
 
 const statusColors: Record<string, string> = {
@@ -65,16 +65,12 @@ function OrdersContent() {
       await orderService.update(orderId, { status: status as Order["status"] });
       const order = orders.find(o => o.id === orderId);
       if (order) {
-        fetch("/api/notifications/order-status", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            orderId,
-            orderNumber: order.orderNumber,
-            status,
-            userId: order.userId,
-            email: order.email,
-          }),
+        notificationService.sendOrderStatusNotification({
+          id: orderId,
+          orderNumber: order.orderNumber,
+          status,
+          userId: order.userId,
+          email: order.email,
         }).catch(err => console.error("Notification error:", err));
       }
       toast({ title: "Success", description: "Order status updated" });

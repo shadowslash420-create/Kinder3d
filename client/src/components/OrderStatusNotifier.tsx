@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { db, orderService, type Order } from "@/lib/firebase";
-import { collection, query, where, orderBy, onSnapshot, updateDoc, doc } from "firebase/firestore";
+import { notificationService, orderService, type Order } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 
 const statusLabels: Record<Order["status"], string> = {
@@ -34,40 +33,35 @@ export default function OrderStatusNotifier() {
 
     let unsubFirestore: (() => void) | null = null;
     let unsubFallback: (() => void) | null = null;
+    let isFirstBatch = true;
 
-    const notificationsRef = collection(db, "notifications");
-    const q = query(
-      notificationsRef,
-      where("userId", "==", user.uid),
-      where("read", "==", false),
-      orderBy("createdAt", "desc")
+    unsubFirestore = notificationService.subscribeToUserNotifications(
+      user.uid,
+      (newNotifications) => {
+        if (isFirstBatch) {
+          newNotifications.forEach((n) => shownIdsRef.current.add(n.id));
+          isFirstBatch = false;
+          return;
+        }
+
+        newNotifications.forEach((notification) => {
+          if (!shownIdsRef.current.has(notification.id)) {
+            shownIdsRef.current.add(notification.id);
+
+            toast({
+              title: notification.title || "Order Update",
+              description: notification.body || `Order status changed to: ${notification.status}`,
+              duration: 6000,
+            });
+
+            notificationService.markAsRead(notification.id).catch(() => {});
+          }
+        });
+      }
     );
 
-    unsubFirestore = onSnapshot(q, (snapshot) => {
-      if (initialLoadRef.current) {
-        snapshot.docs.forEach((d) => {
-          shownIdsRef.current.add(d.id);
-        });
-        initialLoadRef.current = false;
-        return;
-      }
-
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === "added" && !shownIdsRef.current.has(change.doc.id)) {
-          shownIdsRef.current.add(change.doc.id);
-          const data = change.doc.data();
-
-          toast({
-            title: data.title || "Order Update",
-            description: data.body || `Order status changed to: ${data.status}`,
-            duration: 6000,
-          });
-
-          updateDoc(doc(db, "notifications", change.doc.id), { read: true }).catch(() => {});
-        }
-      });
-    }, () => {
-      if (!fallbackActiveRef.current) {
+    setTimeout(() => {
+      if (!fallbackActiveRef.current && shownIdsRef.current.size === 0 && isFirstBatch) {
         fallbackActiveRef.current = true;
         let fallbackInitial = true;
 
@@ -97,7 +91,7 @@ export default function OrderStatusNotifier() {
           }
         );
       }
-    });
+    }, 3000);
 
     return () => {
       if (unsubFirestore) unsubFirestore();

@@ -798,6 +798,83 @@ export const staffService = {
   }
 };
 
+export const notificationService = {
+  async saveToken(token: string, userId?: string, email?: string, role?: string): Promise<void> {
+    const data: Record<string, any> = {
+      token,
+      role: role || "customer",
+      updatedAt: serverTimestamp(),
+    };
+    if (userId) data.userId = userId;
+    if (email) data.email = email;
+    await setDoc(doc(db, "fcm_tokens", token), data, { merge: true });
+  },
+
+  async sendOrderStatusNotification(order: {
+    id: string;
+    orderNumber: string;
+    status: string;
+    userId?: string;
+    email?: string;
+  }): Promise<void> {
+    const statusLabels: Record<string, string> = {
+      pending: "Pending",
+      received: "Received",
+      preparing: "Being Prepared 👨‍🍳",
+      ready: "Ready for Pickup ✅",
+      picked_up: "Picked Up 📦",
+      in_transit: "On Its Way 🚗",
+      delivered: "Delivered 🎉",
+      cancelled: "Cancelled ❌",
+    };
+
+    const statusLabel = statusLabels[order.status] || order.status;
+    const notificationData: Record<string, any> = {
+      title: "Order Update 🔔",
+      body: `Your order #${order.orderNumber} is now: ${statusLabel}`,
+      url: "/my-orders",
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      status: order.status,
+      read: false,
+      createdAt: serverTimestamp(),
+    };
+    if (order.userId) notificationData.userId = order.userId;
+    if (order.email) notificationData.email = order.email;
+
+    await addDoc(collection(db, "notifications"), notificationData);
+
+    fetch("/api/notifications/order-status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(order),
+    }).catch(() => {});
+  },
+
+  subscribeToUserNotifications(userId: string, callback: (notifications: any[]) => void) {
+    const q = query(
+      collection(db, "notifications"),
+      where("userId", "==", userId)
+    );
+    return onSnapshot(q, (snapshot) => {
+      const added = snapshot.docChanges()
+        .filter(c => c.type === "added" && c.doc.data().read === false)
+        .map(c => ({
+          id: c.doc.id,
+          ...c.doc.data(),
+        }));
+      callback(added);
+    }, (error) => {
+      console.error("Notification subscription error:", error);
+      callback([]);
+    });
+  },
+
+  async markAsRead(notificationId: string): Promise<void> {
+    await updateDoc(doc(db, "notifications", notificationId), { read: true });
+  },
+};
+
 export function generateOrderNumber(): string {
   const timestamp = Date.now().toString(36).toUpperCase();
   const random = Math.random().toString(36).substring(2, 6).toUpperCase();
