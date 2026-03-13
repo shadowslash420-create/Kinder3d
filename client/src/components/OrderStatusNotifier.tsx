@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { orderService, type Order } from "@/lib/firebase";
+import { db, orderService, type Order } from "@/lib/firebase";
+import { collection, query, where, orderBy, onSnapshot, updateDoc, doc } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
 
 const statusLabels: Record<Order["status"], string> = {
@@ -17,45 +18,91 @@ const statusLabels: Record<Order["status"], string> = {
 export default function OrderStatusNotifier() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const prevOrdersRef = useRef<Map<string, Order["status"]>>(new Map());
+  const shownIdsRef = useRef<Set<string>>(new Set());
   const initialLoadRef = useRef(true);
+  const fallbackActiveRef = useRef(false);
+  const prevOrdersRef = useRef<Map<string, Order["status"]>>(new Map());
 
   useEffect(() => {
     if (!user) {
-      prevOrdersRef.current.clear();
+      shownIdsRef.current.clear();
       initialLoadRef.current = true;
+      fallbackActiveRef.current = false;
+      prevOrdersRef.current.clear();
       return;
     }
 
-    const unsubscribe = orderService.subscribeToUserOrdersByEmailAndId(
-      user.uid,
-      user.email || null,
-      (orders) => {
-        if (initialLoadRef.current) {
-          orders.forEach((order) => {
-            prevOrdersRef.current.set(order.id, order.status);
-          });
-          initialLoadRef.current = false;
-          return;
-        }
+    let unsubFirestore: (() => void) | null = null;
+    let unsubFallback: (() => void) | null = null;
 
-        orders.forEach((order) => {
-          const prevStatus = prevOrdersRef.current.get(order.id);
-
-          if (prevStatus && prevStatus !== order.status) {
-            toast({
-              title: `Order #${order.orderNumber}`,
-              description: `Your order is now: ${statusLabels[order.status] || order.status}`,
-              duration: 6000,
-            });
-          }
-
-          prevOrdersRef.current.set(order.id, order.status);
-        });
-      }
+    const notificationsRef = collection(db, "notifications");
+    const q = query(
+      notificationsRef,
+      where("userId", "==", user.uid),
+      where("read", "==", false),
+      orderBy("createdAt", "desc")
     );
 
-    return () => unsubscribe();
+    unsubFirestore = onSnapshot(q, (snapshot) => {
+      if (initialLoadRef.current) {
+        snapshot.docs.forEach((d) => {
+          shownIdsRef.current.add(d.id);
+        });
+        initialLoadRef.current = false;
+        return;
+      }
+
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added" && !shownIdsRef.current.has(change.doc.id)) {
+          shownIdsRef.current.add(change.doc.id);
+          const data = change.doc.data();
+
+          toast({
+            title: data.title || "Order Update",
+            description: data.body || `Order status changed to: ${data.status}`,
+            duration: 6000,
+          });
+
+          updateDoc(doc(db, "notifications", change.doc.id), { read: true }).catch(() => {});
+        }
+      });
+    }, () => {
+      if (!fallbackActiveRef.current) {
+        fallbackActiveRef.current = true;
+        let fallbackInitial = true;
+
+        unsubFallback = orderService.subscribeToUserOrdersByEmailAndId(
+          user.uid,
+          user.email || null,
+          (orders) => {
+            if (fallbackInitial) {
+              orders.forEach((order) => {
+                prevOrdersRef.current.set(order.id, order.status);
+              });
+              fallbackInitial = false;
+              return;
+            }
+
+            orders.forEach((order) => {
+              const prevStatus = prevOrdersRef.current.get(order.id);
+              if (prevStatus && prevStatus !== order.status) {
+                toast({
+                  title: `Order #${order.orderNumber}`,
+                  description: `Your order is now: ${statusLabels[order.status] || order.status}`,
+                  duration: 6000,
+                });
+              }
+              prevOrdersRef.current.set(order.id, order.status);
+            });
+          }
+        );
+      }
+    });
+
+    return () => {
+      if (unsubFirestore) unsubFirestore();
+      if (unsubFallback) unsubFallback();
+    };
   }, [user, toast]);
 
   return null;

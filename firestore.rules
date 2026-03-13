@@ -114,9 +114,27 @@ service cloud.firestore {
       allow update, delete: if isAdmin() || isStaffB();
     }
     
+    // ==================== NOTIFICATIONS COLLECTION ====================
+    match /notifications/{notificationId} {
+      allow read: if request.auth != null && 
+                     (request.auth.uid == resource.data.userId || 
+                      request.auth.token.email == resource.data.email);
+      allow update: if request.auth != null && 
+                       (request.auth.uid == resource.data.userId || 
+                        request.auth.token.email == resource.data.email);
+      allow create, delete: if isAdmin();
+    }
+
+    // ==================== FCM TOKENS COLLECTION ====================
+    match /fcm_tokens/{tokenId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create, update: if request.auth != null;
+      allow delete: if isAdmin();
+    }
+
     // ==================== STAFF COLLECTION ====================
     match /staff/{staffId} {
-      allow read: if true; // Allow reading staff for login/role checking
+      allow read: if true;
       allow create, update, delete: if isAdmin();
     }
   }

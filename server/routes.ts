@@ -103,6 +103,21 @@ export async function registerRoutes(
       const body = `Your order #${orderNumber || orderId} is now: ${statusLabel}`;
       const url = "/my-orders";
 
+      const notificationData: Record<string, any> = {
+        title,
+        body,
+        url,
+        orderId,
+        orderNumber: orderNumber || orderId,
+        status,
+        read: false,
+        createdAt: new Date(),
+      };
+      if (userId) notificationData.userId = userId;
+      if (email) notificationData.email = email;
+
+      await adminDb.collection("notifications").add(notificationData);
+
       let tokens: string[] = [];
 
       if (userId) {
@@ -123,7 +138,7 @@ export async function registerRoutes(
         await sendPushNotification({ tokens, title, body, url });
         res.json({ success: true, notified: tokens.length });
       } else {
-        res.json({ success: true, notified: 0, message: "No tokens found for this customer" });
+        res.json({ success: true, notified: 0, message: "No FCM tokens found, notification saved to Firestore" });
       }
     } catch (error) {
       console.error("Order status notification error:", error);
