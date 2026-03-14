@@ -122,6 +122,82 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/orders", async (req, res) => {
+    try {
+      const orderData = req.body;
+      if (!orderData || !orderData.orderNumber || !orderData.items || !orderData.userId) {
+        return res.status(400).json({ error: "Missing required order fields" });
+      }
+
+      if (!adminDb) {
+        return res.status(500).json({ error: "Firebase Admin SDK not initialized" });
+      }
+
+      const cleanedOrder: Record<string, any> = {};
+      for (const [key, value] of Object.entries(orderData)) {
+        if (value !== undefined) {
+          cleanedOrder[key] = value;
+        }
+      }
+
+      const docRef = await adminDb.collection("orders").add({
+        ...cleanedOrder,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      console.log(`✅ Order #${orderData.orderNumber} created (ID: ${docRef.id})`);
+
+      try {
+        let adminTokens: string[] = [];
+        const adminSnapshot = await adminDb.collection("fcm_tokens")
+          .where("role", "==", "admin")
+          .get();
+        adminTokens = adminSnapshot.docs.map(doc => doc.data().token);
+
+        const staffSnapshot = await adminDb.collection("fcm_tokens")
+          .where("role", "==", "staff_a")
+          .get();
+        adminTokens.push(...staffSnapshot.docs.map(doc => doc.data().token));
+
+        const notificationData: Record<string, any> = {
+          title: "New Order 🛒",
+          body: `Order #${orderData.orderNumber} from ${orderData.customerName} — ${orderData.total} DA`,
+          url: "/admin/orders",
+          orderId: docRef.id,
+          orderNumber: orderData.orderNumber,
+          status: "pending",
+          read: false,
+          createdAt: new Date(),
+          targetRole: "admin",
+        };
+        await adminDb.collection("notifications").add(notificationData);
+
+        if (adminTokens.length > 0) {
+          await sendPushNotification({
+            tokens: adminTokens,
+            title: "New Order 🛒",
+            body: `Order #${orderData.orderNumber} from ${orderData.customerName} — ${orderData.total} DA`,
+            url: "/admin/orders",
+            data: {
+              type: "new_order",
+              orderId: docRef.id,
+              orderNumber: orderData.orderNumber,
+            },
+          });
+          console.log(`📤 Notified ${adminTokens.length} admin/staff device(s)`);
+        }
+      } catch (notifyError) {
+        console.error("⚠️ Order saved but notification failed:", notifyError);
+      }
+
+      res.json({ success: true, orderId: docRef.id, orderNumber: orderData.orderNumber });
+    } catch (error) {
+      console.error("❌ Order creation error:", error);
+      res.status(500).json({ error: "Failed to create order" });
+    }
+  });
+
   app.use(
     session({
       secret: SESSION_SECRET,

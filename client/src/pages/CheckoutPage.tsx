@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
-import { orderService, generateOrderNumber, type OrderItem } from "@/lib/firebase";
+import { generateOrderNumber, type OrderItem } from "@/lib/firebase";
 import { ArrowLeft, MapPin, Phone, User, FileText, CreditCard, Map } from "lucide-react";
 import { MapModal } from "@/components/ui/MapModal";
 import { getNearestShop } from "@/lib/shopLogic";
@@ -92,8 +92,8 @@ export default function CheckoutPage() {
         };
       }
 
-      console.log("Creating order in Firebase...");
-      await orderService.create({
+      console.log("Creating order via API...");
+      const orderPayload = {
         orderNumber,
         customerName: customerName.trim(),
         customerPhone: customerPhone.trim(),
@@ -111,9 +111,21 @@ export default function CheckoutPage() {
         paymentStatus: "pending",
         paymentMethod: "COD",
         notes: notes.trim() || "",
+      };
+
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderPayload),
       });
 
-      console.log("Order created, clearing cart...");
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to create order");
+      }
+
+      console.log("Order created via API:", result);
+      console.log("Clearing cart...");
       await clearCart();
 
       toast({ 
