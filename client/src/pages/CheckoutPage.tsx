@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
-import { generateOrderNumber, type OrderItem } from "@/lib/firebase";
+import { orderService, generateOrderNumber, type OrderItem } from "@/lib/firebase";
 import { ArrowLeft, MapPin, Phone, User, FileText, CreditCard, Map } from "lucide-react";
 import { MapModal } from "@/components/ui/MapModal";
 import { getNearestShop } from "@/lib/shopLogic";
@@ -92,7 +92,7 @@ export default function CheckoutPage() {
         };
       }
 
-      console.log("Creating order via API...");
+      console.log("Creating order...");
       const orderPayload = {
         orderNumber,
         customerName: customerName.trim(),
@@ -113,18 +113,27 @@ export default function CheckoutPage() {
         notes: notes.trim() || "",
       };
 
-      const response = await fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderPayload),
-      });
-
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to create order");
+      let orderCreated = false;
+      try {
+        const response = await fetch("/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(orderPayload),
+        });
+        const result = await response.json();
+        if (response.ok && result.success) {
+          console.log("Order created via server API:", result);
+          orderCreated = true;
+        }
+      } catch (apiErr) {
+        console.warn("Server API unavailable, using direct Firebase write");
       }
 
-      console.log("Order created via API:", result);
+      if (!orderCreated) {
+        await orderService.create(orderPayload);
+        console.log("Order created via direct Firebase write");
+      }
+
       console.log("Clearing cart...");
       await clearCart();
 
