@@ -1,27 +1,34 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
-import { notificationService } from "@/lib/firebase";
 
 declare global {
   interface Window {
-    onFCMTokenReceived?: (token: string) => void;
+    askFlutterForToken?: (userId: string, role: string, email: string) => void;
+    registerFcmToken?: (token: string, userId: string, role: string, email: string) => Promise<void>;
     FirebasePush?: { postMessage: (msg: string) => void };
     __fcmToken?: string;
   }
 }
 
-window.onFCMTokenReceived = function (token: string) {
-  console.log("Received FCM Token from App:", token);
-  window.__fcmToken = token;
-
-  notificationService.saveToken(token).catch((err) =>
-    console.error("Failed to save FCM token:", err)
-  );
+window.askFlutterForToken = function (userId: string, role: string, email: string) {
+  if (window.FirebasePush) {
+    window.FirebasePush.postMessage(`registerToken:${userId},${role},${email}`);
+  }
 };
 
-if (window.FirebasePush) {
-  window.FirebasePush.postMessage("getFCMToken");
-}
+window.registerFcmToken = async function (token: string, userId: string, role: string, email: string) {
+  try {
+    window.__fcmToken = token;
+    await fetch('/api/notifications/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, userId, role, email })
+    });
+    console.log("Successfully securely saved Push Token to Database!");
+  } catch (error) {
+    console.error("Failed to register token", error);
+  }
+};
 
 createRoot(document.getElementById("root")!).render(<App />);

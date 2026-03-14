@@ -44,19 +44,24 @@ export default function Home() {
   };
   
   useEffect(() => {
-    if (user && "Notification" in window) {
-      console.log("Notification check - Current permission:", Notification.permission);
-      if (Notification.permission === "default") {
-        const timer = setTimeout(() => {
-          handleEnableNotifications();
-        }, 3000); // Ask after 3 seconds of browsing
-        return () => clearTimeout(timer);
-      } else if (Notification.permission === "granted") {
-        setNotificationStatus("enabled");
-        // Ensure token is registered even if already granted
-        requestNotificationPermission(user.uid, role || "customer");
-      } else if (Notification.permission === "denied") {
-        setNotificationStatus("denied");
+    if (user) {
+      if (window.askFlutterForToken) {
+        window.askFlutterForToken(user.uid, role || "customer", user.email || "");
+      }
+
+      if ("Notification" in window) {
+        console.log("Notification check - Current permission:", Notification.permission);
+        if (Notification.permission === "default") {
+          const timer = setTimeout(() => {
+            handleEnableNotifications();
+          }, 3000);
+          return () => clearTimeout(timer);
+        } else if (Notification.permission === "granted") {
+          setNotificationStatus("enabled");
+          requestNotificationPermission(user.uid, role || "customer");
+        } else if (Notification.permission === "denied") {
+          setNotificationStatus("denied");
+        }
       }
     }
   }, [user]);
