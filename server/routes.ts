@@ -135,7 +135,18 @@ export async function registerRoutes(
       }
 
       if (tokens.length > 0) {
-        await sendPushNotification({ tokens, title, body, url });
+        await sendPushNotification({
+          tokens,
+          title,
+          body,
+          url,
+          data: {
+            type: "order_status",
+            orderId,
+            orderNumber: orderNumber || orderId,
+            status,
+          },
+        });
         res.json({ success: true, notified: tokens.length });
       } else {
         res.json({ success: true, notified: 0, message: "No FCM tokens found, notification saved to Firestore" });
@@ -165,7 +176,17 @@ export async function registerRoutes(
     
     const tokens = snapshot.docs.map(doc => doc.data().token);
     if (tokens.length > 0) {
-      await sendPushNotification({ tokens, title, body, url });
+      await sendPushNotification({
+        tokens,
+        title,
+        body,
+        url,
+        data: {
+          type: "new_order",
+          ...(orderData?.orderId ? { orderId: orderData.orderId } : {}),
+          ...(orderData?.orderNumber ? { orderNumber: orderData.orderNumber } : {}),
+        },
+      });
     }
   }
 
@@ -202,7 +223,18 @@ export async function registerRoutes(
     }
 
     if (tokens.length > 0) {
-      await sendPushNotification({ tokens, title, body, url });
+      await sendPushNotification({
+        tokens,
+        title,
+        body,
+        url,
+        data: {
+          type: "order_status",
+          ...(extra?.orderId ? { orderId: extra.orderId } : {}),
+          ...(extra?.orderNumber ? { orderNumber: extra.orderNumber } : {}),
+          ...(extra?.status ? { status: extra.status } : {}),
+        },
+      });
     }
   }
   app.use(

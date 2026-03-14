@@ -42,25 +42,66 @@ export async function sendPushNotification({ tokens, title, body, icon, data, ur
 
   if (tokens.length === 0) return;
 
+  const fcmData: Record<string, string> = {
+    ...(data || {}),
+    url: url || "/",
+    title,
+    body,
+    click_action: "FLUTTER_NOTIFICATION_CLICK",
+  };
+
   const message = {
-    notification: { title, body, imageUrl: icon },
-    data: { ...data, url: url || "/" },
+    data: fcmData,
+    android: {
+      priority: "high" as const,
+      notification: {
+        title,
+        body,
+        clickAction: "FLUTTER_NOTIFICATION_CLICK",
+        channelId: "orders",
+        ...(icon ? { imageUrl: icon } : {}),
+      },
+    },
+    apns: {
+      payload: {
+        aps: {
+          alert: { title, body },
+          sound: "default",
+          badge: 1,
+          "mutable-content": 1,
+        },
+      },
+      fcmOptions: {
+        ...(icon ? { imageUrl: icon } : {}),
+      },
+    },
     tokens: tokens,
   };
 
   try {
     const response = await messaging.sendEachForMulticast(message);
-    console.log(`Successfully sent ${response.successCount} notifications`);
+    console.log(`FCM: sent ${response.successCount}/${tokens.length} notifications`);
     
     if (response.failureCount > 0) {
       const failedTokens: string[] = [];
       response.responses.forEach((resp, idx) => {
         if (!resp.success) {
           failedTokens.push(tokens[idx]);
-          console.error(`Failure sending to token ${tokens[idx]}:`, resp.error);
+          console.error(`FCM failure for token ${tokens[idx]}:`, resp.error);
         }
       });
-      // Optionally clean up failed tokens from Firestore here
+
+      if (adminDb && failedTokens.length > 0) {
+        const batch = adminDb.batch();
+        for (const token of failedTokens) {
+          const errorCode = response.responses[tokens.indexOf(token)]?.error?.code;
+          if (errorCode === "messaging/registration-token-not-registered" ||
+              errorCode === "messaging/invalid-registration-token") {
+            batch.delete(adminDb.collection("fcm_tokens").doc(token));
+          }
+        }
+        await batch.commit().catch(() => {});
+      }
     }
     return response;
   } catch (error) {
