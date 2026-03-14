@@ -146,9 +146,19 @@ export async function registerRoutes(
     }
   });
 
-  // Helper to notify admins and staff
-  async function notifyStaff(title: string, body: string, url: string) {
+  async function notifyStaff(title: string, body: string, url: string, orderData?: { orderId?: string; orderNumber?: string }) {
     if (!adminDb) return;
+
+    await adminDb.collection("notifications").add({
+      title,
+      body,
+      url,
+      targetRole: "staff",
+      read: false,
+      createdAt: new Date(),
+      ...(orderData || {}),
+    });
+
     const snapshot = await adminDb.collection("fcm_tokens")
       .where("role", "in", ["admin", "staff_a", "staff_b"])
       .get();
@@ -159,14 +169,38 @@ export async function registerRoutes(
     }
   }
 
-  // Helper to notify client
-  async function notifyClient(userId: string, title: string, body: string, url: string) {
+  async function notifyClient(userId: string, title: string, body: string, url: string, extra?: { email?: string; orderId?: string; orderNumber?: string; status?: string }) {
     if (!adminDb) return;
-    const snapshot = await adminDb.collection("fcm_tokens")
+
+    const notificationData: Record<string, any> = {
+      title,
+      body,
+      url,
+      userId,
+      read: false,
+      createdAt: new Date(),
+    };
+    if (extra?.email) notificationData.email = extra.email;
+    if (extra?.orderId) notificationData.orderId = extra.orderId;
+    if (extra?.orderNumber) notificationData.orderNumber = extra.orderNumber;
+    if (extra?.status) notificationData.status = extra.status;
+
+    await adminDb.collection("notifications").add(notificationData);
+
+    let tokens: string[] = [];
+
+    const byUser = await adminDb.collection("fcm_tokens")
       .where("userId", "==", userId)
       .get();
-    
-    const tokens = snapshot.docs.map(doc => doc.data().token);
+    tokens = byUser.docs.map(doc => doc.data().token);
+
+    if (tokens.length === 0 && extra?.email) {
+      const byEmail = await adminDb.collection("fcm_tokens")
+        .where("email", "==", extra.email)
+        .get();
+      tokens = byEmail.docs.map(doc => doc.data().token);
+    }
+
     if (tokens.length > 0) {
       await sendPushNotification({ tokens, title, body, url });
     }
@@ -406,13 +440,29 @@ export async function registerRoutes(
       const order = await storage.updateOrder(req.params.id, parsed.data);
       if (!order) return res.status(404).json({ error: "Order not found" });
 
-      // Notify client about status update
       if (parsed.data.status && order.userId) {
+        const statusLabels: Record<string, string> = {
+          pending: "Pending",
+          received: "Received",
+          preparing: "Being Prepared",
+          ready: "Ready for Pickup",
+          picked_up: "Picked Up",
+          in_transit: "On Its Way",
+          delivered: "Delivered",
+          cancelled: "Cancelled",
+        };
+        const statusLabel = statusLabels[parsed.data.status] || parsed.data.status;
         notifyClient(
           order.userId,
           "Order Update",
-          `Your order #${order.orderNumber} is now ${parsed.data.status}`,
-          "/orders"
+          `Your order #${order.orderNumber} is now: ${statusLabel}`,
+          "/my-orders",
+          {
+            email: order.customerEmail || undefined,
+            orderId: order.id,
+            orderNumber: order.orderNumber,
+            status: parsed.data.status,
+          }
         ).catch(err => console.error("Notification error:", err));
       }
 
@@ -427,11 +477,11 @@ export async function registerRoutes(
       const parsed = insertOrderSchema.safeParse(req.body);
       if (!parsed.success) return res.status(400).json({ error: parsed.error.message });
       const order = await storage.createOrder(parsed.data);
-      // Notify admins/staff about new order
       notifyStaff(
         "New Order Received!",
         `Order #${order.orderNumber} from ${order.customerName}`,
-        "/admin/orders"
+        "/admin/orders",
+        { orderId: order.id, orderNumber: order.orderNumber }
       ).catch(err => console.error("Notification error:", err));
       
       res.status(201).json(order);
