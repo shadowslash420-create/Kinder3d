@@ -31,9 +31,8 @@ Preferred communication style: Simple, everyday language.
 - **Build**: esbuild bundles server code, Vite builds the client
 
 ### Data Storage
-- **Database**: PostgreSQL with Drizzle ORM
-- **Schema Location**: `shared/schema.ts` - defines admins, categories, menuItems, and orders tables
-- **Migrations**: Drizzle Kit for schema migrations (`drizzle-kit push`)
+- **Database**: Firebase Firestore (all data: menu, categories, orders, reviews, contact messages, staff, settings)
+- **Legacy Files**: `server/db.ts` and `server/storage.ts` contain unused PostgreSQL/Drizzle code (not imported anywhere)
 
 ### Authentication & Firebase
 - **Firebase Authentication**: Google Sign-In and Email/Password authentication
@@ -56,12 +55,8 @@ Preferred communication style: Simple, everyday language.
 │   │   └── pages/        # Route components (Home, admin pages)
 ├── server/           # Express backend
 │   ├── index.ts      # Server entry point
-│   ├── routes.ts     # API route definitions
-│   ├── storage.ts    # Database operations interface
-│   └── db.ts         # Drizzle database connection
-├── shared/           # Shared code between client/server
-│   └── schema.ts     # Drizzle schema and Zod validators
-└── migrations/       # Database migrations
+│   ├── routes.ts     # API route definitions (notifications + file uploads)
+│   └── firebase-admin.ts  # Firebase Admin SDK (FCM push notifications)
 ```
 
 ### Key Design Decisions
@@ -90,8 +85,7 @@ Preferred communication style: Simple, everyday language.
 ## External Dependencies
 
 ### Database
-- **PostgreSQL**: Primary database, connection via `DATABASE_URL` environment variable
-- **Drizzle ORM**: Type-safe database queries with automatic migration support
+- **Firebase Firestore**: All data stored and synced via Firestore (no PostgreSQL)
 
 ### Third-Party Libraries
 - **Animation**: GSAP, Framer Motion, Anime.js, Lenis smooth scroll
@@ -101,7 +95,7 @@ Preferred communication style: Simple, everyday language.
 - **Carousel**: Embla Carousel
 
 ### Environment Variables Required
-- `DATABASE_URL`: PostgreSQL connection string
+- `FIREBASE_SERVICE_ACCOUNT`: Firebase Admin SDK service account JSON (required for push notifications on Vercel)
 - `SESSION_SECRET`: (Optional) Secret for session encryption, auto-generated if not provided
 - `FIREBASE_API_KEY`: Firebase web API key
 - `FIREBASE_AUTH_DOMAIN`: Firebase auth domain
