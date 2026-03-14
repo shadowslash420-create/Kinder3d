@@ -37,7 +37,15 @@ async function buildAll() {
       "process.env.NODE_ENV": '"production"',
     },
     minify: true,
-    external: externals,
+    external: [
+      ...externals,
+      "@opentelemetry/api",
+      "@google-cloud/firestore",
+      "firebase-admin",
+      "firebase-admin/app",
+      "firebase-admin/firestore",
+      "firebase-admin/messaging",
+    ],
     logLevel: "info",
   });
 }
