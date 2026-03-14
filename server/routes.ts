@@ -1,42 +1,17 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import express from "express";
-import { createServer, type Server } from "http";
+import { type Server } from "http";
 import session from "express-session";
-import multer from "multer";
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
 
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
 
-declare module "express-session" {
-  interface SessionData {
-    adminId?: string;
-  }
-}
-
 const uploadDir = "./uploads";
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: (_req, _file, cb) => cb(null, uploadDir),
-    filename: (_req, file, cb) => {
-      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-      cb(null, uniqueSuffix + path.extname(file.originalname));
-    },
-  }),
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (_req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|gif|webp/;
-    const ext = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mime = allowedTypes.test(file.mimetype);
-    if (ext && mime) cb(null, true);
-    else cb(new Error("Only image files are allowed"));
-  },
-});
 
 import { adminDb, sendPushNotification } from "./firebase-admin";
 

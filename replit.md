@@ -32,7 +32,6 @@ Preferred communication style: Simple, everyday language.
 
 ### Data Storage
 - **Database**: Firebase Firestore (all data: menu, categories, orders, reviews, contact messages, staff, settings)
-- **Legacy Files**: `server/db.ts` and `server/storage.ts` contain unused PostgreSQL/Drizzle code (not imported anywhere)
 
 ### Authentication & Firebase
 - **Firebase Authentication**: Google Sign-In and Email/Password authentication
@@ -60,7 +59,7 @@ Preferred communication style: Simple, everyday language.
 ```
 
 ### Key Design Decisions
-1. **Monorepo Structure**: Client and server in single repo with shared schema for type safety
+1. **Monorepo Structure**: Client and server in single repo
 2. **Lazy Loading**: All major page sections use React.lazy for performance
 3. **Custom WebGL Effects**: FloatingLines and PrismaticBurst components use raw Three.js/OGL shaders
 4. **Typography**: Playfair Display for headings, DM Sans for body text
