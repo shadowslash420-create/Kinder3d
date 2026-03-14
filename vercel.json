@@ -1,10 +1,15 @@
 {
+  "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/public",
-  "rewrites": [
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "dist/index.cjs",
+      "use": "@vercel/node"
     }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/dist/index.cjs" },
+    { "src": "/uploads/(.*)", "dest": "/dist/index.cjs" },
+    { "src": "/(.*)", "dest": "/dist/index.cjs" }
   ]
 }
