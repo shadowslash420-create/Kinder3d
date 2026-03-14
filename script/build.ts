@@ -7,7 +7,6 @@ import { rm, readFile } from "fs/promises";
 const allowlist = [
   "express",
   "express-session",
-  "firebase-admin",
   "multer",
   "ws",
   "zod",
