@@ -8,9 +8,13 @@ import crypto from "crypto";
 
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
 
-const uploadDir = "./uploads";
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+const uploadDir = process.env.VERCEL ? "/tmp/uploads" : "./uploads";
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (e) {
+  console.warn("Could not create uploads directory:", e);
 }
 
 import { adminDb, sendPushNotification } from "./firebase-admin";
