@@ -54,18 +54,26 @@ export default function Intro({ onEnter }: IntroProps) {
       const creperieSpan = titleElement.querySelector('.creperie-text');
       const kinderSpan = titleElement.querySelector('.kinder-text');
 
+      const splitIntoLetters = (el: Element) => {
+        const text = el.textContent || '';
+        el.textContent = '';
+        for (const char of text) {
+          const span = document.createElement('span');
+          span.className = 'letter';
+          span.style.display = 'inline-block';
+          span.style.opacity = '0';
+          span.style.transform = 'translateY(80px)';
+          span.textContent = char === ' ' ? '\u00A0' : char;
+          el.appendChild(span);
+        }
+      };
+
       if (creperieSpan) {
-        const creperieText = creperieSpan.textContent || '';
-        creperieSpan.innerHTML = creperieText.split('').map((char) => 
-          `<span class="letter" style="display:inline-block;opacity:0;transform:translateY(80px)">${char === ' ' ? '&nbsp;' : char}</span>`
-        ).join('');
+        splitIntoLetters(creperieSpan);
       }
 
       if (kinderSpan) {
-        const kinderText = kinderSpan.textContent || '';
-        kinderSpan.innerHTML = kinderText.split('').map((char) => 
-          `<span class="letter" style="display:inline-block;opacity:0;transform:translateY(80px)">${char === ' ' ? '&nbsp;' : char}</span>`
-        ).join('');
+        splitIntoLetters(kinderSpan);
       }
 
       if (creperieSpan) {
