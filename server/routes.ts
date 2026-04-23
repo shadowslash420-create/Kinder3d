@@ -5,6 +5,7 @@ import session from "express-session";
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
+import multer from "multer";
 
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
 
@@ -211,6 +212,52 @@ export async function registerRoutes(
       },
     })
   );
+
+  const imgbbUpload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 32 * 1024 * 1024 },
+  });
+
+  app.post("/api/upload/image", imgbbUpload.single("image"), async (req, res) => {
+    try {
+      const apiKey = process.env.IMGBB_API_KEY;
+      if (!apiKey) {
+        return res.status(500).json({ error: "Image upload is not configured on the server." });
+      }
+      if (!req.file) {
+        return res.status(400).json({ error: "No image file provided." });
+      }
+
+      const form = new FormData();
+      const blob = new Blob([new Uint8Array(req.file.buffer)], {
+        type: req.file.mimetype || "application/octet-stream",
+      });
+      form.append("image", blob, req.file.originalname || "upload");
+
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=${encodeURIComponent(apiKey)}`, {
+        method: "POST",
+        body: form,
+      });
+
+      const text = await response.text();
+      let result: any;
+      try {
+        result = JSON.parse(text);
+      } catch {
+        console.error("ImgBB returned non-JSON:", text.slice(0, 200));
+        return res.status(502).json({ error: "ImgBB returned an invalid response." });
+      }
+
+      if (!response.ok || !result?.success) {
+        return res.status(502).json({ error: result?.error?.message || "ImgBB upload failed" });
+      }
+
+      return res.json({ url: result.data.url, displayUrl: result.data.display_url });
+    } catch (error) {
+      console.error("ImgBB proxy upload error:", error);
+      return res.status(500).json({ error: "Failed to upload image." });
+    }
+  });
 
   app.use("/uploads", (req, res, next) => {
     res.setHeader("Cache-Control", "public, max-age=31536000");
